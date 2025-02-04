@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de Bord Loto : Dépenses vs Gains</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #f4f4f4;
+            overflow: hidden;
+        }
+        header, footer {
+            width: 100%;
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            left: 0;
+            z-index: 1000;
+        }
+        header {
+            top: 0;
+        }
+        footer {
+            bottom: 0;
+        }
+        .container {
+            flex: 1;
+            margin-top: 90px; /* Pour éviter le chevauchement avec le header */
+            margin-bottom: 70px; /* Pour éviter le chevauchement avec le footer */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .charts {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+        }
+        .chart-container {
+            width: 45%;
+            min-width: 300px;
+            max-width: 500px;
+            margin: 10px;
+        }
+        canvas {
+            width: 100%;
+            height: auto;
+        }
+        table {
+            width: 100%;
+            max-width: 800px;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        .logout {
+            cursor: pointer;
+            background-color: red;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+        .logo {
+            width: 150px;
+            height: auto;
+            margin-right: 10px;
+        }
+        .header-content {
+            display: flex;
+            align-items: center;
+        }
+        h2, h3 {
+            margin-top: 20px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <img src="loto_tracker.png" alt="Loto Tracker Logo" class="logo" width ="150" height="auto">
+            <span class="user-info">Bienvenue, user1234</span>
+        </div>
+        <span>Tableau de Bord Loto : Dépenses vs Gains</span>
+        <a href="#" class="logout">Déconnexion</a>
+    </header>
+
+    <div class="container">
+        <h2>Vue d'ensemble</h2>
+        <div class="charts">
+            <div class="chart-container">
+                <canvas id="barChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <canvas id="lineChart"></canvas>
+            </div>
+        </div>
+
+        <h3>Historique des Transactions</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>Montant (€)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>01/02/2025</td><td>Gain Loto</td><td>15</td></tr>
+                <tr><td>28/01/2025</td><td>Achat de ticket</td><td>-5</td></tr>
+                <tr><td>15/01/2025</td><td>Gain Loto</td><td>10</td></tr>
+                <tr><td>10/01/2025</td><td>Achat de ticket</td><td>-5</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <footer>Loto Tracker 2025</footer>
+
+    <script>
+        const barCtx = document.getElementById('barChart').getContext('2d');
+        const lineCtx = document.getElementById('lineChart').getContext('2d');
+
+        new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin'],
+                datasets: [{
+                    label: 'Gains (€)',
+                    data: [15, 10, 12, 14, 13, 15],
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)'
+                }, {
+                    label: 'Dépenses (€)',
+                    data: [-5, -5, -4, -6, -5, -5],
+                    backgroundColor: 'rgba(255, 99, 132, 0.5)'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+
+        new Chart(lineCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin'],
+                datasets: [{
+                    label: 'Balance (€)',
+                    data: [10, 5, 8, 8, 8, 10],
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    fill: false,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loto Tracker - Soumission de Ticket</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to right, #0d47a1, #1976d2);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        header, footer {
+            background: #0d47a1;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 18px;
+            width: 100%;
+        }
+        .ticket-container {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 700px;
+            width: 90%;
+        }
+        .logo {
+            width: 100px;
+            margin-bottom: 10px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .input-group label {
+            display: block;
+            font-weight: bold;
+            color: #333;
+        }
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 5px;
+        }
+        .checkbox-group label {
+            background: #f1f1f1;
+            padding: 6px;
+            border-radius: 4px;
+            text-align: center;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .checkbox-group input {
+            display: none;
+        }
+        .checkbox-group input:checked + label {
+            background: #0d47a1;
+            color: white;
+        }
+        .submit-btn {
+            background: #0d47a1;
+            color: white;
+            padding: 12px;
+            border: none;
+            width: 100%;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .submit-btn:hover {
+            background: #1565c0;
+        }
+    </style>
+</head>
+<body>
+    <header>Loto Tracker</header>
+    <div class="ticket-container">
+        <img src="loto_tracker.png" alt="Loto Tracker Logo" class="logo">
+        <h2>Soumission d'un Ticket</h2>
+        <form id="ticket-form">
+            <div class="input-group">
+                <label>Dates du ticket</label>
+                <input type="date" id="start-date" required>
+                <input type="date" id="end-date" required>
+            </div>
+            <div class="input-group">
+                <label>Sélectionnez vos numéros (5 numéros)</label>
+                <div class="checkbox-group">
+                    <script>
+                        for (let i = 1; i <= 50; i++) {
+                            document.write(`<input type="checkbox" id="num${i}" value="${i}"><label for="num${i}">${i}</label>`);
+                        }
+                    </script>
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="chance-number">Numéro Chance</label>
+                <input type="number" id="chance-number" min="1" max="10" required>
+            </div>
+            <div class="input-group">
+                <label for="weeks">Nombre de semaines</label>
+                <select id="weeks" required>
+                    <option value="1">1 semaine</option>
+                    <option value="2">2 semaines</option>
+                    <option value="3">3 semaines</option>
+                    <option value="4">4 semaines</option>
+                    <option value="5">5 semaines</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Jours de tirage</label>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="lundi" value="lundi"><label for="lundi">Lundi</label>
+                    <input type="checkbox" id="mercredi" value="mercredi"><label for="mercredi">Mercredi</label>
+                    <input type="checkbox" id="samedi" value="samedi"><label for="samedi">Samedi</label>
+                </div>
+            </div>
+            <div class="input-group">
+                <input type="checkbox" id="second-draw" value="yes">
+                <label for="second-draw">Participer au second tirage</label>
+            </div>
+            <button type="submit" class="submit-btn">Soumettre le Ticket</button>
+        </form>
+    </div>
+    <footer>&copy; 2025 Loto Tracker - Tous droits réservés.</footer>
+    <script>
+        document.getElementById("ticket-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+            alert("Ticket soumis avec succès !");
+        });
+    </script>
+</body>
+</html>
