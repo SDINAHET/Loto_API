@@ -206,3 +206,84 @@ localhost:5000 affichage du tableau scrappé  (collection historique)
 ![alt text](image-2.png)
 lsof -i :5000
 
+![alt text](image-3.png)
+
+db.getCollection('historique').find(
+  {},
+  {
+    _id: 1,
+    annee_numero_de_tirage: 1,
+    codes_gagnants: 1,
+    date_de_tirage: 1,
+    jour_de_tirage: 1,
+    numero_chance: 1
+  }
+);
+
+![alt text](image-4.png)
+db.getCollection('historique').find(
+  {},
+  {
+    _id: 1,
+    annee_numero_de_tirage: 1,
+    combinaison_gagnante_en_ordre_croissant: 1,
+    date_de_tirage: 1,
+    devise: 1,
+    jour_de_tirage: 1,
+    numero_chance: 1
+  }
+
+Backend (Spring Boot) :
+LotoResultsController.java (Contrôleur API)
+LotoResult.java (Modèle)
+LotoResultRepository.java (Repository)
+application.properties (Configuration MongoDB)
+
+Frontend (HTML, CSS, JS) :
+index.html (Page principale)
+styles.css (Styles)
+script.js (Interactions avec l'API)
+
+
+🚀 Conclusion
+✅ Version JWT recommandée pour Spring Boot 3.4.2 + Java 21 : 0.11.5
+⚠️ Ne pas utiliser 0.9.3, car incompatible avec Java 21 et Spring Boot 3.x
+
+Essaie cette configuration et dis-moi si tu as encore des erreurs ! 😊
+
+
+
+
+
+
+Vous avez dit :
+et la 0.12.3 est compatible ou vaut mieux rester sur 0.11.5 pour jwt
+
+ChatGPT a dit :
+✅ Quelle version de JJWT utiliser avec Spring Boot 3.4.2 et Java 21 ?
+La version stable et recommandée actuellement est 0.11.5, car elle est testée et validée avec Spring Boot 3.x.
+
+Concernant 0.12.3 :
+
+C'est une version récente (2024), encore en pré-release.
+Elle n’est pas encore officiellement stable pour les environnements de production.
+Peu de documentation et de retours sur sa compatibilité avec Spring Boot 3.4.2.
+Il y a encore des changements dans la gestion des algorithmes et du Claims parsing.
+🎯 👉 Ma recommandation : RESTER sur 0.11.5
+✅ Complètement compatible avec Spring Boot 3.4.2
+✅ Fonctionne parfaitement avec Java 21
+✅ Stable et testée par la communauté
+✅ Documentation abondante
+✅ Implémentation fiable pour AuthenticationManager, SecurityFilterChain, et JWTUtils
+Si tu veux absolument essayer 0.12.3, il faudra attendre plus de retours et adapter ton code, car il y a déjà eu des modifications sur certaines méthodes.
+
+🚀 Conclusion
+Version	Spring Boot 3.4.2	Java 21	Stabilité
+0.11.5 ✅	✅ Compatible	✅ Compatible	Stable (Recommandée)
+0.12.3 🚧	⚠️ À tester	❓ Possiblement compatible	Pré-release (Pas recommandée en prod)
+🔹 Si tu veux un projet fiable et fonctionnel → utilise 0.11.5.
+🔹 Si tu veux tester 0.12.3, fais-le sur un projet annexe, mais pas en production.
+
+👉 Va pour 0.11.5 et ton JWT fonctionnera sans problème avec Spring Boot 3.4.2 et Java 21 ! 🔥🚀
+
+![alt text](image-5.png)

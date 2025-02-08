@@ -1,7 +1,9 @@
-package com.fdjloto.security;
+package com.fdjloto.api.service;
 
 import com.fdjloto.api.model.User;
 import com.fdjloto.api.repository.UserRepository;
+import com.fdjloto.security.CustomUserDetails;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
