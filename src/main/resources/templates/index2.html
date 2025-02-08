@@ -1,0 +1,44 @@
+import { useEffect, useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Search } from "lucide-react";
+
+export default function LotoResults() {
+  const [latestResult, setLatestResult] = useState(null);
+
+  useEffect(() => {
+    fetch("http://localhost:8080/api/loto/latest")
+      .then((res) => res.json())
+      .then((data) => setLatestResult(data));
+  }, []);
+
+  return (
+    <div className="min-h-screen flex flex-col items-center bg-gray-100 p-6">
+      <h1 className="text-3xl font-bold text-blue-600">Dernier Résultat du Loto</h1>
+      {latestResult ? (
+        <Card className="w-full max-w-lg bg-white p-6 mt-6 shadow-lg rounded-xl">
+          <CardContent className="text-center">
+            <h2 className="text-xl font-semibold">Tirage du {latestResult.date}</h2>
+            <div className="flex justify-center mt-4 space-x-2">
+              {latestResult.numbers.map((num, index) => (
+                <span key={index} className="w-10 h-10 flex items-center justify-center bg-blue-500 text-white text-lg font-bold rounded-full">
+                  {num}
+                </span>
+              ))}
+              <span className="w-10 h-10 flex items-center justify-center bg-red-500 text-white text-lg font-bold rounded-full">
+                {latestResult.bonus}
+              </span>
+            </div>
+            <p className="mt-4 text-lg font-semibold text-gray-700">Jackpot annoncé : {latestResult.jackpot} €</p>
+          </CardContent>
+        </Card>
+      ) : (
+        <p className="mt-6 text-gray-600">Chargement des résultats...</p>
+      )}
+
+      <Button className="mt-6 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg flex items-center">
+        <Search className="mr-2" /> Rechercher un ancien tirage
+      </Button>
+    </div>
+  );
+}

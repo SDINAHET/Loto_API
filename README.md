@@ -1,3 +1,187 @@
+# 🎰 Loto API - Gestion et Calcul des Gains FDJ
+
+## 📌 Description du Projet
+
+Loto API est une application web permettant aux utilisateurs de gérer leurs tickets de loterie FDJ et de calculer automatiquement leurs gains en comparant leurs numéros aux résultats officiels de la FDJ. Le projet inclut une interface utilisateur interactive, une API sécurisée avec authentification JWT, et une gestion des résultats via une base de données hybride SQL/NoSQL.
+
+## 🏗️ Architecture du Projet
+
+L'application suit une architecture **Full-Stack** :
+
+- **Frontend** : React.js / Angular pour une interface utilisateur moderne et réactive.
+- **Backend** : Spring Boot 3.4.2 pour gérer l'API REST et la logique métier.
+- **Base de données** :
+  - **MySQL** : Stockage des utilisateurs et des tickets.
+  - **MongoDB** : Stockage des résultats FDJ historiques.
+- **Automatisation** : Un script journalier récupère et met à jour les résultats de la FDJ à partir des fichiers ZIP fournis.
+
+---
+
+## 🚀 Fonctionnalités Principales
+
+- ✔️ **Gestion des utilisateurs** (Inscription, Connexion, Authentification JWT)
+- ✔️ **Soumission et gestion des tickets** (CRUD des tickets)
+- ✔️ **Calcul automatique des gains** en comparant les numéros avec les résultats FDJ
+- ✔️ **Historique des tickets** avec stockage en base de données
+- ✔️ **Visualisation des résultats sous forme de graphiques** 📊
+- ✔️ **Mise à jour automatique des résultats FDJ** via un script journalier
+- ✔️ **Sécurisation des endpoints API** avec Spring Security & JWT
+- ✔️ **Déploiement sur Alwaysdata avec MySQL & MongoDB**
+
+---
+
+## 🏗️ Installation & Configuration
+
+### 1️⃣ Prérequis
+
+- [Java 21](https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html)
+- [Spring Boot 3.4.2](https://spring.io/projects/spring-boot)
+- [MySQL 8.x](https://www.mysql.com/downloads/)
+- [SQLite 3.x](https://www.sqlite.org/download.html) use here
+- [MongoDB](https://www.mongodb.com/try/download/community) use here
+- [Node.js 18+](https://nodejs.org/)
+- [Git](https://git-scm.com/)
+
+### 2️⃣ Cloner le projet
+```bash
+git clone https://github.com/SDINAHET/Loto_API.git
+cd project_java
+```
+
+### 3️⃣ Configuration de la base de données
+#### MySQL (Utilisateur & Tickets)
+Créer la base de données :
+```sql
+CREATE DATABASE loto_db;
+```
+Configurer `application.properties` si MySQL:
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/loto_db
+spring.datasource.username=root
+spring.datasource.password=motdepasse
+spring.jpa.hibernate.ddl-auto=update
+```
+
+Configurer `application.properties` si SQLite:
+```properties
+spring.datasource.url=jdbc:sqlite:loto.db
+spring.datasource.driver-class-name=org.sqlite.JDBC
+spring.datasource.username=
+spring.datasource.password=
+spring.datasource.hikari.maximum-pool-size=5
+```
+
+
+#### MongoDB (Résultats FDJ)
+Démarrer MongoDB et configurer `application.properties` :
+```properties
+spring.data.mongodb.uri=mongodb://localhost:27017/loto_results
+```
+collection historique
+
+
+### 4️⃣ Lancer le Backend (Spring Boot)
+```bash
+cd backend
+mvn install
+mvn spring-boot:run
+./mvnw spring-boot:run
+```
+L'API est disponible sur `http://localhost:8080/api`
+L'API est disponible sur `http://localhost:8082/api` here
+
+### 5️⃣ Lancer le Frontend (React/Angular)
+```bash
+cd frontend
+npm install  # Installation des dépendances
+npm start    # Lancer l'application
+```
+L'application sera accessible sur `http://localhost:3000`
+
+---
+
+## 🔗 Endpoints de l'API (Exemples)
+
+### 📌 Authentification
+| Méthode | Endpoint | Description |
+|---------|---------|-------------|
+| POST | `/api/auth/register` | Inscription utilisateur |
+| POST | `/api/auth/login` | Connexion (JWT Token) |
+
+### 🎟️ Gestion des Tickets
+| Méthode | Endpoint | Description |
+|---------|---------|-------------|
+| POST | `/api/tickets` | Ajouter un ticket |
+| GET | `/api/tickets` | Lister les tickets |
+| GET | `/api/tickets/{id}` | Détails d’un ticket |
+| DELETE | `/api/tickets/{id}` | Supprimer un ticket |
+
+### 🎰 Résultats FDJ
+| Méthode | Endpoint | Description |
+|---------|---------|-------------|
+| GET | `/api/results` | Récupérer les derniers résultats FDJ |
+| GET | `/api/results/{date}` | Résultats d’une date spécifique |
+
+---
+
+## 🛠️ Tests & Qualité du Code
+### ✅ Tests Unitaires & d’Intégration
+- **Backend** : JUnit, Spring Boot Test
+- **API** : Postman / Insomnia
+- **Frontend** : Jest (React) ou Karma (Angular)
+
+Exécuter les tests backend :
+```bash
+./mvnw test
+```
+
+---
+
+## 📡 Déploiement
+Le projet peut être déployé sur **Alwaysdata, AWS ou un VPS** avec Docker.
+### 📌 Déploiement avec Docker
+Créer un `Dockerfile` pour le backend :
+```dockerfile
+FROM openjdk:21-jdk-slim
+COPY target/loto-api.jar /app.jar
+ENTRYPOINT ["java", "-jar", "/app.jar"]
+```
+
+Lancer les conteneurs :
+```bash
+docker-compose up -d
+```
+
+---
+
+## 🚀 Roadmap & Améliorations Futures
+✔️ **Ajout d’analyses avancées sur les résultats FDJ**
+✔️ **Support de nouveaux jeux (Euromillions, Keno, etc.)**
+✔️ **Notifications pour les résultats gagnants**
+✔️ **Ajout d’un mode premium avec des fonctionnalités avancées**
+
+---
+
+## 👨‍💻 Auteur & Contributions
+Développé par [@SDINAHET](https://github.com/SDINAHET)
+Contributions bienvenues ! Ouvrez une issue ou proposez une PR 🚀
+
+---
+
+## 📜 Licence
+Projet sous licence **MIT** - Libre d'utilisation et de modification.
+
+---
+
+🎉 **Merci d'utiliser Loto API !** Bonne chance 🍀
+
+
+
+
+
+http://localhost:8082/api/hello
+http://localhost:8082/swagger-ui/index.html?continue#/
+
 # Loto_API
 Loto_API
 
@@ -206,3 +390,84 @@ localhost:5000 affichage du tableau scrappé  (collection historique)
 ![alt text](image-2.png)
 lsof -i :5000
 
+![alt text](image-3.png)
+
+db.getCollection('historique').find(
+  {},
+  {
+    _id: 1,
+    annee_numero_de_tirage: 1,
+    codes_gagnants: 1,
+    date_de_tirage: 1,
+    jour_de_tirage: 1,
+    numero_chance: 1
+  }
+);
+
+![alt text](image-4.png)
+db.getCollection('historique').find(
+  {},
+  {
+    _id: 1,
+    annee_numero_de_tirage: 1,
+    combinaison_gagnante_en_ordre_croissant: 1,
+    date_de_tirage: 1,
+    devise: 1,
+    jour_de_tirage: 1,
+    numero_chance: 1
+  }
+
+Backend (Spring Boot) :
+LotoResultsController.java (Contrôleur API)
+LotoResult.java (Modèle)
+LotoResultRepository.java (Repository)
+application.properties (Configuration MongoDB)
+
+Frontend (HTML, CSS, JS) :
+index.html (Page principale)
+styles.css (Styles)
+script.js (Interactions avec l'API)
+
+
+🚀 Conclusion
+✅ Version JWT recommandée pour Spring Boot 3.4.2 + Java 21 : 0.11.5
+⚠️ Ne pas utiliser 0.9.3, car incompatible avec Java 21 et Spring Boot 3.x
+
+Essaie cette configuration et dis-moi si tu as encore des erreurs ! 😊
+
+
+
+
+
+
+Vous avez dit :
+et la 0.12.3 est compatible ou vaut mieux rester sur 0.11.5 pour jwt
+
+ChatGPT a dit :
+✅ Quelle version de JJWT utiliser avec Spring Boot 3.4.2 et Java 21 ?
+La version stable et recommandée actuellement est 0.11.5, car elle est testée et validée avec Spring Boot 3.x.
+
+Concernant 0.12.3 :
+
+C'est une version récente (2024), encore en pré-release.
+Elle n’est pas encore officiellement stable pour les environnements de production.
+Peu de documentation et de retours sur sa compatibilité avec Spring Boot 3.4.2.
+Il y a encore des changements dans la gestion des algorithmes et du Claims parsing.
+🎯 👉 Ma recommandation : RESTER sur 0.11.5
+✅ Complètement compatible avec Spring Boot 3.4.2
+✅ Fonctionne parfaitement avec Java 21
+✅ Stable et testée par la communauté
+✅ Documentation abondante
+✅ Implémentation fiable pour AuthenticationManager, SecurityFilterChain, et JWTUtils
+Si tu veux absolument essayer 0.12.3, il faudra attendre plus de retours et adapter ton code, car il y a déjà eu des modifications sur certaines méthodes.
+
+🚀 Conclusion
+Version	Spring Boot 3.4.2	Java 21	Stabilité
+0.11.5 ✅	✅ Compatible	✅ Compatible	Stable (Recommandée)
+0.12.3 🚧	⚠️ À tester	❓ Possiblement compatible	Pré-release (Pas recommandée en prod)
+🔹 Si tu veux un projet fiable et fonctionnel → utilise 0.11.5.
+🔹 Si tu veux tester 0.12.3, fais-le sur un projet annexe, mais pas en production.
+
+👉 Va pour 0.11.5 et ton JWT fonctionnera sans problème avec Spring Boot 3.4.2 et Java 21 ! 🔥🚀
+
+![alt text](image-5.png)

@@ -1,41 +1,60 @@
-package com.fdjloto.api.controller;
+// package com.fdjloto.api.controller;
 
-import com.fdjloto.security.JWTUtils;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.*;
+// import com.fdjloto.api.model.User;
+// import com.fdjloto.api.security.JwtUtil;
+// import com.fdjloto.api.service.UserService;
+// import io.swagger.v3.oas.annotations.Operation;
+// import io.swagger.v3.oas.annotations.tags.Tag;
+// import org.springframework.http.ResponseEntity;
+// import org.springframework.security.authentication.AuthenticationManager;
+// import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+// import org.springframework.security.core.userdetails.UserDetails;
+// import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+// import java.util.HashMap;
+// import java.util.Map;
 
-@RestController
-@RequestMapping("/api/auth")
-public class AuthController {
+// @RestController
+// @RequestMapping("/api/auth")
+// @Tag(name = "Auth API", description = "Gestion de l'authentification et des tokens")
+// public class AuthController {
 
-    private final AuthenticationManager authenticationManager;
-    private final JWTUtils jwtUtils;
+//     private final AuthenticationManager authenticationManager;
+//     private final UserService userService;
+//     private final JwtUtil jwtUtil;
 
-    public AuthController(AuthenticationManager authenticationManager, JWTUtils jwtUtils) {
-        this.authenticationManager = authenticationManager;
-        this.jwtUtils = jwtUtils;
-    }
+//     public AuthController(AuthenticationManager authenticationManager, UserService userService, JwtUtil jwtUtil) {
+//         this.authenticationManager = authenticationManager;
+//         this.userService = userService;
+//         this.jwtUtil = jwtUtil;
+//     }
 
-    @PostMapping("/login")
-    public Map<String, String> login(@RequestBody Map<String, String> loginData) {
-        String username = loginData.get("username");
-        String password = loginData.get("password");
+//     @PostMapping("/login")
+//     @Operation(summary = "Authentification par email et mot de passe")
+//     public ResponseEntity<?> login(@RequestBody Map<String, String> request) {
+//         String email = request.get("email");
+//         String password = request.get("password");
 
-        Authentication authentication = authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(username, password)
-        );
+//         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
 
-        String token = jwtUtils.generateToken((UserDetails) authentication.getPrincipal());
-        return Map.of("token", token);
-    }
+//         final UserDetails userDetails = userService.loadUserByUsername(email);
+//         final String jwt = jwtUtil.generateToken(userDetails);
 
-    @GetMapping("/protected")
-    public String protectedRoute() {
-        return "🔒 Route protégée accessible uniquement avec un JWT valide !";
-    }
-}
+//         Map<String, String> response = new HashMap<>();
+//         response.put("token", jwt);
+//         return ResponseEntity.ok(response);
+//     }
+
+//     @PostMapping("/token")
+//     @Operation(summary = "Générer un nouveau token JWT")
+//     public ResponseEntity<?> generateToken(@RequestBody Map<String, String> request) {
+//         String email = request.get("email");
+
+//         final UserDetails userDetails = userService.loadUserByUsername(email);
+//         final String jwt = jwtUtil.generateToken(userDetails);
+
+//         Map<String, String> response = new HashMap<>();
+//         response.put("token", jwt);
+//         return ResponseEntity.ok(response);
+//     }
+// }
