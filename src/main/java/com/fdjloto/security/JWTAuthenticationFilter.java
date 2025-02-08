@@ -13,9 +13,6 @@
 // import org.springframework.lang.NonNull;
 // // import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
-
-
-
 // import java.io.IOException;
 
 // @Component
@@ -31,20 +28,18 @@
 
 //     @Override
 //     protected void doFilterInternal(
-//         @NonNull HttpServletRequest request,
-//         @NonNull HttpServletResponse response,
-//         @NonNull FilterChain filterChain
-//     ) throws ServletException, IOException {
+//             @NonNull HttpServletRequest request,
+//             @NonNull HttpServletResponse response,
+//             @NonNull FilterChain filterChain) throws ServletException, IOException {
 //         String token = extractToken(request);
-// 		if (token != null) {
-// 			String username = jwtUtils.extractUsername(token);
-// 			UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-// 			if (jwtUtils.validateToken(token, userDetails)) { // ✅ Passe bien les deux arguments
-// 				SecurityContextHolder.getContext().setAuthentication(
-// 					new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities())
-// 				);
-// 			}
-// 		}
+//         if (token != null) {
+//             String username = jwtUtils.extractUsername(token);
+//             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+//             if (jwtUtils.validateToken(token, userDetails)) { // ✅ Passe bien les deux arguments
+//                 SecurityContextHolder.getContext().setAuthentication(
+//                         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities()));
+//             }
+//         }
 
 //         filterChain.doFilter(request, response);
 //     }
@@ -55,5 +50,5 @@
 //             return bearerToken.substring(7);
 //         }
 //         return null;
-//     }
+//    }
 // }

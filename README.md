@@ -37,13 +37,14 @@ L'application suit une architecture **Full-Stack** :
 - [Java 21](https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html)
 - [Spring Boot 3.4.2](https://spring.io/projects/spring-boot)
 - [MySQL 8.x](https://www.mysql.com/downloads/)
-- [MongoDB](https://www.mongodb.com/try/download/community)
+- [SQLite 3.x](https://www.sqlite.org/download.html) use here
+- [MongoDB](https://www.mongodb.com/try/download/community) use here
 - [Node.js 18+](https://nodejs.org/)
 - [Git](https://git-scm.com/)
 
 ### 2️⃣ Cloner le projet
 ```bash
-git clone https://github.com/SDINAHET/project_java.git
+git clone https://github.com/SDINAHET/Loto_API.git
 cd project_java
 ```
 
@@ -53,7 +54,7 @@ Créer la base de données :
 ```sql
 CREATE DATABASE loto_db;
 ```
-Configurer `application.properties` :
+Configurer `application.properties` si MySQL:
 ```properties
 spring.datasource.url=jdbc:mysql://localhost:3306/loto_db
 spring.datasource.username=root
@@ -61,18 +62,33 @@ spring.datasource.password=motdepasse
 spring.jpa.hibernate.ddl-auto=update
 ```
 
+Configurer `application.properties` si SQLite:
+```properties
+spring.datasource.url=jdbc:sqlite:loto.db
+spring.datasource.driver-class-name=org.sqlite.JDBC
+spring.datasource.username=
+spring.datasource.password=
+spring.datasource.hikari.maximum-pool-size=5
+```
+
+
 #### MongoDB (Résultats FDJ)
 Démarrer MongoDB et configurer `application.properties` :
 ```properties
 spring.data.mongodb.uri=mongodb://localhost:27017/loto_results
 ```
+collection historique
+
 
 ### 4️⃣ Lancer le Backend (Spring Boot)
 ```bash
 cd backend
+mvn install
+mvn spring-boot:run
 ./mvnw spring-boot:run
 ```
 L'API est disponible sur `http://localhost:8080/api`
+L'API est disponible sur `http://localhost:8082/api` here
 
 ### 5️⃣ Lancer le Frontend (React/Angular)
 ```bash
@@ -163,8 +179,8 @@ Projet sous licence **MIT** - Libre d'utilisation et de modification.
 
 
 
-
-
+http://localhost:8082/api/hello
+http://localhost:8082/swagger-ui/index.html?continue#/
 
 # Loto_API
 Loto_API
