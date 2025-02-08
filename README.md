@@ -1,3 +1,171 @@
+# 🎰 Loto API - Gestion et Calcul des Gains FDJ
+
+## 📌 Description du Projet
+
+Loto API est une application web permettant aux utilisateurs de gérer leurs tickets de loterie FDJ et de calculer automatiquement leurs gains en comparant leurs numéros aux résultats officiels de la FDJ. Le projet inclut une interface utilisateur interactive, une API sécurisée avec authentification JWT, et une gestion des résultats via une base de données hybride SQL/NoSQL.
+
+## 🏗️ Architecture du Projet
+
+L'application suit une architecture **Full-Stack** :
+
+- **Frontend** : React.js / Angular pour une interface utilisateur moderne et réactive.
+- **Backend** : Spring Boot 3.4.2 pour gérer l'API REST et la logique métier.
+- **Base de données** :
+  - **MySQL** : Stockage des utilisateurs et des tickets.
+  - **MongoDB** : Stockage des résultats FDJ historiques.
+- **Automatisation** : Un script journalier récupère et met à jour les résultats de la FDJ à partir des fichiers ZIP fournis.
+
+---
+
+## 🚀 Fonctionnalités Principales
+
+- ✔️ **Gestion des utilisateurs** (Inscription, Connexion, Authentification JWT)
+- ✔️ **Soumission et gestion des tickets** (CRUD des tickets)
+- ✔️ **Calcul automatique des gains** en comparant les numéros avec les résultats FDJ
+- ✔️ **Historique des tickets** avec stockage en base de données
+- ✔️ **Visualisation des résultats sous forme de graphiques** 📊
+- ✔️ **Mise à jour automatique des résultats FDJ** via un script journalier
+- ✔️ **Sécurisation des endpoints API** avec Spring Security & JWT
+- ✔️ **Déploiement sur Alwaysdata avec MySQL & MongoDB**
+
+---
+
+## 🏗️ Installation & Configuration
+
+### 1️⃣ Prérequis
+
+- [Java 21](https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html)
+- [Spring Boot 3.4.2](https://spring.io/projects/spring-boot)
+- [MySQL 8.x](https://www.mysql.com/downloads/)
+- [MongoDB](https://www.mongodb.com/try/download/community)
+- [Node.js 18+](https://nodejs.org/)
+- [Git](https://git-scm.com/)
+
+### 2️⃣ Cloner le projet
+```bash
+git clone https://github.com/SDINAHET/project_java.git
+cd project_java
+```
+
+### 3️⃣ Configuration de la base de données
+#### MySQL (Utilisateur & Tickets)
+Créer la base de données :
+```sql
+CREATE DATABASE loto_db;
+```
+Configurer `application.properties` :
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/loto_db
+spring.datasource.username=root
+spring.datasource.password=motdepasse
+spring.jpa.hibernate.ddl-auto=update
+```
+
+#### MongoDB (Résultats FDJ)
+Démarrer MongoDB et configurer `application.properties` :
+```properties
+spring.data.mongodb.uri=mongodb://localhost:27017/loto_results
+```
+
+### 4️⃣ Lancer le Backend (Spring Boot)
+```bash
+cd backend
+./mvnw spring-boot:run
+```
+L'API est disponible sur `http://localhost:8080/api`
+
+### 5️⃣ Lancer le Frontend (React/Angular)
+```bash
+cd frontend
+npm install  # Installation des dépendances
+npm start    # Lancer l'application
+```
+L'application sera accessible sur `http://localhost:3000`
+
+---
+
+## 🔗 Endpoints de l'API (Exemples)
+
+### 📌 Authentification
+| Méthode | Endpoint | Description |
+|---------|---------|-------------|
+| POST | `/api/auth/register` | Inscription utilisateur |
+| POST | `/api/auth/login` | Connexion (JWT Token) |
+
+### 🎟️ Gestion des Tickets
+| Méthode | Endpoint | Description |
+|---------|---------|-------------|
+| POST | `/api/tickets` | Ajouter un ticket |
+| GET | `/api/tickets` | Lister les tickets |
+| GET | `/api/tickets/{id}` | Détails d’un ticket |
+| DELETE | `/api/tickets/{id}` | Supprimer un ticket |
+
+### 🎰 Résultats FDJ
+| Méthode | Endpoint | Description |
+|---------|---------|-------------|
+| GET | `/api/results` | Récupérer les derniers résultats FDJ |
+| GET | `/api/results/{date}` | Résultats d’une date spécifique |
+
+---
+
+## 🛠️ Tests & Qualité du Code
+### ✅ Tests Unitaires & d’Intégration
+- **Backend** : JUnit, Spring Boot Test
+- **API** : Postman / Insomnia
+- **Frontend** : Jest (React) ou Karma (Angular)
+
+Exécuter les tests backend :
+```bash
+./mvnw test
+```
+
+---
+
+## 📡 Déploiement
+Le projet peut être déployé sur **Alwaysdata, AWS ou un VPS** avec Docker.
+### 📌 Déploiement avec Docker
+Créer un `Dockerfile` pour le backend :
+```dockerfile
+FROM openjdk:21-jdk-slim
+COPY target/loto-api.jar /app.jar
+ENTRYPOINT ["java", "-jar", "/app.jar"]
+```
+
+Lancer les conteneurs :
+```bash
+docker-compose up -d
+```
+
+---
+
+## 🚀 Roadmap & Améliorations Futures
+✔️ **Ajout d’analyses avancées sur les résultats FDJ**
+✔️ **Support de nouveaux jeux (Euromillions, Keno, etc.)**
+✔️ **Notifications pour les résultats gagnants**
+✔️ **Ajout d’un mode premium avec des fonctionnalités avancées**
+
+---
+
+## 👨‍💻 Auteur & Contributions
+Développé par [@SDINAHET](https://github.com/SDINAHET)
+Contributions bienvenues ! Ouvrez une issue ou proposez une PR 🚀
+
+---
+
+## 📜 Licence
+Projet sous licence **MIT** - Libre d'utilisation et de modification.
+
+---
+
+🎉 **Merci d'utiliser Loto API !** Bonne chance 🍀
+
+
+
+
+
+
+
+
 # Loto_API
 Loto_API
 
