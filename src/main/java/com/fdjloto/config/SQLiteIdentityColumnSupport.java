@@ -1,3 +1,4 @@
+package com.fdjloto.config;
 // package com.fdjloto.config;
 
 // import org.hibernate.dialect.identity.IdentityColumnSupportImpl;

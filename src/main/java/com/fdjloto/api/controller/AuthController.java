@@ -1,60 +1,49 @@
-// package com.fdjloto.api.controller;
+package com.fdjloto.api.controller;
 
-// import com.fdjloto.api.model.User;
-// import com.fdjloto.api.security.JwtUtil;
-// import com.fdjloto.api.service.UserService;
-// import io.swagger.v3.oas.annotations.Operation;
-// import io.swagger.v3.oas.annotations.tags.Tag;
-// import org.springframework.http.ResponseEntity;
-// import org.springframework.security.authentication.AuthenticationManager;
-// import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-// import org.springframework.security.core.userdetails.UserDetails;
-// import org.springframework.web.bind.annotation.*;
+import com.fdjloto.api.model.User;
+import com.fdjloto.api.security.JwtUtils;
+import com.fdjloto.api.service.UserService;
 
-// import java.util.HashMap;
-// import java.util.Map;
+import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
 
-// @RestController
-// @RequestMapping("/api/auth")
-// @Tag(name = "Auth API", description = "Gestion de l'authentification et des tokens")
-// public class AuthController {
+@RestController
+@RequestMapping("/api/auth")
+public class AuthController {
 
-//     private final AuthenticationManager authenticationManager;
-//     private final UserService userService;
-//     private final JwtUtil jwtUtil;
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtils jwtUtils;
+    private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
-//     public AuthController(AuthenticationManager authenticationManager, UserService userService, JwtUtil jwtUtil) {
-//         this.authenticationManager = authenticationManager;
-//         this.userService = userService;
-//         this.jwtUtil = jwtUtil;
-//     }
+    public AuthController(AuthenticationManager authenticationManager, JwtUtils jwtUtils, UserService userService, PasswordEncoder passwordEncoder) {
+        this.authenticationManager = authenticationManager;
+        this.jwtUtils = jwtUtils;
+        this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
+    }
 
-//     @PostMapping("/login")
-//     @Operation(summary = "Authentification par email et mot de passe")
-//     public ResponseEntity<?> login(@RequestBody Map<String, String> request) {
-//         String email = request.get("email");
-//         String password = request.get("password");
+    @Operation(summary = "Authenticate user and generate JWT token")
+    @PostMapping("/login")
+    public ResponseEntity<String> authenticateUser(@RequestParam String email, @RequestParam String password) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(email, password)
+        );
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtUtils.generateJwtToken(authentication);
+        return ResponseEntity.ok(jwt);
+    }
 
-//         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
-
-//         final UserDetails userDetails = userService.loadUserByUsername(email);
-//         final String jwt = jwtUtil.generateToken(userDetails);
-
-//         Map<String, String> response = new HashMap<>();
-//         response.put("token", jwt);
-//         return ResponseEntity.ok(response);
-//     }
-
-//     @PostMapping("/token")
-//     @Operation(summary = "Générer un nouveau token JWT")
-//     public ResponseEntity<?> generateToken(@RequestBody Map<String, String> request) {
-//         String email = request.get("email");
-
-//         final UserDetails userDetails = userService.loadUserByUsername(email);
-//         final String jwt = jwtUtil.generateToken(userDetails);
-
-//         Map<String, String> response = new HashMap<>();
-//         response.put("token", jwt);
-//         return ResponseEntity.ok(response);
-//     }
-// }
+    @Operation(summary = "Register a new user")
+    @PostMapping("/register")
+    public ResponseEntity<User> registerUser(@RequestBody User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return ResponseEntity.ok(userService.createUser(user));
+    }
+}
