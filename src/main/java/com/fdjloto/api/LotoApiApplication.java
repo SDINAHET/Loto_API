@@ -7,8 +7,23 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+// import com.fdjloto.config.TestSecurityConfig;
 
-@SpringBootApplication
+// @SpringBootTest(classes = LotoApiApplication.class)
+// class LotoApiApplicationTests {
+//     @Test
+//     void contextLoads() {
+//     }
+// }
+
+// @SpringBootTest(classes = {LotoApiApplication.class, SecurityConfig.class})
+// class LotoApiApplicationTests {
+//     @Test
+//     void contextLoads() {
+//     }
+// }
+
+@SpringBootApplication(scanBasePackages = { "com.fdjloto.api", "com.fdjloto.security"})  // S'assure que le package `security` est scanné)
 @EnableWebMvc
 public class LotoApiApplication {
     public static void main(String[] args) {

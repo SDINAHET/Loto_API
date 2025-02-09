@@ -1,62 +1,40 @@
-package com.fdjloto.security;
+package com.fdjloto.api.controller;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import com.fdjloto.security.JwtUtil;
+import com.fdjloto.api.service.UserService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.http.HttpMethod;
-import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
+import java.util.HashMap;
+import java.util.Map;
 
-// @Configuration
-// @EnableWebSecurity
-// public class SecurityConfig {
+@RestController
+@RequestMapping("/api/auth")
+public class AuthController {
 
-//     @Bean
-//     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//         http
-//             .csrf(csrf -> csrf.disable())
-//             .authorizeHttpRequests(auth -> auth
-//                 .requestMatchers( "/api/users/register","/swagger-ui/**", "/v3/api-docs/**").permitAll()  // Autoriser Swagger UI
-//                 .anyRequest().authenticated()
-//             )
-//             .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
+    private final AuthenticationManager authenticationManager;
+    private final UserService userService;
+    private final JwtUtil jwtUtil;
 
-//         return http.build();
-//     }
+    public AuthController(AuthenticationManager authenticationManager, UserService userService, JwtUtil jwtUtil) {
+        this.authenticationManager = authenticationManager;
+        this.userService = userService;
+        this.jwtUtil = jwtUtil;
+    }
 
-//     @Bean
-//     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-//         return authenticationConfiguration.getAuthenticationManager();
-//     }
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        String password = request.get("password");
 
-//     @Bean
-//     public PasswordEncoder passwordEncoder() {
-//         return new BCryptPasswordEncoder();
-//     }
-// }
-@Configuration
-@EnableWebSecurity
-public class SecurityConfig {
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
+        final UserDetails userDetails = userService.loadUserByUsername(email);
+        final String jwt = jwtUtil.generateToken(userDetails);
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-            .csrf(csrf -> csrf.disable()) // ✅ Désactiver CSRF temporairement pour Swagger/Postman
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.GET, "/api/users/**").permitAll()  // ✅ Autoriser GET sans authentification
-                .requestMatchers(HttpMethod.POST, "/api/users/**").permitAll() // ✅ Autoriser POST sans authentification
-                .requestMatchers(HttpMethod.PUT, "/api/users/**").permitAll()  // ✅ Autoriser PUT sans authentification
-                .requestMatchers(HttpMethod.DELETE, "/api/users/**").permitAll() // ✅ Autoriser DELETE sans authentification
-                .anyRequest().authenticated()
-            )
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
-        return http.build();
+        Map<String, String> response = new HashMap<>();
+        response.put("token", jwt);
+        return ResponseEntity.ok(response);
     }
 }
