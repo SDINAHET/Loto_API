@@ -114,6 +114,7 @@
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>2.0.2</version>  <!-- incompatible avec version 2.3.0 changer avec 2.0.2 ou 2.2.0 -->
+            <!--⚠️ Vérification importante : Pour Spring Boot 3.x, il faut bien utiliser springdoc-openapi-starter-webmvc-ui au lieu de springdoc-openapi-ui.-->
         </dependency>
 
         <!-- Spring Boot Starter Test -->

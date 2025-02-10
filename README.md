@@ -45,7 +45,7 @@ L'application suit une architecture **Full-Stack** :
 ### 2️⃣ Cloner le projet
 ```bash
 git clone https://github.com/SDINAHET/Loto_API.git
-cd project_java
+cd Loto_API
 ```
 
 ### 3️⃣ Configuration de la base de données
