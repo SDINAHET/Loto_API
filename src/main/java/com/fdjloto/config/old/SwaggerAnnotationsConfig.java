@@ -1,4 +1,4 @@
-package com.fdjloto.config;
+package com.fdjloto.config.old;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
