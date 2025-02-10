@@ -43,4 +43,14 @@ public class JwtUtils {
             return false;
         }
     }
+    // public static void main(String[] args) {
+    //     JwtUtils jwtUtils = new JwtUtils();
+
+    //     // Simulation d'un utilisateur
+    //     String token = jwtUtils.generateJwtToken(() -> "testUser");
+
+    //     System.out.println("🔹 Token généré : " + token);
+    //     System.out.println("🔹 Utilisateur extrait du token : " + jwtUtils.getUserFromJwtToken(token));
+    //     System.out.println("🔹 Token valide ? " + jwtUtils.validateJwtToken(token));
+    // }
 }
