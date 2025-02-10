@@ -42,6 +42,16 @@ L'application suit une architecture **Full-Stack** :
 - [Node.js 18+](https://nodejs.org/)
 - [Git](https://git-scm.com/)
 
+#### Tools
+Test API:
+- [Insomnia] (https://insomnia.rest/download)
+- [Postman] (https://www.postman.com/downloads/)
+
+Test bases de données;
+- [Dbeaver] (https://dbeaver.io/)
+- [HeidiSQL] (https://www.heidisql.com/download.php)
+- [Compass] (https://www.mongodb.com/try/download/compass)
+
 ### 2️⃣ Cloner le projet
 ```bash
 git clone https://github.com/SDINAHET/Loto_API.git
@@ -78,6 +88,10 @@ Démarrer MongoDB et configurer `application.properties` :
 spring.data.mongodb.uri=mongodb://localhost:27017/loto_results
 ```
 collection historique
+
+#### Tester l'API de scrapping
+Accéder à http://localhost:8082/api/loto/scrape pour déclencher le scraping manuellement.
+Les données seront mises à jour automatiquement toutes les heures.
 
 
 ### 4️⃣ Lancer le Backend (Spring Boot)
