@@ -57,7 +57,7 @@ public class SecurityConfig {
                         // Swagger UI accessible sans authentification
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll() // ✅ Swagger accessible sans JWT
                         // Auth API accessible sans authentification
-                        .requestMatchers("/api/auth/**", "/api/hello", "/localhost:5500/**").permitAll()
+                        .requestMatchers("/api/auth/**", "/api/hello", "/localhost:5500/**", "api/loto/scrape").permitAll()
                         // Endpoints protégés par JWT
                         .requestMatchers("/api/protected/**").permitAll()
                         .requestMatchers("/api/user/**").authenticated()  // Protégé par JWT
