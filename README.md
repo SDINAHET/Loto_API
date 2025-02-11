@@ -485,3 +485,12 @@ Version	Spring Boot 3.4.2	Java 21	Stabilité
 👉 Va pour 0.11.5 et ton JWT fonctionnera sans problème avec Spring Boot 3.4.2 et Java 21 ! 🔥🚀
 
 ![alt text](image-5.png)
+
+
+TicketController.java (Contrôleur REST pour les tickets)
+TicketService.java (Service pour la logique métier)
+TicketRepository.java (Interface JPA pour MySQL)
+GameResultRepository.java (Interface MongoDB pour les résultats FDJ)
+Ticket.java (Modèle MySQL pour les tickets)
+GameResult.java (Modèle MongoDB pour les résultats FDJ)
+ResultFetcherService.java (Service pour récupérer et mettre à jour les résultats FDJ)
