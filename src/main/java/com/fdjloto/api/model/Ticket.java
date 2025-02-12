@@ -1,7 +1,9 @@
 package com.fdjloto.api.model;
 
 import jakarta.persistence.*;
+import java.time.LocalDate;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 @Entity
 public class Ticket {
@@ -11,20 +13,16 @@ public class Ticket {
     private UUID id;
 
     @Column(nullable = false)
-    private UUID userId; // Modification ici, assure-toi que c'est bien UUID et non String
+    private UUID userId;
 
     @Column(nullable = false)
-    private String numbers;
+    private String numbers; // Format: "1-2-3-4-5"
 
     @Column(nullable = false)
-    private int chanceNumber;
+    private int chanceNumber = 1; // Par défaut 1, entre 1 et 10
 
     @Column(nullable = false)
-    private String drawDate;
-
-    // public Ticket() {
-    //     // this.id = UUID.randomUUID();
-    // }
+    private LocalDate drawDate;
 
     public UUID getId() {
         return id;
@@ -47,6 +45,9 @@ public class Ticket {
     }
 
     public void setNumbers(String numbers) {
+        if (!isValidNumbers(numbers)) {
+            throw new IllegalArgumentException("Les numéros doivent être au format '1-2-3-4-5' avec des valeurs entre 1 et 49.");
+        }
         this.numbers = numbers;
     }
 
@@ -55,15 +56,23 @@ public class Ticket {
     }
 
     public void setChanceNumber(int chanceNumber) {
+        if (chanceNumber <= 1 || chanceNumber > 10) {
+            throw new IllegalArgumentException("Le numéro chance doit être entre 1 et 10.");
+        }
         this.chanceNumber = chanceNumber;
     }
 
-    public String getDrawDate() {
+    public LocalDate getDrawDate() {
         return drawDate;
     }
 
-    public void setDrawDate(String drawDate) {
+    public void setDrawDate(LocalDate drawDate) {
         this.drawDate = drawDate;
+    }
+
+    private boolean isValidNumbers(String numbers) {
+        String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
+        return Pattern.matches(regex, numbers);
     }
 }
 

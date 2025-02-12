@@ -494,3 +494,6 @@ GameResultRepository.java (Interface MongoDB pour les résultats FDJ)
 Ticket.java (Modèle MySQL pour les tickets)
 GameResult.java (Modèle MongoDB pour les résultats FDJ)
 ResultFetcherService.java (Service pour récupérer et mettre à jour les résultats FDJ)
+
+
+![alt text](image-6.png)

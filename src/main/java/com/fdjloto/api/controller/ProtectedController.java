@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
@@ -14,7 +16,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/protected")
-// @SecurityRequirement(name = "bearerAuth")  // 🔥 Swagger sait que ce contrôleur est sécurisé
+@SecurityRequirement(name = "bearerAuth")  // 🔥 Swagger sait que ce contrôleur est sécurisé
 public class ProtectedController {
 
     @GetMapping("/userinfo")
@@ -28,12 +30,23 @@ public class ProtectedController {
             Map<String, String> response = new HashMap<>();
             response.put("message", "Bienvenue " + userDetails.getUsername());
             response.put("username", userDetails.getUsername());
-            response.put("roles", userDetails.getAuthorities().toString());
+            // response.put("roles", userDetails.getAuthorities().toString());
 
             return ResponseEntity.ok(response);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Utilisateur non authentifié"));
         }
     }
+    // public ResponseEntity<Map<String, Object>> getUserInfo(@AuthenticationPrincipal Jwt jwt) {
+    //     if (jwt == null) {
+    //         return ResponseEntity.status(401).body(Map.of("error", "Token JWT invalide ou manquant"));
+    //     }
+
+    //     return ResponseEntity.ok(Map.of(
+    //         "username", jwt.getClaim("sub"),
+    //         "roles", jwt.getClaim("roles"),
+    //         "token_valid", "✅"
+    //     ));
+    // }
 }
 

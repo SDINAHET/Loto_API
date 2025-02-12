@@ -59,6 +59,11 @@ public class TicketService {
         return ticketRepository.save(existingTicket);
     }
 
+    public List<Ticket> getAllTickets() {
+        return ticketRepository.findAll(); // Assure-toi que `ticketRepository` est bien défini.
+    }
+
+
     /**
      * Supprime un ticket spécifique par son ID.
      * @param ticketId ID du ticket à supprimer.

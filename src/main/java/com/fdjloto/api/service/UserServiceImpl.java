@@ -40,15 +40,24 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userRepository.save(user);
     }
 
+    // @Override
+    // public User updateUser(UUID id, User user) { // ✅ Garde UUID
+    //     if (userRepository.existsById(id)) {
+    //         user.setId(id.toString()); // ✅ Stocke UUID sous forme de String
+    //         return userRepository.save(user);
+    //     }
+    //     return null;
+    // }
     @Override
     public User updateUser(UUID id, User user) { // ✅ Garde UUID
         if (userRepository.existsById(id)) {
-            user.setId(id.toString()); // ✅ Stocke UUID sous forme de String
+            user.setId(id); // ✅ Passe directement l'UUID
             return userRepository.save(user);
         }
         return null;
     }
-    
+
+
 
     @Override
     public void deleteUser(UUID id) { // ✅ Garde UUID

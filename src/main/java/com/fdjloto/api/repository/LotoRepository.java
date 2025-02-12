@@ -4,4 +4,5 @@ import com.fdjloto.api.model.LotoResult;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface LotoRepository extends MongoRepository<LotoResult, String> {
+	// Optional<GameResult> findByDrawDate(String drawDate);
 }

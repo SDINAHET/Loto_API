@@ -11,8 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-
 
 import java.util.List;
 import java.util.Optional;
@@ -22,7 +20,7 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/api/users")
 @Tag(name = "User Management", description = "Endpoints for managing users")
-@SecurityRequirement(name = "BearerAuth") // 🔐 Ajout de l'authentification JWT
+// @SecurityRequirement(name = "BearerAuth") // 🔐 Ajout de l'authentification JWT
 public class UserController {
 
     private final UserService userService;
@@ -44,8 +42,8 @@ public class UserController {
 
     @Operation(summary = "Get user by ID")
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable String id) {
-        Optional<User> user = userService.getUserById(UUID.fromString(id)); // ✅ Convertit en UUID
+    public ResponseEntity<User> getUserById(@PathVariable UUID id) {
+        Optional<User> user = userService.getUserById(id); // ✅ Utilise directement l'UUID
         return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
@@ -59,21 +57,22 @@ public class UserController {
     @Operation(summary = "Create a new user")
     @PostMapping
     public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
-        user.setId(UUID.randomUUID().toString()); // ✅ Stocke UUID sous forme de String
+        user.setId(UUID.randomUUID()); // ✅ Génère un UUID natif
         return new ResponseEntity<>(userService.createUser(user), HttpStatus.CREATED);
     }
 
     @Operation(summary = "Update an existing user")
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable String id, @Valid @RequestBody User user) {
-        return ResponseEntity.ok(userService.updateUser(UUID.fromString(id), user)); // ✅ Convertit en UUID
+    public ResponseEntity<User> updateUser(@PathVariable UUID id, @Valid @RequestBody User user) {
+        return ResponseEntity.ok(userService.updateUser(id, user)); // ✅ Corrigé
     }
 
     @Operation(summary = "Delete a user (Admin only)")
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Void> deleteUser(@PathVariable String id) {
-        userService.deleteUser(UUID.fromString(id)); // ✅ Convertit en UUID
+    public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
+        userService.deleteUser(id); // ✅ Utilise directement l'UUID
         return ResponseEntity.noContent().build();
     }
 }
+

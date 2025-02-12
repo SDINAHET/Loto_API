@@ -14,3 +14,4 @@ public interface UserService {
     User updateUser(UUID id, User user); // ✅ Garde UUID
     void deleteUser(UUID id); // ✅ Garde UUID
 }
+
