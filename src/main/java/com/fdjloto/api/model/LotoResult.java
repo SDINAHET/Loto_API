@@ -3,6 +3,10 @@ package com.fdjloto.api.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import java.util.Date;
+
+
 // @Document(collection = "historique")
 // public class LotoResult {
 //     @Id
@@ -36,7 +40,10 @@ public class LotoResult {
     private String id;
     private int anneeNumeroDeTirage;
     private String jourDeTirage;
-    private String dateDeTirage;
+
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", timezone = "Europe/Paris")
+    private Date dateDeTirage; // ✅ Maintenant stocké en Date
+
     private String dateDeForclusion;
     private int boule1;
     private int boule2;
@@ -96,8 +103,10 @@ public class LotoResult {
 	public String getJourDeTirage() { return jourDeTirage; }
 	public void setJourDeTirage(String jourDeTirage) { this.jourDeTirage = jourDeTirage; }
 
-	public String getDateDeTirage() { return dateDeTirage; }
-	public void setDateDeTirage(String dateDeTirage) { this.dateDeTirage = dateDeTirage; }
+
+    public Date getDateDeTirage() { return dateDeTirage; }  // ✅ Correction : retourne une Date
+    public void setDateDeTirage(Date dateDeTirage) { this.dateDeTirage = dateDeTirage; } // ✅ Accepte une Date
+	
 
 	public String getDateDeForclusion() { return dateDeForclusion; }
 	public void setDateDeForclusion(String dateDeForclusion) { this.dateDeForclusion = dateDeForclusion; }

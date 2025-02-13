@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,8 +25,10 @@ import jakarta.validation.Valid;
 public class UserController {
 
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
         this.userService = userService;
     }
 
@@ -54,11 +57,17 @@ public class UserController {
         return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @Operation(summary = "Create a new user")
-    @PostMapping
-    public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
-        user.setId(UUID.randomUUID()); // ✅ Génère un UUID natif
-        return new ResponseEntity<>(userService.createUser(user), HttpStatus.CREATED);
+    // @Operation(summary = "Create a new user")
+    // @PostMapping
+    // public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
+    //     user.setId(UUID.randomUUID()); // ✅ Génère un UUID natif
+    //     return new ResponseEntity<>(userService.createUser(user), HttpStatus.CREATED);
+    // }
+    @Operation(summary = "Register a new user")
+    @PostMapping("/register")
+    public ResponseEntity<User> registerUser(@RequestBody User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return ResponseEntity.ok(userService.createUser(user));
     }
 
     @Operation(summary = "Update an existing user")

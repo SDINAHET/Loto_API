@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/loto")
+@CrossOrigin(origins = "*") // Permet les requêtes depuis le frontend
 public class LotoController {
 
     @Autowired

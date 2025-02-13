@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public Optional<User> getUserById(UUID id) { // ✅ Garde UUID
-        return userRepository.findById(id);
+        return userRepository.findById(id.toString());
     }
 
     @Override
@@ -40,28 +40,29 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userRepository.save(user);
     }
 
-    // @Override
-    // public User updateUser(UUID id, User user) { // ✅ Garde UUID
-    //     if (userRepository.existsById(id)) {
-    //         user.setId(id.toString()); // ✅ Stocke UUID sous forme de String
-    //         return userRepository.save(user);
-    //     }
-    //     return null;
-    // }
     @Override
     public User updateUser(UUID id, User user) { // ✅ Garde UUID
-        if (userRepository.existsById(id)) {
-            user.setId(id); // ✅ Passe directement l'UUID
+        if (userRepository.existsById(id.toString())) {
+            user.setId(id.toString()); // ✅ Stocke UUID sous forme de String
             return userRepository.save(user);
         }
         return null;
     }
 
+    // @Override
+    // public User updateUser(UUID id, User user) { // ✅ Garde UUID
+    //     if (userRepository.existsById(id)) {
+    //         user.setId(id); // ✅ Passe directement l'UUID
+    //         return userRepository.save(user);
+    //     }
+    //     return null;
+    // }
+
 
 
     @Override
     public void deleteUser(UUID id) { // ✅ Garde UUID
-        userRepository.deleteById(id);
+        userRepository.deleteById(id.toString());
     }
 
     @Override

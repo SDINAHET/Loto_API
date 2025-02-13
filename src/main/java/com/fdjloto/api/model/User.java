@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 
 import java.util.UUID;
 
+
 @Entity
 @Table(name = "users")
 public class User {
@@ -16,10 +17,13 @@ public class User {
     // @GeneratedValue(strategy = GenerationType.UUID) // ✅ UUID généré automatiquement
     // private String id;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO) // ✅ Génère un UUID natif
-    private UUID id; // ✅ Changer String → UUID
+    // @Id
+    // @GeneratedValue(strategy = GenerationType.AUTO) // ✅ Génère un UUID natif
+    // private UUID id; // ✅ Changer String → UUID
 
+    @Id
+    @Column(columnDefinition = "TEXT", unique = true, nullable = false) // ✅ Stocker UUID en `TEXT` (String)
+    private String id;
 
     @Size(max = 26, message = "Le prénom ne peut pas dépasser 26 caractères") // ✅ Max 26 caractères
     @NotBlank(message = "Le prénom est obligatoire")
@@ -45,13 +49,32 @@ public class User {
     // @Column(nullable = true) // ✅ ajout de la colonne token
     // private String token;
 
+     /** ✅ Génère automatiquement l'UUID avant l'insertion en base */
+    //  @PrePersist
+    //  public void generateUUID() {
+    //      if (id == null) {
+    //          id = UUID.randomUUID();
+    //      }
+    //      if (!admin) {
+    //          admin = false;
+    //      }
+    //  }
+
+    /** ✅ Génère automatiquement l'UUID avant l'insertion en base */
+    @PrePersist
+    public void generateUUID() {
+        if (id == null) {
+            id = UUID.randomUUID().toString(); // ✅ Stocke UUID sous forme de String
+        }
+    }
+
     public User() {
-        this.id = UUID.randomUUID(); // ✅ Génère un UUID sous forme de String
+        // this.id = UUID.randomUUID(); // ✅ Génère un UUID sous forme de String
         this.admin = false; // ✅ Assure que tous les nouveaux utilisateurs sont non-admin
     }
 
     public User(String firstName, String lastName, String email, String password, boolean admin) {
-        this.id = UUID.randomUUID(); // ✅ Génère un UUID sous forme de String
+        // this.id = UUID.randomUUID(); // ✅ Génère un UUID sous forme de String
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -70,8 +93,8 @@ public class User {
     // }
 
     // ✅ Getters et Setters
-    public UUID getId() { return id; }
-    public void setId(UUID id) { this.id = id; } // ✅ Utilisation de String au lieu de UUID
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; } // ✅ Utilisation de String au lieu de UUID
 
     public String getFirstName() { return firstName; }
     public void setFirstName(String firstName) { this.firstName = firstName; }
