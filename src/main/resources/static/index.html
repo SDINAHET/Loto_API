@@ -10,6 +10,8 @@
     <script src="https://cdn.jsdelivr.net/npm/moment/min/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/moment-timezone/builds/moment-timezone-with-data.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
         .lottery-ball {
             display: inline-block;
@@ -38,7 +40,36 @@
         <div class="text-center my-3">
             <h2>Prochain tirage dans : <span id="countdown"></span></h2>
         </div>
-        <br>
+        <div class="text-center my-3">
+            <button class="btn btn-lg btn-primary" onclick="showPrediction()">
+                🔮 Voir la prédiction du prochain tirage (Version Premium)
+            </button>
+        </div>
+
+        <!-- Modal Bootstrap -->
+        <div class="modal fade" id="predictionModal" tabindex="-1" aria-labelledby="predictionModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="predictionModalLabel">📊 Prédiction du prochain tirage</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h5 class="text-center text-primary">Numéros probables :</h5>
+                        <div id="predictedNumbers" class="text-center my-3"></div>
+
+                        <h5 class="text-center text-success">Numéro Chance probable :</h5>
+                        <p class="text-center fs-4" id="predictedChance"></p>
+
+                        <h5 class="text-center mt-4">Écart-type des numéros</h5>
+                        <canvas id="stdDevChart"></canvas> <!-- Graphique -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <br>
         <div class="text-center my-3">
             <h2>Historique des tirages: </h2>
@@ -269,12 +300,104 @@
             document.getElementById("numbersContainer").innerHTML = sortedHTML + `<span class="lottery-ball lucky-number">${numeroChance}</span>`;
         }
 
+        document.addEventListener("DOMContentLoaded", function () {
+            console.log("✅ DOM chargé, exécution des scripts...");
+            loadLast20();
+        });
 
 
+        /**
+        * 📌 Fonction `showPrediction`
+        * ==========================================
+        * Récupère les prédictions du loto depuis l'API et met à jour l'affichage :
+        * - Affiche les numéros probables et le numéro chance.
+        * - Calcule et affiche l'écart-type sous forme de graphique et de texte explicatif.
+        * - Ouvre un modal Bootstrap contenant les résultats.
+        */
+        async function showPrediction() {
+            try {
+                console.log("📡 Récupération des prédictions...");
+                let response = await axios.get("http://localhost:8082/api/predictions/latest");
+                let data = response.data;
 
+                // 🔍 Vérification des données reçues
+                if (!data || !data.probableNumbers || !data.stdDevNumbers) {
+                    showErrorModal("⚠️ Les données de prédiction sont invalides !");
+                    return;
+                }
 
+                console.log("✅ Données reçues :", data);
 
+                // 📡 Vérification des éléments HTML avant accès
+                let predictedNumbersEl = document.getElementById("predictedNumbers");
+                let predictedChanceEl = document.getElementById("predictedChance");
+                let stdDevChartEl = document.getElementById("stdDevChart");
 
+                if (!predictedNumbersEl || !predictedChanceEl || !stdDevChartEl) {
+                    showErrorModal("❌ Un ou plusieurs éléments du DOM sont introuvables !");
+                    return;
+                }
+
+                // 🔢 Mise à jour des numéros probables
+                predictedNumbersEl.innerHTML = data.probableNumbers
+                    .map(num => `<span class="lottery-ball">${num}</span>`)
+                    .join('');
+
+                predictedChanceEl.innerHTML = `<span class="lottery-ball lucky-number">${data.probableChance}</span>`;
+
+                // 🆕 Suppression de l'ancien graphique s'il existe
+                if (window.myChart) {
+                    window.myChart.destroy();
+                }
+
+                // 📊 Création du graphique avec Chart.js
+                let ctx = stdDevChartEl.getContext("2d");
+                let labels = Object.keys(data.stdDevNumbers);
+                let stdDevValues = Object.values(data.stdDevNumbers);
+
+                window.myChart = new Chart(ctx, {
+                    type: "bar",
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: "Écart-Type des numéros",
+                            data: stdDevValues,
+                            backgroundColor: "rgba(54, 162, 235, 0.6)",
+                            borderColor: "rgba(54, 162, 235, 1)",
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: "📊 Dispersion des Numéros Probables (Écart-Type)",
+                                font: { size: 16 }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: "Valeur de l'Écart-Type",
+                                    font: { size: 14 }
+                                }
+                            }
+                        }
+                    }
+                });
+
+                // ✅ Affichage du modal Bootstrap
+                let modal = new bootstrap.Modal(document.getElementById("predictionModal"));
+                modal.show();
+
+            } catch (error) {
+                console.error("❌ Erreur lors de la récupération de la prédiction :", error);
+                showErrorModal("⚠️ Impossible de charger les prédictions. Vérifiez votre serveur.");
+            }
+        }
 
 
 

@@ -66,6 +66,7 @@ public class SecurityConfig {
                         // .requestMatchers("/api/protected/**").permitAll()
                         .requestMatchers("/api/tickets/**").permitAll()
                         .requestMatchers("/api/historique/last20").permitAll()
+                        .requestMatchers("/api/predictions/generate", "/api/generate", "api/predictions/latest").permitAll()
                         .requestMatchers("/api/historique/last20/Detail/**").permitAll()
                         .requestMatchers("/api/tirages", "/api/tirages/**").permitAll()
                         .requestMatchers("/api/users/**", "/api/users").permitAll()  // Protégé par JWT

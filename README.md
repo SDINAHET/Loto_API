@@ -503,3 +503,55 @@ ResultFetcherService.java (Service pour récupérer et mettre à jour les résul
 ![alt text](image-9.png)
 ![alt text](image-10.png)
 ![alt text](image-11.png)
+
+
+🔬 Explication scientifique et professionnelle
+📌 Concept de l’écart-type appliqué aux prédictions de loto
+L'écart-type est un indicateur statistique clé qui mesure la dispersion des nombres tirés par rapport à la moyenne des tirages passés.
+
+Formule mathématique :
+𝜎
+=
+∑
+(
+𝑥
+𝑖
+−
+𝜇
+)
+2
+𝑁
+−
+1
+σ=
+N−1
+∑(x
+i
+​
+ −μ)
+2
+
+​
+
+​
+
+Explication des variables :
+𝜎
+σ = Écart-type
+𝜇
+μ = Moyenne des valeurs
+𝑁
+N = Nombre total d'observations
+𝑥
+𝑖
+x
+i
+​
+  = Valeurs individuelles des tirages
+🎯 Comment interpréter les résultats ?
+Un écart-type faible ➜ Les numéros sont fréquemment tirés avec peu de variations.
+Un écart-type élevé ➜ Les numéros sont tirés de manière très irrégulière.
+Le graphique généré permet une visualisation rapide de la dispersion des numéros probables, aidant à identifier les numéros les plus stables et ceux qui varient fortement.
+
+![alt text](image-12.png)
+![alt text](image-13.png)
