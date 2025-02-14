@@ -15,6 +15,6 @@ public class Historique20Service {
     }
 
     public List<Historique20Result> getLast20Results() {
-        return historique20Repository.findTop20ByOrderByDateDeTirageDesc();
+        return historique20Repository.findTop6ByOrderByDateDeTirageDesc();
     }
 }

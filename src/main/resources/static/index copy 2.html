@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Résultats Loto</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment/min/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment-timezone/builds/moment-timezone-with-data.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .lottery-ball {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            border-radius: 50%;
+            background: blue;
+            color: white;
+            text-align: center;
+            font-weight: bold;
+            margin: 5px;
+        }
+        .lucky-number {
+            background: red;
+        }
+        .card-lottery {
+            margin: 10px;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container mt-4">
+        <h1 class="text-center">Résultats du Loto</h1>
+        <p class="text-center" id="current-time"></p>
+        <div class="text-center my-3">
+            <h2>Prochain tirage dans : <span id="countdown"></span></h2>
+        </div>
+        <br>
+        <br>
+        <div class="text-center my-3">
+            <h2>Historique des tirages: </span></h2>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="detailModalLabel">Détail du Tirage</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                Chargement...
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+            </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-3 g-4" id="last20"></div>
+        <h3 class="mt-4">Rechercher un tirage</h3>
+        <div class="input-group mb-3">
+            <input type="date" id="startDate" class="form-control">
+            <input type="date" id="endDate" class="form-control">
+            <button class="btn btn-primary" onclick="searchTirages()">Rechercher</button>
+        </div>
+        <div id="searchResults" class="row row-cols-1 row-cols-md-3 g-4"></div>
+    </div>
+    <script>
+        function updateTime() {
+            document.getElementById('current-time').innerText = 'Heure de Paris : ' + moment().tz("Europe/Paris").format("HH:mm:ss");
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        function startCountdown() {
+            setInterval(() => {
+                let now = moment().tz("Europe/Paris");
+                let nextDraw = moment().tz("Europe/Paris").add(2, 'days').set({ hour: 20, minute: 0, second: 0 });
+                let diff = moment.duration(nextDraw.diff(now));
+                document.getElementById("countdown").innerText = `${diff.days()}j ${diff.hours()}h ${diff.minutes()}m ${diff.seconds()}s`;
+            }, 1000);
+        }
+        startCountdown();
+
+        function getDayName(dateString) {
+            let [day, month, year] = dateString.split("/").map(Number);
+            let date = new Date(year, month - 1, day);
+            let jours = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
+            return jours[date.getDay()];
+        }
+
+        async function loadLast20() {
+            try {
+                let response = await axios.get("http://localhost:8082/api/historique/last20");
+                let data = response.data;
+                let container = document.getElementById("last20");
+                container.innerHTML = "";
+                data.forEach(draw => {
+                    let dayName = getDayName(draw.dateDeTirage); // Récupérer le jour
+                    let card = document.createElement("div");
+                    card.className = "col";
+                    card.innerHTML = `
+                        <div class="card card-lottery text-center">
+                            <div class="card-body">
+                                <h5>${dayName} ${draw.dateDeTirage}</h5>
+                                <div>
+                                    <span class="lottery-ball">${draw.boule1}</span>
+                                    <span class="lottery-ball">${draw.boule2}</span>
+                                    <span class="lottery-ball">${draw.boule3}</span>
+                                    <span class="lottery-ball">${draw.boule4}</span>
+                                    <span class="lottery-ball">${draw.boule5}</span>
+                                    <span class="lottery-ball lucky-number">${draw.numeroChance}</span>
+                                </div>
+                                <button class="btn btn-outline-primary mt-2" onclick="viewDetails('${draw.dateDeTirage}')">Détail du Tirage</button>
+                            </div>
+                        </div>`;
+                    container.appendChild(card);
+                });
+            } catch (error) {
+                console.error("Erreur lors du chargement des derniers tirages", error);
+            }
+        }
+        loadLast20();
+
+        function viewDetails(date) {
+            alert("Détails du tirage du " + date);
+        }
+    </script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Résultats Loto</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment/min/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment-timezone/builds/moment-timezone-with-data.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .lottery-ball {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            border-radius: 50%;
+            background: blue;
+            color: white;
+            text-align: center;
+            font-weight: bold;
+            margin: 5px;
+        }
+        .lucky-number {
+            background: red;
+        }
+        .card-lottery {
+            margin: 10px;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container mt-4">
+        <h1 class="text-center">Résultats du Loto</h1>
+        <p class="text-center" id="current-time"></p>
+        <div class="text-center my-3">
+            <h2>Prochain tirage dans : <span id="countdown"></span></h2>
+        </div>
+        <br>
+        <br>
+        <div class="text-center my-3">
+            <h2>Historique des tirages: </h2>
+        </div>
+
+        <!-- Modal Détail du Tirage -->
+        <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="detailModalLabel">Détail du Tirage</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="modalBody">
+                        Chargement...
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-3 g-4" id="last20"></div>
+
+        <h3 class="mt-4">Rechercher un tirage</h3>
+        <div class="input-group mb-3">
+            <input type="date" id="startDate" class="form-control">
+            <input type="date" id="endDate" class="form-control">
+            <button class="btn btn-primary" onclick="searchTirages()">Rechercher</button>
+        </div>
+        <div id="searchResults" class="row row-cols-1 row-cols-md-3 g-4"></div>
+    </div>
+
+    <script>
+        function updateTime() {
+            document.getElementById('current-time').innerText = 'Heure de Paris : ' + moment().tz("Europe/Paris").format("HH:mm:ss");
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        function startCountdown() {
+            setInterval(() => {
+                let now = moment().tz("Europe/Paris");
+                let nextDraw = moment().tz("Europe/Paris").add(2, 'days').set({ hour: 20, minute: 0, second: 0 });
+                let diff = moment.duration(nextDraw.diff(now));
+                document.getElementById("countdown").innerText = `${diff.days()}j ${diff.hours()}h ${diff.minutes()}m ${diff.seconds()}s`;
+            }, 1000);
+        }
+        startCountdown();
+
+        function getDayName(dateString) {
+            let [day, month, year] = dateString.split("/").map(Number);
+            let date = new Date(year, month - 1, day);
+            let jours = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
+            return jours[date.getDay()];
+        }
+
+        async function loadLast20() {
+            try {
+                let response = await axios.get("http://localhost:8082/api/historique/last20");
+                let data = response.data;
+                let container = document.getElementById("last20");
+                container.innerHTML = "";
+                data.forEach(draw => {
+                    let dayName = getDayName(draw.dateDeTirage);
+                    let card = document.createElement("div");
+                    card.className = "col";
+                    card.innerHTML = `
+                        <div class="card card-lottery text-center">
+                            <div class="card-body">
+                                <h5>${dayName} ${draw.dateDeTirage}</h5>
+                                <div>
+                                    <span class="lottery-ball">${draw.boule1}</span>
+                                    <span class="lottery-ball">${draw.boule2}</span>
+                                    <span class="lottery-ball">${draw.boule3}</span>
+                                    <span class="lottery-ball">${draw.boule4}</span>
+                                    <span class="lottery-ball">${draw.boule5}</span>
+                                    <span class="lottery-ball lucky-number">${draw.numeroChance}</span>
+                                </div>
+                                <button class="btn btn-outline-primary mt-2" onclick="viewDetails('${draw.dateDeTirage}')">Détail du Tirage</button>
+                            </div>
+                        </div>`;
+                    container.appendChild(card);
+                });
+            } catch (error) {
+                console.error("Erreur lors du chargement des derniers tirages", error);
+            }
+        }
+        loadLast20();
+
+        async function viewDetails(date) {
+            let formattedDate = moment(date, "DD/MM/YYYY").format("YYYY-MM-DD");
+            let url = `http://localhost:8082/api/historique/last20/Detail/tirage/${formattedDate}`;
+
+            try {
+                let response = await axios.get(url);
+                let data = response.data;
+                let modalBody = document.getElementById("modalBody");
+                modalBody.innerHTML = `
+                    <h4>Tirage du ${data.dateDeTirage}</h4>
+                    <div>
+                        <span class="lottery-ball">${data.boule1}</span>
+                        <span class="lottery-ball">${data.boule2}</span>
+                        <span class="lottery-ball">${data.boule3}</span>
+                        <span class="lottery-ball">${data.boule4}</span>
+                        <span class="lottery-ball">${data.boule5}</span>
+                        <span class="lottery-ball lucky-number">${data.numeroChance}</span>
+                    </div>
+                    <p><strong>Jackpot annoncé :</strong> ${data.rapportDuRang1} €</p>
+                    <p><strong>Gagnants Rang 1 :</strong> ${data.nombreDeGagnantAuRang1}</p>`;
+                $("#detailModal").modal("show");
+            } catch (error) {
+                console.error("Erreur lors du chargement des détails du tirage", error);
+                document.getElementById("modalBody").innerHTML = "Erreur lors du chargement des données.";
+            }
+        }
+    </script>
+</body>
+</html>
+

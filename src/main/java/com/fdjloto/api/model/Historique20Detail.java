@@ -2,41 +2,54 @@ package com.fdjloto.api.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
-
-// @Document(collection = "historique")
-// public class LotoResult {
+@Document(collection = "historique")
+public class Historique20Detail {
 //     @Id
 //     private String id;
-//     private String date;
-//     private String numeros;
-//     private String etoiles;
 
-//     public LotoResult() {}
+//     private int anneeNumeroDeTirage;
 
-//     public LotoResult(String date, String numeros, String etoiles) {
-//         this.date = date;
-//         this.numeros = numeros;
-//         this.etoiles = etoiles;
-//     }
+//     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Europe/Paris")
+//     private Date dateDeTirage;
 
-//     // Getters et Setters
-//     public String getDate() { return date; }
-//     public void setDate(String date) { this.date = date; }
+//     private String dateDeForclusion;
+//     private int boule1, boule2, boule3, boule4, boule5, numeroChance;
+//     private String combinaisonGagnante;
 
-//     public String getNumeros() { return numeros; }
-//     public void setNumeros(String numeros) { this.numeros = numeros; }
+//     private int boule1SecondTirage, boule2SecondTirage, boule3SecondTirage, boule4SecondTirage, boule5SecondTirage;
+//     private String combinaisonGagnanteSecondTirage;
 
-//     public String getEtoiles() { return etoiles; }
-//     public void setEtoiles(String etoiles) { this.etoiles = etoiles; }
+//     private int nombreDeGagnantAuRang1, nombreDeGagnantAuRang2, nombreDeGagnantAuRang3;
+//     private double rapportDuRang1, rapportDuRang2, rapportDuRang3;
+
+//     private String codesGagnants;
+//     private int numeroJokerplus;
+//     private String devise;
+
+//     // ✅ Constructeur vide
+//     public Historique20Detail() {}
+
+//     // ✅ Getters et Setters
+//     public String getId() { return id; }
+//     public void setId(String id) { this.id = id; }
+
+//     public Date getDateDeTirage() { return dateDeTirage; }
+//     public void setDateDeTirage(Date dateDeTirage) { this.dateDeTirage = dateDeTirage; }
+
+//     public String getCombinaisonGagnante() { return combinaisonGagnante; }
+//     public void setCombinaisonGagnante(String combinaisonGagnante) { this.combinaisonGagnante = combinaisonGagnante; }
+
+//     public int getNumeroJokerplus() { return numeroJokerplus; }
+//     public void setNumeroJokerplus(int numeroJokerplus) { this.numeroJokerplus = numeroJokerplus; }
+
+//     public String getCodesGagnants() { return codesGagnants; }
+//     public void setCodesGagnants(String codesGagnants) { this.codesGagnants = codesGagnants; }
 // }
-
-@Document(collection = "historique")
-public class LotoResult {
-    @Id
+@Id
     private String id;
     private int anneeNumeroDeTirage;
     private String jourDeTirage;
@@ -91,7 +104,7 @@ public class LotoResult {
     private String devise;
 
 	// ✅ Constructeur vide (nécessaire pour Spring Boot)
-	public LotoResult() {}
+	public Historique20Detail() {}
 
 	// ✅ Getters et Setters
 	public String getId() { return id; }
