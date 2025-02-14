@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
+@CrossOrigin(origins = "http://127.0.0.1:5500") // 🔥 Autorise CORS pour Live Server
 @RestController
 @RequestMapping("/api/historique/last20/Detail")
 public class Historique20DetailController {
