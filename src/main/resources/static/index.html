@@ -44,12 +44,29 @@
             <h2>Historique des tirages: </h2>
         </div>
 
-        <!-- Modal Détail du Tirage -->
+        <!-- Modal Détail du Tirage
         <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="detailModalLabel">Détail du Tirage</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="modalBody">
+                        Chargement...
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+        <!-- Modal Détail du Tirage -->
+        <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl"> <!-- Largeur augmentée -->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title fw-bold" id="detailModalLabel">Détail du Tirage</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body" id="modalBody">
@@ -144,8 +161,6 @@
                 console.log("Requête API vers :", apiUrl);
 
                 let response = await axios.get(apiUrl);
-                console.log("Réponse API :", response); // ✅ Affiche toute la réponse
-
                 let data = response.data;
 
                 if (!data) {
@@ -154,39 +169,83 @@
                 }
 
                 let modalContent = `
-                    <h5 class="text-center text-primary">Tirage du ${data.dateDeTirage} (${data.jourDeTirage})</h5>
-                    <div class="text-center my-3">
-                        <h6>Numéros tirés :</h6>
-                        <div>
-                            <span class="lottery-ball">${data.boule1}</span>
-                            <span class="lottery-ball">${data.boule2}</span>
-                            <span class="lottery-ball">${data.boule3}</span>
-                            <span class="lottery-ball">${data.boule4}</span>
-                            <span class="lottery-ball">${data.boule5}</span>
-                            <span class="lottery-ball lucky-number">${data.numeroChance}</span>
+                    <div class="container-fluid">
+                        <h4 class="text-center text-danger fw-bold">Résultat Loto du ${data.jourDeTirage} ${data.dateDeTirage}</h4>
+                        <div class="row">
+                            <div class="col-md-6 text-center">
+                                <h5 class="fw-bold">Le tirage</h5>
+                                <div class="mb-3">
+                                    <span class="lottery-ball">${data.boule1}</span>
+                                    <span class="lottery-ball">${data.boule2}</span>
+                                    <span class="lottery-ball">${data.boule3}</span>
+                                    <span class="lottery-ball">${data.boule4}</span>
+                                    <span class="lottery-ball">${data.boule5}</span>
+                                    <span class="lottery-ball lucky-number">${data.numeroChance}</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 text-center">
+                                <h5 class="fw-bold">Second tirage</h5>
+                                <div class="mb-3">
+                                    <span class="lottery-ball">${data.boule1SecondTirage}</span>
+                                    <span class="lottery-ball">${data.boule2SecondTirage}</span>
+                                    <span class="lottery-ball">${data.boule3SecondTirage}</span>
+                                    <span class="lottery-ball">${data.boule4SecondTirage}</span>
+                                    <span class="lottery-ball">${data.boule5SecondTirage}</span>
+                                </div>
+                            </div>
                         </div>
+
+                        <h5 class="text-center text-primary fw-bold">Jackpot annoncé : <span class="text-dark"> ${data.rapportDuRang1.toLocaleString()} €</span></h5>
+
+                        <hr>
+
+                        <h5 class="text-center fw-bold">Rapports du tirage :</h5>
+                        <div class="table-responsive">
+                            <table class="table table-striped text-center">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Rang</th>
+                                        <th>Gagnants</th>
+                                        <th>Gain (€)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>1</td><td>${data.nombreDeGagnantAuRang1}</td><td>${data.rapportDuRang1.toLocaleString()}</td></tr>
+                                    <tr><td>2</td><td>${data.nombreDeGagnantAuRang2}</td><td>${data.rapportDuRang2.toLocaleString()}</td></tr>
+                                    <tr><td>3</td><td>${data.nombreDeGagnantAuRang3}</td><td>${data.rapportDuRang3.toLocaleString()}</td></tr>
+                                    <tr><td>4</td><td>${data.nombreDeGagnantAuRang4}</td><td>${data.rapportDuRang4.toLocaleString()}</td></tr>
+                                    <tr><td>5</td><td>${data.nombreDeGagnantAuRang5}</td><td>${data.rapportDuRang5.toLocaleString()}</td></tr>
+                                    <tr><td>6</td><td>${data.nombreDeGagnantAuRang6}</td><td>${data.rapportDuRang6.toLocaleString()}</td></tr>
+                                    <tr><td>7</td><td>${data.nombreDeGagnantAuRang7}</td><td>${data.rapportDuRang7.toLocaleString()}</td></tr>
+                                    <tr><td>8</td><td>${data.nombreDeGagnantAuRang8}</td><td>${data.rapportDuRang8.toLocaleString()}</td></tr>
+                                    <tr><td>9</td><td>${data.nombreDeGagnantAuRang9}</td><td>${data.rapportDuRang9.toLocaleString()}</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <hr>
+
+                        <h5 class="text-center fw-bold">Joker+ : <span class="text-primary">${data.numeroJokerplus}</span></h5>
+
+                        <hr>
+                        <h5 class="text-center fw-bold">Codes gagnants :</h5>
+                        <p class="text-center">${data.codesGagnants.replace(/,/g, ", ")}</p>
                     </div>
-                    <hr>
-                    <h6>Rapports du tirage :</h6>
-                    <ul class="list-group">
-                        <li class="list-group-item">Gagnants Rang 1 : ${data.nombreDeGagnantAuRang1} (Gain : ${data.rapportDuRang1.toLocaleString()} €)</li>
-                        <li class="list-group-item">Gagnants Rang 2 : ${data.nombreDeGagnantAuRang2} (Gain : ${data.rapportDuRang2.toLocaleString()} €)</li>
-                        <li class="list-group-item">Gagnants Rang 3 : ${data.nombreDeGagnantAuRang3} (Gain : ${data.rapportDuRang3.toLocaleString()} €)</li>
-                    </ul>
                 `;
 
                 document.getElementById("modalBody").innerHTML = modalContent;
 
-                // **FORCE L'AFFICHAGE DU MODAL**
                 let modalElement = document.getElementById('detailModal');
                 let modalInstance = new bootstrap.Modal(modalElement);
-                modalInstance.show(); // Force l’ouverture du modal
+                modalInstance.show(); // Affichage du modal amélioré
 
             } catch (error) {
                 console.error("Erreur lors de la récupération des détails du tirage", error);
                 document.getElementById("modalBody").innerHTML = "<p class='text-center text-danger'>Erreur lors du chargement des détails.</p>";
             }
         }
+
+
 
 
 

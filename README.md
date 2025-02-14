@@ -501,3 +501,4 @@ ResultFetcherService.java (Service pour récupérer et mettre à jour les résul
 ![alt text](image-7.png)
 ![alt text](image-8.png)
 ![alt text](image-9.png)
+![alt text](image-10.png)
