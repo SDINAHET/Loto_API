@@ -16,7 +16,8 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/tirages")
-@CrossOrigin(origins = "*")
+// @CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://127.0.0.1:5500") // 🔥 Autorise CORS pour Live Server
 public class TirageController {
 
     private final LotoRepository lotoRepository;

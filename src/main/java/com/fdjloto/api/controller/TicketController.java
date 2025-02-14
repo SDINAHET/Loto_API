@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/tickets")
+@CrossOrigin(origins = "http://127.0.0.1:5500") // 🔥 Autorise CORS pour Live Server
 public class TicketController {
 
     @Autowired

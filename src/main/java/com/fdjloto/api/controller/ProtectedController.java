@@ -17,6 +17,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/protected")
 @SecurityRequirement(name = "bearerAuth")  // 🔥 Swagger sait que ce contrôleur est sécurisé
+@CrossOrigin(origins = "http://127.0.0.1:5500") // 🔥 Autorise CORS pour Live Server
 public class ProtectedController {
 
     @GetMapping("/userinfo")
