@@ -168,13 +168,14 @@
                     return;
                 }
 
+                // Génération du contenu du modal avec un container pour le tri
                 let modalContent = `
                     <div class="container-fluid">
                         <h4 class="text-center text-danger fw-bold">Résultat Loto du ${data.jourDeTirage} ${data.dateDeTirage}</h4>
                         <div class="row">
                             <div class="col-md-6 text-center">
                                 <h5 class="fw-bold">Le tirage</h5>
-                                <div class="mb-3">
+                                <div id="numbersContainer" class="mb-3">
                                     <span class="lottery-ball">${data.boule1}</span>
                                     <span class="lottery-ball">${data.boule2}</span>
                                     <span class="lottery-ball">${data.boule3}</span>
@@ -182,6 +183,9 @@
                                     <span class="lottery-ball">${data.boule5}</span>
                                     <span class="lottery-ball lucky-number">${data.numeroChance}</span>
                                 </div>
+                                <button id="toggleSortButton" class="btn btn-outline-primary btn-sm" onclick="toggleSortNumbers(${data.boule1}, ${data.boule2}, ${data.boule3}, ${data.boule4}, ${data.boule5}, ${data.numeroChance})">
+                                    Trier les numéros
+                                </button>
                             </div>
                             <div class="col-md-6 text-center">
                                 <h5 class="fw-bold">Second tirage</h5>
@@ -244,6 +248,29 @@
                 document.getElementById("modalBody").innerHTML = "<p class='text-center text-danger'>Erreur lors du chargement des détails.</p>";
             }
         }
+
+        // ✅ Fonction pour trier les numéros ou les remettre dans l'ordre original
+        let isSorted = false;
+        function toggleSortNumbers(...numbers) {
+            let numeroChance = numbers.pop(); // Extrait le numéro chance de la liste
+            let sortedNumbers;
+
+            if (!isSorted) {
+                sortedNumbers = [...numbers].sort((a, b) => a - b);
+                document.getElementById("toggleSortButton").innerText = "Remettre l'ordre original";
+            } else {
+                sortedNumbers = numbers;
+                document.getElementById("toggleSortButton").innerText = "Trier les numéros";
+            }
+
+            isSorted = !isSorted;
+
+            let sortedHTML = sortedNumbers.map(num => `<span class="lottery-ball">${num}</span>`).join('');
+            document.getElementById("numbersContainer").innerHTML = sortedHTML + `<span class="lottery-ball lucky-number">${numeroChance}</span>`;
+        }
+
+
+
 
 
 
