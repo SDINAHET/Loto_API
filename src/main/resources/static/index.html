@@ -6,6 +6,11 @@
     <title>Résultats Loto</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="loto_tracker.png">
+
+
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/moment/min/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/moment-timezone/builds/moment-timezone-with-data.min.js"></script>
@@ -31,14 +36,206 @@
         .card-lottery {
             margin: 10px;
         }
+        .logo {
+            width: 120px;
+            height: 120px;
+        }
+
+        .header {
+            background-color: #212529;
+            padding: 10px 20px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        /* 📌 Conteneur principal du compte à rebours */
+        .countdown-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: #ffeb3b;
+            text-shadow: 4px 4px 12px rgba(255, 215, 0, 1);
+            padding: 20px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, rgba(255, 87, 34, 0.95), rgba(255, 193, 7, 0.95));
+            box-shadow: 0px 0px 25px rgba(255, 87, 34, 0.8);
+            text-align: center;
+            width: fit-content;
+            margin: auto;
+            position: relative;
+            overflow: hidden;
+            animation: glow 2s infinite alternate, bounce 2s infinite ease-in-out;
+        }
+
+        /* 🌀 Arrière-plan animé avec GIF scintillant */
+        .countdown-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://media.giphy.com/media/3o6Zt481isNVuQI1l6/giphy.gif') no-repeat center center;
+            background-size: cover;
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        /* 🔥 Ajout d’un coq dansant 🐓 */
+        .countdown-container::after {
+            content: "🐓";
+            position: absolute;
+            font-size: 4rem;
+            top: -20px;
+            right: 10px;
+            animation: coqFlap 1s infinite alternate;
+        }
+
+        /* 🕺 Animation du coq */
+        @keyframes coqFlap {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(10deg); }
+        }
+
+        /* 🐇 Ajout d’un lapin ultra-rapide */
+        .lapin {
+            position: absolute;
+            left: -50px;
+            bottom: 0;
+            font-size: 3.5rem;
+           animation: lapinJump 2s infinite ease-in-out;
+        }
+
+        /* 🐰 Animation du lapin bondissant */
+        @keyframes lapinJump {
+            0%, 100% { left: -50px; bottom: 0; }
+            50% { left: 50%; bottom: 80px; }
+        }
+
+        /* 🎡 Roue de la fortune ultra-dynamique */
+        .roulette {
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+            font-size: 5rem;
+            animation: spinRoulette 3s infinite linear;
+        }
+
+        /* 🔥 Animation de rotation rapide */
+        @keyframes spinRoulette {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 🎇 Ajout de confettis GIF */
+        .confetti {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: url('https://media.giphy.com/media/3oz8xWz8boEEUXNwhW/giphy.gif') no-repeat center center;
+            background-size: cover;
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        /* 🎆 Effet lumineux pour chaque chiffre */
+        .countdown-container span {
+            display: inline-block;
+            transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
+            font-size: 4rem;
+            font-weight: bold;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 12px;
+            color: #ffffff;
+            text-shadow: 4px 4px 12px rgba(255, 215, 0, 1);
+            animation: flash 1s infinite alternate, fireGlow 1.5s infinite ease-in-out;
+        }
+
+        /* 🔥 Animation scintillante */
+        @keyframes flash {
+            0% { color: #ffeb3b; text-shadow: 5px 5px 20px rgba(255, 215, 0, 1); }
+            100% { color: #ffffff; text-shadow: 5px 5px 30px rgba(255, 193, 7, 1); }
+        }
+
+        /* 🔥 Ajout d’un effet de flammes */
+        @keyframes fireGlow {
+            0% { box-shadow: 0px 0px 10px rgba(255, 87, 34, 0.7); }
+            100% { box-shadow: 0px 0px 25px rgba(255, 193, 7, 1); }
+        }
+
+        /* 🔄 Effet de vibration des secondes */
+        .countdown-container span:nth-child(5) {
+            animation: shake 1s infinite;
+        }
+
+        /* 🔥 Animation de secousse */
+        @keyframes shake {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+            75% { transform: rotate(-5deg); }
+            100% { transform: rotate(5deg); }
+        }
+
+        /* 🎱 Boules animées en fond */
+        .boule {
+            position: absolute;
+            bottom: -50px;
+            width: 60px;
+            height: 60px;
+            background-color: gold;
+            border-radius: 50%;
+            box-shadow: 0px 0px 15px rgba(255, 215, 0, 1);
+            animation: roll 6s infinite linear;
+        }
+
+        /* 🏀 Animation des boules en mouvement */
+        @keyframes roll {
+            0% { left: 0; bottom: -50px; }
+            50% { left: 50%; bottom: 120px; }
+            100% { left: 100%; bottom: -50px; }
+        }
+
+
+
+
+
     </style>
 </head>
 <body class="bg-light">
+    <!-- HEADER -->
+    <header class="header d-flex justify-content-between align-items-center p-3 bg-dark text-white">
+        <div class="d-flex align-items-center">
+            <img src="loto_tracker.png" alt="Logo Loto" class="logo">
+            <h1 class="m-0 ms-2">Tracker du Loto Français</h1>
+        </div>
+        <button class="btn btn-outline-light">
+            <i class="fas fa-user"></i> Se connecter
+        </button>
+    </header>
     <div class="container mt-4">
         <h1 class="text-center">Résultats du Loto</h1>
         <p class="text-center" id="current-time"></p>
         <div class="text-center my-3">
-            <h2>Prochain tirage dans : <span id="countdown"></span></h2>
+            <h2>Prochain tirage dans :
+                <span id="countdown" class="countdown-container"></span></h2>
+                <!-- <div class="countdown-container"> -->
+                    <!-- <span id="days">00</span>j
+                    <span id="hours">00</span>h
+                    <span id="minutes">00</span>m
+                    <span id="seconds">00</span>s -->
+                <!-- </div> -->
+                <!-- <div class="lapin">🐇</div>
+                <div class="roulette">🎡</div>
+                <div class="confetti"></div>
+                <div class="boule"></div> -->
+
         </div>
         <div class="text-center my-3">
             <button class="btn btn-lg btn-primary" onclick="showPrediction()">
@@ -133,10 +330,15 @@
                 let now = moment().tz("Europe/Paris");
                 let nextDraw = moment().tz("Europe/Paris").add(2, 'days').set({ hour: 20, minute: 0, second: 0 });
                 let diff = moment.duration(nextDraw.diff(now));
-                document.getElementById("countdown").innerText = `${diff.days()}j ${diff.hours()}h ${diff.minutes()}m ${diff.seconds()}s`;
+
+                // Mise à jour du texte avec un effet dynamique
+                document.getElementById("countdown").innerText =
+                    `${diff.days()}j ${diff.hours()}h ${diff.minutes()}m ${diff.seconds()}s`;
+
             }, 1000);
         }
         startCountdown();
+
 
         function getDayName(dateString) {
             let [day, month, year] = dateString.split("/").map(Number);
