@@ -255,6 +255,7 @@
                                     <tr><td>8</td><td>${data.nombreDeGagnantAuRang8}</td><td>${data.rapportDuRang8.toLocaleString()}</td></tr>
                                     <tr><td>9</td><td>${data.nombreDeGagnantAuRang9}</td><td>${data.rapportDuRang9.toLocaleString()}</td></tr>
                                 </tbody>
+                                </tbody>
                             </table>
                         </div>
 
@@ -263,8 +264,53 @@
                         <h5 class="text-center fw-bold">Joker+ : <span class="text-primary">${data.numeroJokerplus}</span></h5>
 
                         <hr>
-                        <h5 class="text-center fw-bold">Codes gagnants :</h5>
-                        <p class="text-center">${data.codesGagnants.replace(/,/g, ", ")}</p>
+                        <!-- <h5 class="text-center fw-bold">Codes gagnants :</h5> -->
+                        <!-- <p class="text-center fw-bold">${data.codesGagnants.replace(/,/g, ", ")}</p> -->
+                         <h5 class="text-center fw-bold">Codes gagnants :</h5>
+                        <div class="winning-codes-container text-center">
+                            ${data.codesGagnants.split(',').map(code =>
+                                `<span class="winning-code">${code.trim()}</span>`
+                            ).join('')}
+                        </div>
+                        <style>
+                        .lottery-ball {
+                            display: inline-block;
+                            width: 40px;
+                            height: 40px;
+                            line-height: 40px;
+                            text-align: center;
+                            font-size: 1.2em;
+                            font-weight: bold;
+                            color: white;
+                            border-radius: 50%;
+                            margin: 5px;
+                        }
+                        .blue-ball {
+                            background-color: #007bff; /* Bleu */
+                        }
+                        .red-ball {
+                            background-color: #dc3545; /* Rouge */
+                        }
+                        .winning-codes-container {
+                            display: flex;
+                            flex-wrap: wrap; /* Permet de passer à la ligne si nécessaire */
+                            gap: 10px; /* Espacement entre chaque code */
+                            justify-content: center; /* Centrage des éléments */
+                        }
+
+                        .winning-code {
+                            background-color: orange; /* Fond orange */
+                            color: white; /* Texte blanc */
+                            padding: 8px 12px; /* Espacement autour du texte */
+                            border-radius: 5px; /* Coins arrondis */
+                            font-size: 1.1em; /* Ajustement de la taille du texte */
+                            font-weight: bold; /* Texte en gras */
+                            display: inline-block; /* Empêche l'élargissement */
+                        }
+
+                        </style>
+
+
                     </div>
                 `;
 
@@ -300,10 +346,63 @@
             document.getElementById("numbersContainer").innerHTML = sortedHTML + `<span class="lottery-ball lucky-number">${numeroChance}</span>`;
         }
 
+
         document.addEventListener("DOMContentLoaded", function () {
             console.log("✅ DOM chargé, exécution des scripts...");
             loadLast20();
         });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("predictionButton").addEventListener("click", function () {
+                let paypalUrl = "https://www.paypal.com/paypalme/TON_COMPTE_PAYPAL/5"; // Remplace par ton lien PayPal
+
+                let confirmation = confirm("Pour accéder à la prédiction du prochain tirage, un paiement de 5€ est requis. Voulez-vous continuer ?");
+                if (confirmation) {
+                    // 🔹 Ouvrir PayPal dans un nouvel onglet
+                    let paypalWindow = window.open(paypalUrl, "_blank");
+
+                    if (!paypalWindow) {
+                        alert("⚠️ Impossible d'ouvrir PayPal. Vérifiez votre bloqueur de pop-ups.");
+                        return;
+                    }
+
+                    // 🔹 Afficher un message avec un décompte sur la page principale
+                    let countdownMessage = document.createElement("div");
+                    countdownMessage.innerHTML = `<p>🕒 Vous êtes sur PayPal. Retour au tirage dans <span id="countdown">10</span> secondes...</p>`;
+                    countdownMessage.style.position = "fixed";
+                    countdownMessage.style.top = "20px";
+                    countdownMessage.style.left = "50%";
+                    countdownMessage.style.transform = "translateX(-50%)";
+                    countdownMessage.style.background = "black";
+                    countdownMessage.style.color = "white";
+                    countdownMessage.style.padding = "10px";
+                    countdownMessage.style.borderRadius = "5px";
+                    document.body.appendChild(countdownMessage);
+
+                    // 🔹 Décompte avant la fermeture de PayPal et retour au modal
+                    let countdown = 10;
+                    let countdownInterval = setInterval(() => {
+                        countdown--;
+                        document.getElementById("countdown").textContent = countdown;
+                    }, 1000);
+
+                    setTimeout(() => {
+                        clearInterval(countdownInterval);
+                        document.body.removeChild(countdownMessage); // Supprimer le message
+
+                        if (!paypalWindow.closed) {
+                            paypalWindow.close(); // Ferme la fenêtre PayPal après 10 secondes
+                        }
+
+                        // ✅ Affichage du modal Bootstrap de prédiction
+                        let modal = new bootstrap.Modal(document.getElementById("predictionModal"));
+                        modal.show();
+
+                    }, 10000);
+                }
+            });
+        });
+
 
 
         /**
@@ -321,7 +420,7 @@
                 let data = response.data;
 
                 // 🔍 Vérification des données reçues
-                if (!data || !data.probableNumbers || !data.stdDevNumbers) {
+                if (!data || !Array.isArray(data.probableNumbers) || typeof data.stdDevNumbers !== "object") {
                     showErrorModal("⚠️ Les données de prédiction sont invalides !");
                     return;
                 }
@@ -346,7 +445,7 @@
                 predictedChanceEl.innerHTML = `<span class="lottery-ball lucky-number">${data.probableChance}</span>`;
 
                 // 🆕 Suppression de l'ancien graphique s'il existe
-                if (window.myChart) {
+                if (window.myChart && typeof window.myChart.destroy === "function") {
                     window.myChart.destroy();
                 }
 
@@ -398,6 +497,24 @@
                 showErrorModal("⚠️ Impossible de charger les prédictions. Vérifiez votre serveur.");
             }
         }
+
+        // 🎯 Ajouter l'event listener UNE SEULE FOIS
+        document.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("predictionButton").addEventListener("click", function () {
+                let paypalUrl = "https://www.paypal.com/paypalme/TON_COMPTE_PAYPAL/5"; // Remplace par ton lien PayPal
+
+                let confirmation = confirm("Pour accéder à la prédiction du prochain tirage, un paiement de 5€ est requis. Voulez-vous continuer ?");
+                if (confirmation) {
+                    window.location.href = paypalUrl;
+
+                    // 🚨 Mieux vaut gérer la redirection via PayPal plutôt qu'un setTimeout !
+                    setTimeout(() => {
+                        window.location.href = "prediction.html"; // Remplace par l'URL réelle de la page de prédiction
+                    }, 10000);
+                }
+            });
+        });
+
 
 
 

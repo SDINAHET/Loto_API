@@ -1301,6 +1301,229 @@
 //     }
 // }
 
+// package com.fdjloto.api.service;
+
+// import java.io.BufferedReader;
+// import java.io.IOException;
+// import java.io.InputStream;
+// import java.io.InputStreamReader;
+// import java.net.HttpURLConnection;
+// import java.net.URL;
+// import java.nio.charset.StandardCharsets;
+// import java.util.ArrayList;
+// import java.util.Arrays;
+// import java.util.List;
+// import java.text.SimpleDateFormat;
+// import java.util.Date;
+// import java.util.Locale;
+
+
+// import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+// import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
+// import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.scheduling.annotation.Scheduled;
+// import org.springframework.stereotype.Service;
+
+// import com.fdjloto.api.model.LotoResult;
+// import com.fdjloto.api.repository.LotoRepository;
+// import com.opencsv.CSVParser;
+// import com.opencsv.CSVParserBuilder;
+// import com.opencsv.CSVReader;
+// import com.opencsv.CSVReaderBuilder;
+// import com.opencsv.exceptions.CsvException;
+
+// @Service
+// public class LotoScraperService {
+
+//     private static final String ZIP_URL = "https://www.sto.api.fdj.fr/anonymous/service-draw-info/v3/documentations/1a2b3c4d-9876-4562-b3fc-2c963f66afp6";
+
+//     @Autowired
+//     private LotoRepository lotoRepository;
+
+//     // @Scheduled(fixedRate = 3600000)  // Exécution toutes les heures
+// 	// @Scheduled(fixedDelay = 300000)  // Attendre 5 minutes après la fin de l'exécution précédente
+// 	@Scheduled(fixedRate = 300000)  // Exécution toutes les 5 minutes
+//     public void scrapeData() {
+//         System.out.println("🟢 Démarrage du scraping...");
+
+//         System.out.println("🟡 Test de connexion à MongoDB...");
+//         try {
+//             lotoRepository.count();
+//             System.out.println("✅ Connexion MongoDB réussie !");
+//         } catch (Exception e) {
+//             System.err.println("🚨 Erreur de connexion MongoDB : " + e.getMessage());
+//             return;
+//         }
+
+//         try {
+//             System.out.println("🟡 Téléchargement du fichier ZIP...");
+//             URL url = new URL(ZIP_URL);
+//             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+//             connection.setRequestMethod("GET");
+
+//             if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+//                 System.err.println("🚨 Erreur HTTP : " + connection.getResponseCode());
+//                 return;
+//             }
+
+//             try (InputStream inputStream = connection.getInputStream();
+//                  ZipArchiveInputStream zipInputStream = new ZipArchiveInputStream(inputStream)) {
+
+//                 ZipArchiveEntry entry;
+//                 while ((entry = zipInputStream.getNextZipEntry()) != null) {
+//                     if (entry.getName().endsWith(".csv")) {
+//                         System.out.println("✅ Fichier trouvé et extrait : " + entry.getName());
+//                         parseCSV(zipInputStream);
+//                         break;
+//                     }
+//                 }
+//             }
+//         } catch (IOException e) {
+//             System.err.println("🚨 Erreur lors du téléchargement : " + e.getMessage());
+//         }
+//     }
+
+// 	private int parseInteger(String value, int defaultValue) {
+// 		try {
+// 			return Integer.parseInt(value.trim());
+// 		} catch (NumberFormatException | NullPointerException e) {
+// 			// System.err.println("🚨 Erreur de conversion en entier : " + value);
+// 			return defaultValue;
+// 		}
+// 	}
+
+// 	private double parseDouble(String value, double defaultValue) {
+// 		try {
+// 			if (value == null || value.trim().isEmpty()) {
+// 				return defaultValue;
+// 			}
+// 			return Double.parseDouble(value.replace(" ", "").replace(",", ".")); // Remplacement "," -> "." pour décimaux
+// 		} catch (NumberFormatException e) {
+// 			System.err.println("🚨 Erreur de conversion en double : " + value);
+// 			return defaultValue;
+// 		}
+// 	}
+
+//     private void parseCSV(InputStream inputStream) {
+// 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+
+// 			CSVParser csvParser = new CSVParserBuilder().withSeparator(';').build();
+// 			CSVReader csvReader = new CSVReaderBuilder(reader).withCSVParser(csvParser).build();
+
+// 			List<String[]> records = csvReader.readAll();
+// 			for (String[] row : records) {
+// 				if (row.length > 49) { // Ignore la dernière colonne si elle est vide
+// 					row = Arrays.copyOf(row, 49);
+// 				}
+// 			}
+// 			System.out.println("🟡 Nombre total de lignes : " + records.size());
+
+// 			if (records.isEmpty()) {
+// 				System.out.println("🚨 Le fichier CSV est vide.");
+// 				return;
+// 			}
+
+// 			System.out.println("🟡 Suppression des anciennes données MongoDB...");
+// 			lotoRepository.deleteAll();
+
+// 			if (records.get(0).length < 50) {
+// 				System.err.println("🚨 Erreur : Le CSV contient " + records.get(0).length + " colonnes au lieu de 50.");
+// 				return;
+// 			}
+
+// 			List<LotoResult> lotoResults = new ArrayList<>();
+// 			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE); // ✅ Format correct
+// 			for (int i = 1; i < records.size(); i++) {
+// 				String[] row = records.get(i);
+
+// 				if (row.length < 49) {
+// 					System.err.println("🚨 Ligne " + i + " ignorée (trop courte, seulement " + row.length + " colonnes).");
+// 					continue;
+// 				}
+
+// 				if (i <= 5) {
+// 					System.out.println("🔹 Ligne " + i + " : " + Arrays.toString(row));
+// 				}
+
+// 				try {
+//                     LotoResult lotoResult = new LotoResult();
+
+// 					lotoResult.setAnneeNumeroDeTirage(parseInteger(row[0], 0));
+// 					lotoResult.setJourDeTirage(row[1]);
+
+// 					lotoResult.setDateDeTirage(dateFormat.parse(row[2])); // Correction ici    string --> date
+
+// 					lotoResult.setDateDeForclusion(row[3]);
+// 					lotoResult.setBoule1(parseInteger(row[4], 0));
+// 					lotoResult.setBoule2(parseInteger(row[5], 0));
+// 					lotoResult.setBoule3(parseInteger(row[6], 0));
+// 					lotoResult.setBoule4(parseInteger(row[7], 0));
+// 					lotoResult.setBoule5(parseInteger(row[8], 0));
+// 					lotoResult.setNumeroChance(parseInteger(row[9], 0));
+// 					lotoResult.setCombinaisonGagnante(row[10]);
+// 					lotoResult.setNombreDeGagnantAuRang1(parseInteger(row[11], 0));
+// 					lotoResult.setRapportDuRang1(parseDouble(row[12], 0.0));
+
+// 					// Gestion dynamique des autres rangs
+// 					// for (int j = 13; j <= 28; j += 2) {
+// 					// 	int rank = ((j - 11) / 2 + 2);
+// 					// 	lotoResult.getClass().getMethod("setNombreDeGagnantAuRang" + rank, int.class)
+// 					// 			.invoke(lotoResult, parseInteger(row[j], 0));
+// 					// 	lotoResult.getClass().getMethod("setRapportDuRang" + rank, double.class)
+// 					// 			.invoke(lotoResult, parseDouble(row[j + 1], 0.0));
+// 					// }
+// 					for (int j = 13; j <= 28 && j < row.length; j += 2) { // Vérifie que j reste dans les limites
+// 						int rank = ((j - 11) / 2 + 2);
+// 						try {
+// 							lotoResult.getClass().getMethod("setNombreDeGagnantAuRang" + rank, int.class)
+// 									.invoke(lotoResult, parseInteger(row[j], 0));
+// 							lotoResult.getClass().getMethod("setRapportDuRang" + rank, double.class)
+// 									.invoke(lotoResult, parseDouble(row[j + 1], 0.0));
+// 						} catch (NoSuchMethodException e) {
+// 							// System.err.println("⚠️ Méthode setNombreDeGagnantAuRang" + rank + " non trouvée, ignorée.");
+// 						}
+// 					}
+
+// 					lotoResult.setNombreDeCodesGagnants(parseInteger(row[29], 0));
+// 					lotoResult.setRapportCodesGagnants(parseInteger(row[30], 0));
+// 					lotoResult.setCodesGagnants(row[31]);
+// 					lotoResult.setBoule1SecondTirage(parseInteger(row[32], 0));
+// 					lotoResult.setBoule2SecondTirage(parseInteger(row[33], 0));
+// 					lotoResult.setBoule3SecondTirage(parseInteger(row[34], 0));
+// 					lotoResult.setBoule4SecondTirage(parseInteger(row[35], 0));
+// 					lotoResult.setBoule5SecondTirage(parseInteger(row[36], 0));
+
+// 					lotoResult.setCombinaisonGagnanteSecondTirage(row[38]);
+// 					lotoResult.setNombreDeGagnantAuRang1SecondTirage(parseInteger(row[39], 0));
+// 					lotoResult.setRapportDuRang1SecondTirage(parseDouble(row[40], 0.0));
+// 					lotoResult.setNumeroJokerplus(parseInteger(row[47], 0));
+
+// 					// ✅ Vérification avant d'accéder à la colonne "Devise"
+// 					if (row.length >= 49 && !row[48].isEmpty()) {
+// 						lotoResult.setDevise(row[48]);  // Devise correcte si elle existe
+// 					} else {
+// 						lotoResult.setDevise("EUR");  // Valeur par défaut si absente
+// 					}
+
+// 					lotoResults.add(lotoResult);
+//                 } catch (Exception e) {
+//                     System.err.println("🚨 Erreur parsing ligne " + i + " : " + e.getMessage());
+//                 }
+//             }
+
+//             if (!lotoResults.isEmpty()) {
+//                 lotoRepository.saveAll(lotoResults);
+//                 System.out.println("✅ " + lotoResults.size() + " documents insérés dans MongoDB !");
+//             } else {
+//                 System.out.println("🚨 Aucun document inséré !");
+//             }
+
+//         } catch (IOException | CsvException e) {
+//             System.err.println("🚨 Erreur CSV : " + e.getMessage());
+//         }
+//     }
+// }
+
 package com.fdjloto.api.service;
 
 import java.io.BufferedReader;
@@ -1464,25 +1687,31 @@ public class LotoScraperService {
 					lotoResult.setNombreDeGagnantAuRang1(parseInteger(row[11], 0));
 					lotoResult.setRapportDuRang1(parseDouble(row[12], 0.0));
 
-					// Gestion dynamique des autres rangs
-					// for (int j = 13; j <= 28; j += 2) {
-					// 	int rank = ((j - 11) / 2 + 2);
-					// 	lotoResult.getClass().getMethod("setNombreDeGagnantAuRang" + rank, int.class)
-					// 			.invoke(lotoResult, parseInteger(row[j], 0));
-					// 	lotoResult.getClass().getMethod("setRapportDuRang" + rank, double.class)
-					// 			.invoke(lotoResult, parseDouble(row[j + 1], 0.0));
-					// }
-					for (int j = 13; j <= 28 && j < row.length; j += 2) { // Vérifie que j reste dans les limites
-						int rank = ((j - 11) / 2 + 2);
+					// ✅ Extraction des rangs 2 à 9
+					for (int j = 13, rank = 2; j <= 28 && j + 1 < row.length; j += 2, rank++) {
 						try {
-							lotoResult.getClass().getMethod("setNombreDeGagnantAuRang" + rank, int.class)
-									.invoke(lotoResult, parseInteger(row[j], 0));
-							lotoResult.getClass().getMethod("setRapportDuRang" + rank, double.class)
-									.invoke(lotoResult, parseDouble(row[j + 1], 0.0));
+							int nombreGagnants = parseInteger(row[j], -1);
+							double rapport = parseDouble(row[j + 1], -1.0);
+
+							if (nombreGagnants == -1 || rapport == -1.0) {
+								System.err.println("🚨 Erreur d'extraction du Rang " + rank + " (ligne CSV mal formatée).");
+							} else {
+								// Utilisation de la réflexion pour éviter les répétitions
+								lotoResult.getClass().getMethod("setNombreDeGagnantAuRang" + rank, int.class)
+										.invoke(lotoResult, nombreGagnants);
+								lotoResult.getClass().getMethod("setRapportDuRang" + rank, double.class)
+										.invoke(lotoResult, rapport);
+
+								// 🔹 Debugging : Afficher les valeurs extraites pour vérifier
+								// System.out.println("✅ Rang " + rank + " : " + nombreGagnants + " gagnants, rapport = " + rapport);
+							}
 						} catch (NoSuchMethodException e) {
-							// System.err.println("⚠️ Méthode setNombreDeGagnantAuRang" + rank + " non trouvée, ignorée.");
+							System.err.println("⚠️ Méthode setNombreDeGagnantAuRang" + rank + " non trouvée.");
+						} catch (Exception e) {
+							System.err.println("🚨 Exception lors de l'extraction du rang " + rank + " : " + e.getMessage());
 						}
 					}
+
 
 					lotoResult.setNombreDeCodesGagnants(parseInteger(row[29], 0));
 					lotoResult.setRapportCodesGagnants(parseInteger(row[30], 0));
