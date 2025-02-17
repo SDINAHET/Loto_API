@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loto Tracker - Connexion</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background: linear-gradient(to right, #000428, #004e92);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            color: white;
+        }
+        .header {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+        .header button {
+            background: #004e92;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .header button:hover {
+            background: #0074cc;
+        }
+        .container {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            width: 350px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .container h2 {
+            color: #fff;
+            margin-bottom: 20px;
+        }
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+            width: 100%;
+        }
+        .input-group label {
+            display: block;
+            color: #bbb;
+            margin-bottom: 5px;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .forgot-password a, .register-link a {
+            color: #4fa3d1;
+            font-size: 14px;
+            text-decoration: none;
+        }
+        .forgot-password a:hover, .register-link a:hover {
+            text-decoration: underline;
+        }
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            background: #004e92;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-top: 10px;
+        }
+        .btn:hover {
+            background: #0074cc;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <button onclick="window.location.href='index.html'">Retour à l'accueil</button>
+    </div>
+    <div class="container">
+        <h2>Loto Tracker - Connexion</h2>
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Mot de passe</label>
+                <input type="password" id="password" required>
+            </div>
+            <div class="forgot-password">
+                <a href="#">Mot de passe oublié ?</a>
+            </div>
+            <button type="submit" class="btn">Se connecter</button>
+        </form>
+        <div class="register-link">
+            <p>Pas encore inscrit ? <a href="#" id="registerLink">Créer un compte</a></p>
+        </div>
+    </div>
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            fetch("http://127.0.0.1:8082/api/users/find?email=" + email)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Utilisateur non trouvé");
+                    }
+                    return response.json();
+                })
+                .then(user => {
+                    fetch("http://127.0.0.1:8082/api/users/register", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            email: user.email,
+                            password: password
+                        })
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            alert("Connexion réussie");
+                        } else {
+                            alert("Échec de la connexion");
+                        }
+                    })
+                })
+                .catch(error => alert(error.message));
+        });
+
+        document.getElementById("registerLink").addEventListener("click", function(event) {
+            event.preventDefault();
+            window.location.href = "register.html";
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loto Tracker - Inscription</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background: linear-gradient(to right, #000428, #004e92);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            color: white;
+        }
+        .header {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+        .header button {
+            background: #004e92;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .header button:hover {
+            background: #0074cc;
+        }
+        .container {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            width: 350px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .container h2 {
+            color: #fff;
+            margin-bottom: 20px;
+        }
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+            width: 100%;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            background: #1a1a1a;
+            color: #fff;
+            font-size: 16px;
+        }
+        .input-group input::placeholder {
+            color: #888;
+        }
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            background: #004e92;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-top: 10px;
+        }
+        .btn:hover {
+            background: #0074cc;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <button onclick="window.location.href='index.html'">Retour à l'accueil</button>
+    </div>
+    <div class="container">
+        <h2>Loto Tracker - Inscription</h2>
+        <form id="registerForm">
+            <div class="input-group">
+                <input type="email" id="email" placeholder="Entrez votre email" required>
+            </div>
+            <div class="input-group">
+                <input type="password" id="password" placeholder="Entrez votre mot de passe" required>
+            </div>
+            <div class="input-group">
+                <input type="password" id="confirmPassword" placeholder="Confirmez votre mot de passe" required>
+            </div>
+            <button type="submit" class="btn">S'inscrire</button>
+        </form>
+    </div>
+    <script>
+        document.getElementById("registerForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirmPassword").value;
+
+            if (password !== confirmPassword) {
+                alert("Les mots de passe ne correspondent pas");
+                return;
+            }
+
+            try {
+                const response = await fetch("http://127.0.0.1:8082/api/users/register", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, password })
+                });
+
+                if (response.ok) {
+                    alert("Inscription réussie");
+                    window.location.href = "login.html";
+                } else {
+                    const errorData = await response.json();
+                    alert("Erreur: " + (errorData.message || "Échec de l'inscription"));
+                }
+            } catch (error) {
+                alert("Erreur de connexion au serveur");
+            }
+        });
+    </script>
+</body>
+</html>

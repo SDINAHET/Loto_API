@@ -18,7 +18,9 @@ import java.util.Optional;
 import java.util.UUID;
 import jakarta.validation.Valid;
 
-@CrossOrigin(origins = "http://127.0.0.1:5500") // 🔥 Autorise CORS pour Live Server
+// @CrossOrigin(origins = "http://127.0.0.1:5500") // 🔥 Autorise CORS pour Live Server
+@CrossOrigin(origins = "*")
+
 @RestController
 @RequestMapping("/api/users")
 @Tag(name = "User Management", description = "Endpoints for managing users")
