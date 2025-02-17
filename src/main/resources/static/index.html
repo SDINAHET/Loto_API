@@ -51,6 +51,10 @@
             background-color: #dc3545; /* Rouge */
         }
 
+        .trans-ball {
+            background-color: #007bff;
+        }
+
         .lucky-number {
             background: red;
         }
@@ -260,7 +264,7 @@
         </div>
         <div class="text-center my-3">
             <button class="btn btn-lg btn-primary" onclick="showPrediction()">
-                🔮 Voir la prédiction du prochain tirage (Version Premium)
+                🔮 Voir la prédiction du prochain tirage
             </button>
         </div>
 
@@ -310,6 +314,7 @@
                 </div>
             </div>
         </div> -->
+
         <!-- Modal Détail du Tirage -->
         <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-xl"> <!-- Largeur augmentée -->
@@ -319,7 +324,57 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body" id="modalBody">
-                        Chargement...
+                        <hr>
+                        <h5 class="text-center fw-bold">Rapports du tirage :</h5>
+                        <!-- Nav pills -->
+                        <ul class="nav nav-pills mb-3" id="tirageTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active bg-primary text-white" id="rapport-tab" data-bs-toggle="tab" data-bs-target="#rapport" type="button" role="tab">Rapport du tirage</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link bg-secondary text-white" id="second-rapport-tab" data-bs-toggle="tab" data-bs-target="#second-rapport" type="button" role="tab">Rapport second tirage</button>
+                            </li>
+                        </ul>
+
+                        <!-- Tab panes -->
+                        <div class="tab-content mt-3">
+                            <div class="tab-pane fade show active" id="rapport" role="tabpanel">
+                                <h5 class="text-center fw-bold">Rapport du tirage :</h5>
+                                <div class="table-responsive">
+                                    <table class="table table-striped text-center">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th>Rang</th>
+                                                <th>Combinaison</th>
+                                                <th>Gagnants</th>
+                                                <th>Gain (€)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="rapportTirageBody">
+                                            <!-- Données insérées dynamiquement -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="second-rapport" role="tabpanel">
+                                <h5 class="text-center fw-bold">Rapport du second tirage :</h5>
+                                <div class="table-responsive">
+                                    <table class="table table-striped text-center">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th>Rang</th>
+                                                <th>Combinaison</th>
+                                                <th>Gagnants</th>
+                                                <th>Gain (€)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="rapportSecondTirageBody">
+                                            <!-- Données insérées dynamiquement -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
@@ -327,6 +382,7 @@
                 </div>
             </div>
         </div>
+
 
         <div class="row row-cols-1 row-cols-md-3 g-4" id="last20"></div>
 
@@ -340,6 +396,17 @@
     </div>
 
     <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let triggerTabList = [].slice.call(document.querySelectorAll('#tirageTabs button'));
+            triggerTabList.forEach(function (triggerEl) {
+                let tabTrigger = new bootstrap.Tab(triggerEl);
+                triggerEl.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    tabTrigger.show();
+                });
+            });
+        });
+
         function updateTime() {
             document.getElementById('current-time').innerText = 'Heure de Paris : ' + moment().tz("Europe/Paris").format("HH:mm:ss");
         }
@@ -463,7 +530,7 @@
                                 <thead class="table-dark">
                                     <tr>
                                         <th>Rang</th>
-                                        <th></th>
+                                        <th>Combinaisons</th>
                                         <th>Gagnants</th>
                                         <th>Gain (€)</th>
                                     </tr>
@@ -480,7 +547,8 @@
                                             <span class="lottery-ball2 red-ball"></span>
                                         </td>
                                         <td><strong>${data.nombreDeGagnantAuRang1}</strong></td>
-                                        <td><strong>${data.rapportDuRang1.toLocaleString()} €</strong></td>
+                                        <td><strong>${data.nombreDeGagnantAuRang1 === 0 ? "-" : data.rapportDuRang1.toLocaleString() + " €"}</strong></td>
+
                                     </tr>
                                     <tr>
                                         <td>2</td>
@@ -490,10 +558,11 @@
                                             <span class="lottery-ball2 blue-ball"></span>
                                             <span class="lottery-ball2 blue-ball"></span>
                                             <span class="lottery-ball2 blue-ball"></span>
+
                                             <span class=""></span>
                                         </td>
                                         <td><strong>${data.nombreDeGagnantAuRang2}</strong></td>
-                                        <td><strong>${data.rapportDuRang2.toLocaleString()} €</strong></td>
+                                        <td><strong>${data.nombreDeGagnantAuRang2 === 0 ? "-" : data.rapportDuRang2.toLocaleString() + " €"}</strong></td>
                                     </tr>
                                     <tr>
                                         <td>3</td>
@@ -507,7 +576,7 @@
 
                                         </td>
                                         <td><strong>${data.nombreDeGagnantAuRang3}</strong></td>
-                                        <td><strong>${data.rapportDuRang3.toLocaleString()} €</strong></td>
+                                        <td><strong>${data.nombreDeGagnantAuRang3 === 0 ? "-" : data.rapportDuRang3.toLocaleString() + " €"}</strong></td>
                                     </tr>
                                     <tr>
                                         <td>4</td>
@@ -520,7 +589,7 @@
                                             <span class=""></span>
                                         </td>
                                         <td><strong>${data.nombreDeGagnantAuRang4}</strong></td>
-                                        <td><strong>${data.rapportDuRang4.toLocaleString()} €</strong></td>
+                                        <td><strong>${data.nombreDeGagnantAuRang4 === 0 ? "-" : data.rapportDuRang4.toLocaleString() + " €"}</strong></td>
                                     </tr>
                                     <tr>
                                         <td>5</td>
@@ -533,7 +602,7 @@
                                             <span class=""></span>
                                         </td>
                                         <td><strong>${data.nombreDeGagnantAuRang5}</strong></td>
-                                        <td><strong>${data.rapportDuRang5.toLocaleString()} €</strong></td>
+                                        <td><strong>${data.nombreDeGagnantAuRang5 === 0 ? "-" : data.rapportDuRang5.toLocaleString() + " €"}</strong></td>
                                     </tr>
                                     <tr>
                                         <td>6</td>
@@ -598,12 +667,14 @@
                         <hr>
                         <!-- <h5 class="text-center fw-bold">Codes gagnants :</h5> -->
                         <!-- <p class="text-center fw-bold">${data.codesGagnants.replace(/,/g, ", ")}</p> -->
-                         <h5 class="text-center fw-bold">Codes gagnants :</h5>
+                        <h5 class="text-center fw-bold">Codes gagnants :</h5>
                         <div class="winning-codes-container text-center">
                             ${data.codesGagnants.split(',').map(code =>
                                 `<span class="winning-code">${code.trim()}</span>`
                             ).join('')}
                         </div>
+
+
                         <style>
                         .lottery-ball {
                             display: inline-block;
@@ -676,7 +747,30 @@
 
             let sortedHTML = sortedNumbers.map(num => `<span class="lottery-ball">${num}</span>`).join('');
             document.getElementById("numbersContainer").innerHTML = sortedHTML + `<span class="lottery-ball lucky-number">${numeroChance}</span>`;
+
         }
+        document.addEventListener("DOMContentLoaded", function () {
+            // Vérifier si data est bien défini
+            if (typeof data === "undefined" || !data.codesGagnants) {
+                console.error("data.codesGagnants est introuvable !");
+                return;
+            }
+
+            // Récupérer et trier les codes gagnants
+            const sortedWinningCodes = data.codesGagnants
+                .split(',')
+                .map(code => code.trim()) // Nettoyer les espaces
+                .sort((a, b) => a.localeCompare(b)); // Trier alphabétiquement
+
+            // Générer dynamiquement le HTML en conservant le style
+            document.querySelector('.winning-codes-container').innerHTML = sortedWinningCodes
+                .map(code => `<span class="winning-code">${code}</span>`)
+                .join('');
+
+            // Mettre à jour le numéro Joker+
+            document.getElementById('jokerplus').textContent = data.numeroJokerplus;
+        });
+
 
 
         document.addEventListener("DOMContentLoaded", function () {
@@ -748,8 +842,12 @@
         async function showPrediction() {
             try {
                 console.log("📡 Récupération des prédictions...");
+                console.log("📡 Appel API : http://localhost:8082/api/predictions/latest");
                 let response = await axios.get("http://localhost:8082/api/predictions/latest");
                 let data = response.data;
+                console.log("✅ Réponse reçue :", response.data);
+
+
 
                 // 🔍 Vérification des données reçues
                 if (!data || !Array.isArray(data.probableNumbers) || typeof data.stdDevNumbers !== "object") {
@@ -851,7 +949,16 @@
 
 
     </script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"> </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Écoute l'événement lorsque le modal est complètement affiché
+        let detailModal = document.getElementById("detailModal");
+        detailModal.addEventListener('shown.bs.modal', function () {
+            console.log("Modal is fully shown");
+        });
+    });
+</script>
 <footer class="footer">
     <div class="footer-container">
         <!-- <div class="footer-logo">
