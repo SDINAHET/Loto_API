@@ -113,17 +113,19 @@
             <button type="submit" class="btn">Se connecter</button>
         </form>
         <div class="register-link">
-            <p>Pas encore inscrit ? <a href="#" id="registerLink">Créer un compte</a></p>
+            <p>Pas encore inscrit ? <a href="register.html" id="registerLink">Créer un compte</a></p>
+
         </div>
     </div>
     <script>
         document.getElementById("loginForm").addEventListener("submit", async function(event) {
             event.preventDefault();
+
             const email = document.getElementById("email").value;
             const password = document.getElementById("password").value;
 
             try {
-                const response = await fetch("http://127.0.0.1:8082/api/auth/login", {
+                const response = await fetch("http://localhost:8082/api/auth/login", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ email, password })
@@ -134,9 +136,9 @@
                 }
 
                 const data = await response.json();
-                localStorage.setItem("jwtToken", data.token);
+                localStorage.setItem("jwtToken", data.token); // ✅ Stockage du JWT
                 alert("Connexion réussie !");
-                window.location.href = "dashboard.html";
+                window.location.href = "index_connexion.html";
             } catch (error) {
                 alert(error.message);
             }
@@ -151,7 +153,7 @@
             }
 
             try {
-                const response = await fetch("http://127.0.0.1:8082/api/users/me", {
+                const response = await fetch("http://localhost:8082/api/protected/userinfo", {
                     method: "GET",
                     headers: {
                         "Authorization": `Bearer ${token}`,
@@ -165,14 +167,115 @@
 
                 const userData = await response.json();
                 console.log(userData);
+                alert(`Bienvenue ${userData.username}`);
             } catch (error) {
                 alert(error.message);
             }
         }
 
+        document.addEventListener("DOMContentLoaded", async function() {
+            await checkUserAuth(); // Vérifie l'authentification dès le chargement de la page
+        });
 
+        // ✅ Vérifie si l'utilisateur est connecté via le cookie
+        async function checkUserAuth() {
+            try {
+                const response = await fetch("http://localhost:8082/api/protected/userinfo", {
+                    method: "GET",
+                    credentials: "include" // Envoie le cookie JWT automatiquement
+                });
 
+                if (response.ok) {
+                    const userData = await response.json();
+                    document.getElementById("loginButton").style.display = "none";
+                    document.getElementById("logoutButton").style.display = "inline-block";
+                    document.getElementById("settingsButton").style.display = "inline-block";
 
+                    console.log("Utilisateur connecté :", userData);
+                } else {
+                    document.getElementById("loginButton").style.display = "inline-block";
+                    document.getElementById("logoutButton").style.display = "none";
+                    document.getElementById("settingsButton").style.display = "none";
+                }
+            } catch (error) {
+                console.error("Erreur lors de la vérification de l'authentification :", error);
+            }
+        }
+
+        // ✅ Déconnexion
+        async function logout() {
+            try {
+                const response = await fetch("http://localhost:8082/api/auth/logout", {
+                    method: "POST",
+                    credentials: "include"
+                });
+
+                if (response.ok) {
+                    alert("Déconnexion réussie !");
+                    window.location.href = "index.html";
+                }
+            } catch (error) {
+                alert("Erreur lors de la déconnexion.");
+            }
+        }
+
+        // ✅ Ouvrir la modale de paramètres
+        async function openSettings() {
+            try {
+                const response = await fetch("http://localhost:8082/api/protected/userinfo", {
+                    method: "GET",
+                    credentials: "include"
+                });
+
+                if (!response.ok) {
+                    throw new Error("Impossible de récupérer les informations utilisateur.");
+                }
+
+                const userData = await response.json();
+                document.getElementById("updateEmail").value = userData.username;
+                document.getElementById("updateFirstName").value = userData.firstName || "";
+                document.getElementById("updateLastName").value = userData.lastName || "";
+
+                document.getElementById("settingsModal").style.display = "block";
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        // ✅ Fermer la modale de paramètres
+        function closeSettings() {
+            document.getElementById("settingsModal").style.display = "none";
+        }
+
+        // ✅ Mise à jour des informations utilisateur
+        document.getElementById("updateForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const updatedData = {
+                email: document.getElementById("updateEmail").value,
+                firstName: document.getElementById("updateFirstName").value,
+                lastName: document.getElementById("updateLastName").value,
+                password: document.getElementById("updatePassword").value || null
+            };
+
+            try {
+                const response = await fetch("http://localhost:8082/api/users/me", {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "include",
+                    body: JSON.stringify(updatedData)
+                });
+
+                if (!response.ok) {
+                    throw new Error("Mise à jour échouée.");
+                }
+
+                alert("Profil mis à jour avec succès !");
+                closeSettings();
+            } catch (error) {
+                alert(error.message);
+            }
+        });
     </script>
 </body>
 </html>

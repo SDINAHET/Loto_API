@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Politique de Confidentialité - Loto Tracker</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+    <!-- HEADER -->
+    <header class="header d-flex justify-content-between align-items-center p-3 bg-dark text-white">
+        <div class="d-flex align-items-center">
+            <img src="loto_tracker.png" alt="Logo Loto" class="logo" width="50" height="50">
+            <h1 class="m-0 ms-2">Tracker du Loto Français</h1>
+        </div>
+        <a href="login.html" class="btn btn-outline-light">
+            <i class="fas fa-user"></i> Se connecter
+        </a>
+    </header>
+
+    <main class="container mt-4">
+        <h2>Politique de Confidentialité</h2>
+        <p>Nous accordons une grande importance à la confidentialité de vos données personnelles. Cette politique explique quelles données nous collectons, comment nous les utilisons et vos droits conformément au Règlement Général sur la Protection des Données (RGPD).</p>
+
+        <h3>Collecte des données personnelles</h3>
+        <p>Nous collectons les données suivantes :
+            <ul>
+                <li>Nom et prénom</li>
+                <li>Adresse email</li>
+                <li>Adresse IP</li>
+                <li>Données de navigation</li>
+            </ul>
+        </p>
+
+        <h3>Utilisation des données</h3>
+        <p>Nous utilisons vos données pour :
+            <ul>
+                <li>Améliorer votre expérience utilisateur</li>
+                <li>Vous envoyer des notifications et des mises à jour</li>
+                <li>Garantir la sécurité de notre service</li>
+                <li>Respecter nos obligations légales</li>
+            </ul>
+        </p>
+
+        <h3>Partage des données</h3>
+        <p>Nous ne vendons ni ne partageons vos données personnelles avec des tiers, sauf dans les cas suivants :
+            <ul>
+                <li>Obligation légale</li>
+                <li>Partenaires techniques assurant le bon fonctionnement du site</li>
+            </ul>
+        </p>
+
+        <h3>Vos droits</h3>
+        <p>Conformément au RGPD, vous disposez des droits suivants :
+            <ul>
+                <li>Accès à vos données</li>
+                <li>Rectification de vos données</li>
+                <li>Suppression de vos données</li>
+                <li>Opposition au traitement de vos données</li>
+            </ul>
+            Vous pouvez exercer ces droits en nous contactant à <strong>contact@lototracker.com</strong>.
+        </p>
+
+        <h3>Cookies</h3>
+        <p>Nous utilisons des cookies pour améliorer votre navigation. Vous pouvez gérer vos préférences via les paramètres de votre navigateur.</p>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-container">
+            <!-- <div class="footer-logo">
+                 <img src="loto_tracker.png" alt="Loto Français Tracker">
+            </div> -->
+            <!-- <div class="footer-links">
+                <a href="#">Mentions légales</a>
+                <a href="#">Conditions d'utilisation</a>
+                <a href="#">Politique de confidentialité</a>
+            </div> -->
+            <div class="footer-links">
+                <a href="mentions_legales.html" class="footer-button">Mentions légales</a>
+                <a href="conditions_utilisation.html" class="footer-button">Conditions d'utilisation</a>
+                <a href="politique_confidentialite.html" class="footer-button">Politique de confidentialité</a>
+            </div>
+
+            <div class="footer-social">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+            </div>
+            <p class="footer-text">© 2025 Tracker du Loto Français / SDINAHET. Tous droits réservés.</p>
+        </div>
+    </footer>
+    <style>
+        /* 📌 Footer Compact & Fixé en Bas */
+
+
+        .footer {
+            background: linear-gradient(135deg, #212529, #343a40);
+            color: #ffffff;
+            padding: 8px 0;
+            text-align: center;
+            font-size: 0.9rem;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+            left: 0;
+            box-shadow: 0px -4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 📌 Contenu Centré */
+        .footer-container {
+            max-width: 1200px;
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* 📌 Flexbox pour tout aligner en une seule ligne */
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            width: 100%;
+            padding: 0 10px;
+        }
+
+        /* 🔗 Liens */
+        .footer-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .footer-links a {
+            color: #ffeb3b;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .footer-links a:hover {
+            color: #ff5722;
+        }
+
+        /* 🎵 Réseaux Sociaux */
+        .footer-social {
+            display: flex;
+            gap: 10px;
+        }
+
+        .footer-social a {
+            color: #ffffff;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease-in-out, color 0.3s;
+        }
+
+        .footer-social a:hover {
+            color: #ffeb3b;
+            transform: scale(1.1);
+        }
+
+        /* 📜 Texte du footer */
+        .footer-text {
+            margin-top: 3px;
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        /* 🌀 Animation d’apparition */
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .footer {
+            animation: fadeInUp 1.5s ease-in-out;
+        }
+
+
+
+    </style>
+
+
+    </body>
+    </html>
+
+
+
+
+
+

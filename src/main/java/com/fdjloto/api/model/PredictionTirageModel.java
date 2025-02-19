@@ -16,6 +16,7 @@ public class PredictionTirageModel {
     private double stdDevChance;
     private Map<Integer, String> confidenceIntervals; // ✅ Ajouter ce champ
     private String confidenceChance; // ✅ Ajouter ce champ
+    private Map<Integer, Double> sortieRates; // ✅ Ajout du taux de sortie
 
     // ✅ Getters & Setters
     public String getId() {
@@ -72,6 +73,15 @@ public class PredictionTirageModel {
 
     public void setConfidenceChance(String confidenceChance) {
         this.confidenceChance = confidenceChance;
+    }
+
+    // ✅ Ajout des getters et setters pour sortieRates
+    public Map<Integer, Double> getSortieRates() {
+        return sortieRates;
+    }
+
+    public void setSortieRates(Map<Integer, Double> sortieRates) {
+        this.sortieRates = sortieRates;
     }
 }
 

@@ -4,10 +4,12 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 import java.util.UUID;
 
-
+@Schema(description = "Represents a user in the system")
 @Entity
 @Table(name = "users")
 public class User {
@@ -43,6 +45,7 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Schema(defaultValue = "false", description = "Defines if the user has admin privileges")
     @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE") // 🔥 Définit admin = false (0)
     private boolean admin = false;
 

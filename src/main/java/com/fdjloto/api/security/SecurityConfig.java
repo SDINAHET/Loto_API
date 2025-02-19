@@ -11,6 +11,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 // import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -51,6 +52,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
+                .headers(headers -> headers
+                    .frameOptions(frame -> frame.sameOrigin()) // ✅ Autoriser les iframes depuis la même origine
+                    .xssProtection(xss -> xss.disable()) // ✅ Désactiver la protection XSS si nécessaire
+                )
                 .csrf(csrf -> csrf.disable()) // 🔴 Désactive CSRF pour les APIs REST stateless
                 // .csrf(AbstractHttpConfigurer::disable) // ✅ Version optimisée
                 // .anonymous(anonymous -> anonymous.disable()) // Supprime l'authentification anonyme
@@ -75,10 +80,16 @@ public class SecurityConfig {
                         .requestMatchers("/api/protected/**").authenticated()  // Protégé par JWT
                         // .anyRequest().authenticated()
                 )
+                // .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())));
                 // .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 🔴 JWT = stateless
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)  // 🔐 Ajoute le filtre JWT
                 .build();
     }
+
+    // @Bean
+    // public JwtAuthenticationConverter jwtAuthenticationConverter() {
+    //     return new JwtAuthenticationConverter();
+    // }
 //     @Bean
 //     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 //         return http

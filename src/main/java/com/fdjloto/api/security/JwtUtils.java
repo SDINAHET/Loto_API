@@ -4,6 +4,8 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
@@ -11,6 +13,13 @@ import javax.crypto.SecretKey;
 
 @Component
 public class JwtUtils {
+
+
+    @Value("${app.jwtSecret}") // 🔥 Récupère la clé JWT depuis application.properties
+    private String jwtSecret;
+
+    @Value("${app.jwtExpirationMs}") // 🔥 Récupère l'expiration depuis application.properties
+    private int jwtExpirationMs;
 
     private static final String SECRET_KEY = "your_super_secret_key_that_should_be_at_least_32_characters_long";
     private static final SecretKey secretKey = Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
@@ -53,4 +62,13 @@ public class JwtUtils {
     //     System.out.println("🔹 Utilisateur extrait du token : " + jwtUtils.getUserFromJwtToken(token));
     //     System.out.println("🔹 Token valide ? " + jwtUtils.validateJwtToken(token));
     // }
+
+    // ✅ Ajout de la méthode getUserNameFromJwtToken
+    public String getUserNameFromJwtToken(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(jwtSecret)
+                .parseClaimsJws(token)
+                .getBody();
+        return claims.getSubject(); // 🔥 Retourne l'email ou l'username
+    }
 }

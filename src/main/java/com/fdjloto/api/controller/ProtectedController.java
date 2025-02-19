@@ -18,26 +18,28 @@ import java.util.Map;
 @RequestMapping("/api/protected")
 @SecurityRequirement(name = "bearerAuth")  // 🔥 Swagger sait que ce contrôleur est sécurisé
 @CrossOrigin(origins = "http://127.0.0.1:5500") // 🔥 Autorise CORS pour Live Server
+// @CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST})
+
 public class ProtectedController {
 
-    @GetMapping("/userinfo")
-    public ResponseEntity<Map<String, String>> getUserInfo(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
-        // Vérification de l'authentification de l'utilisateur
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    // @GetMapping("/userinfo")
+    // public ResponseEntity<Map<String, String>> getUserInfo(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+    //     // Vérification de l'authentification de l'utilisateur
+    //     Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        if (principal instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) principal;
+    //     if (principal instanceof UserDetails) {
+    //         UserDetails userDetails = (UserDetails) principal;
 
-            Map<String, String> response = new HashMap<>();
-            response.put("message", "Bienvenue " + userDetails.getUsername());
-            response.put("username", userDetails.getUsername());
-            // response.put("roles", userDetails.getAuthorities().toString());
+    //         Map<String, String> response = new HashMap<>();
+    //         response.put("message", "Bienvenue " + userDetails.getUsername());
+    //         response.put("username", userDetails.getUsername());
+    //         // response.put("roles", userDetails.getAuthorities().toString());
 
-            return ResponseEntity.ok(response);
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Utilisateur non authentifié"));
-        }
-    }
+    //         return ResponseEntity.ok(response);
+    //     } else {
+    //         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Utilisateur non authentifié"));
+    //     }
+    // }
     // public ResponseEntity<Map<String, Object>> getUserInfo(@AuthenticationPrincipal Jwt jwt) {
     //     if (jwt == null) {
     //         return ResponseEntity.status(401).body(Map.of("error", "Token JWT invalide ou manquant"));
@@ -49,5 +51,36 @@ public class ProtectedController {
     //         "token_valid", "✅"
     //     ));
     // }
+
+    // @GetMapping("/userinfo")
+    // public ResponseEntity<Map<String, Object>> getUserInfo(@AuthenticationPrincipal Jwt jwt) {
+    //     if (jwt == null) {
+    //         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+    //             .body(Map.of("error", "Token JWT invalide ou manquant"));
+    //     }
+
+    //     return ResponseEntity.ok(Map.of(
+    //         "message", "Bienvenue " + jwt.getClaim("sub"),
+    //         "username", jwt.getClaim("sub"),
+    //         "roles", jwt.getClaim("roles"),
+    //         "token_valid", "✅"
+    //     ));
+    // }
+
+    @GetMapping("/userinfo")
+    public ResponseEntity<Map<String, Object>> getUserInfo(@AuthenticationPrincipal Jwt jwt) {
+        if (jwt == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(Map.of("error", "Token JWT invalide ou manquant"));
+        }
+
+        return ResponseEntity.ok(Map.of(
+            "message", "Bienvenue " + jwt.getSubject(),
+            "username", jwt.getSubject(),
+            "roles", jwt.getClaim("roles"),
+            "token_valid", "✅"
+        ));
+    }
+
 }
 

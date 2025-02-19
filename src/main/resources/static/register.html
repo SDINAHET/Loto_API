@@ -50,7 +50,7 @@
             margin-bottom: 20px;
         }
         .input-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             text-align: left;
             width: 100%;
         }
@@ -91,10 +91,16 @@
         <h2>Loto Tracker - Inscription</h2>
         <form id="registerForm">
             <div class="input-group">
-                <input type="email" id="email" placeholder="Entrez votre email" required>
+                <input type="text" id="firstName" placeholder="Prénom" required>
             </div>
             <div class="input-group">
-                <input type="password" id="password" placeholder="Entrez votre mot de passe" required>
+                <input type="text" id="lastName" placeholder="Nom de famille" required>
+            </div>
+            <div class="input-group">
+                <input type="email" id="email" placeholder="Email" required>
+            </div>
+            <div class="input-group">
+                <input type="password" id="password" placeholder="Mot de passe" required>
             </div>
             <div class="input-group">
                 <input type="password" id="confirmPassword" placeholder="Confirmez votre mot de passe" required>
@@ -102,9 +108,13 @@
             <button type="submit" class="btn">S'inscrire</button>
         </form>
     </div>
+
     <script>
         document.getElementById("registerForm").addEventListener("submit", async function(event) {
             event.preventDefault();
+
+            const firstName = document.getElementById("firstName").value;
+            const lastName = document.getElementById("lastName").value;
             const email = document.getElementById("email").value;
             const password = document.getElementById("password").value;
             const confirmPassword = document.getElementById("confirmPassword").value;
@@ -114,24 +124,40 @@
                 return;
             }
 
+            // 🔹 Données utilisateur à envoyer (sans `id`)
+            const userData = {
+                firstName,
+                lastName,
+                email,
+                password,
+                admin: 0 // 🔥 Ajout de admin = 0
+            };
+
             try {
-                const response = await fetch("http://127.0.0.1:8082/api/users/register", {
+                const response = await fetch("http://localhost:8082/api/auth/register", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ email, password })
+                    body: JSON.stringify(userData)
                 });
 
+                const data = await response.json();
+                console.log("Réponse serveur :", data);
+
                 if (response.ok) {
-                    alert("Inscription réussie");
+                    alert("Inscription réussie !");
                     window.location.href = "login.html";
                 } else {
-                    const errorData = await response.json();
-                    alert("Erreur: " + (errorData.message || "Échec de l'inscription"));
+                    console.error("Erreur serveur :", data);
+                    alert("Erreur: " + (data.message || "Échec de l'inscription"));
                 }
             } catch (error) {
+                console.error("Erreur réseau :", error);
                 alert("Erreur de connexion au serveur");
             }
         });
+
+
     </script>
 </body>
 </html>
+
