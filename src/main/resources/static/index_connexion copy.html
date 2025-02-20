@@ -127,7 +127,7 @@
         /* 🕺 Animation du coq */
         @keyframes coqFlap {
             0% { transform: rotate(0deg); }
-            100% { transform: rotate(30deg); }
+            100% { transform: rotate(10deg); }
         }
 
         /* 🐇 Ajout d’un lapin ultra-rapide */
@@ -252,7 +252,35 @@
 
     </header>
     <body>
+        <!-- <div class="header">
+            <button id="homeButton" onclick="window.location.href='index.html'">Accueil</button>
+            <button id="loginButton" onclick="window.location.href='login.html'">Se connecter</button>
+            <button id="logoutButton" onclick="logout()" style="display: none;">Déconnexion</button>
+            <button id="settingsButton" onclick="openSettings()" style="display: none;">Paramètres</button>
+        </div>
 
+        <div id="settingsModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <span class="close" onclick="closeSettings()">&times;</span>
+                <h2>Modifier votre profil</h2>
+                <form id="updateForm">
+                    <label>Email :</label>
+                    <input type="email" id="updateEmail" required><br>
+
+                    <label>Prénom :</label>
+                    <input type="text" id="updateFirstName" required><br>
+
+                    <label>Nom :</label>
+                    <input type="text" id="updateLastName" required><br>
+
+                    <label>Nouveau mot de passe :</label>
+                    <input type="password" id="updatePassword"><br>
+
+                    <button type="submit">Enregistrer</button>
+                </form>
+            </div>
+        </div>
+    </body> -->
 
 
     <div class="container mt-4">
@@ -261,7 +289,16 @@
         <div class="text-center my-3">
             <h2>Prochain tirage dans :
                 <span id="countdown" class="countdown-container"></span></h2>
-
+                <!-- <div class="countdown-container"> -->
+                    <!-- <span id="days">00</span>j
+                    <span id="hours">00</span>h
+                    <span id="minutes">00</span>m
+                    <span id="seconds">00</span>s -->
+                <!-- </div> -->
+                <!-- <div class="lapin">🐇</div>
+                <div class="roulette">🎡</div>
+                <div class="confetti"></div>
+                <div class="boule"></div> -->
 
         </div>
         <div class="text-center my-3">
@@ -297,7 +334,84 @@
                     </div>
                 </div>
             </div>
+            <!-- <style>
+            /* 📌 Effet glassy pour le modal */
+            .glassy {
+                background: rgba(255, 255, 255, 0.9);
+                backdrop-filter: blur(10px);
+                border-radius: 10px;
+                box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+            }
 
+            /* 📌 Style des boules de loto */
+            .lottery-ball {
+                display: inline-block;
+                width: 50px;
+                height: 50px;
+                line-height: 50px;
+                text-align: center;
+                font-size: 1.2em;
+                font-weight: bold;
+                color: white;
+                border-radius: 50%;
+                margin: 5px;
+            }
+
+            .blue-ball { background-color: #007bff; }
+            .red-ball { background-color: #dc3545; }
+            .lucky-number { background: gold; color: black; font-size: 1.4em; }
+
+            </style> -->
+            <!-- </style>
+            /* 📌 Appliquer une largeur de 90% pour un meilleur affichage */
+            .container {
+                max-width: 90%;
+            }
+
+            /* 📌 Largeur améliorée des modals */
+            .modal-lg, .modal-xl {
+                max-width: 90% !important;
+            }
+
+            /* 📊 Agrandir le graphique */
+            #sortieRatesChart {
+                width: 100% !important;
+                height: 350px !important;
+            }
+
+            /* 🎯 Amélioration de l'affichage des numéros probables */
+            #predictedNumbers span, #predictedChance span {
+                font-size: 1.5rem;
+                padding: 15px;
+            }
+
+            /* 📌 Largeur augmentée des tableaux */
+            .table-responsive {
+                max-width: 100%;
+                overflow-x: auto;
+            }
+
+            /* 📌 Ajustement des boutons */
+            .btn {
+                font-size: 1rem;
+                padding: 12px 20px;
+            }
+
+            /* 📌 Centrer le contenu pour une meilleure lisibilité */
+            .text-center {
+                text-align: center;
+            }
+
+            /* 🔄 Meilleure répartition des colonnes sur grand écran */
+            @media (min-width: 992px) {
+                .row-cols-md-3 {
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: space-around;
+                }
+            }
+
+            </style> -->
 
 
 

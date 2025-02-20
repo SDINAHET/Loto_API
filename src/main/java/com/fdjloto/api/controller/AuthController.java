@@ -36,17 +36,17 @@ public class AuthController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    // @PostMapping("/login")
-    // public ResponseEntity<String> authenticateUser(@RequestParam String email, @RequestParam String password) {
-    //     Authentication authentication = authenticationManager.authenticate(
-    //             new UsernamePasswordAuthenticationToken(email, password)
-    //     );
-    //     SecurityContextHolder.getContext().setAuthentication(authentication);
-    //     String jwt = jwtUtils.generateJwtToken(authentication);
-    //     return ResponseEntity.ok(jwt);
-    // }
+    @PostMapping("/login3")
+    public ResponseEntity<String> authenticateUser(@RequestParam String email, @RequestParam String password) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(email, password)
+        );
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtUtils.generateJwtToken(authentication);
+        return ResponseEntity.ok(jwt);
+    }
 
-    // @PostMapping("/login")
+    // @PostMapping("/login2")
     // public ResponseEntity<Map<String, String>> authenticateUser(@RequestBody Map<String, String> request) {
     //     String email = request.get("email");
     //     String password = request.get("password");

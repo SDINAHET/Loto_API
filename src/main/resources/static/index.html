@@ -11,6 +11,7 @@
     <link rel="icon" type="image/png" href="loto_tracker.png">
 
 
+
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/moment/min/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/moment-timezone/builds/moment-timezone-with-data.min.js"></script>
@@ -21,6 +22,7 @@
 
 
     <style>
+
         .lottery-ball {
             display: inline-block;
             width: 40px;
@@ -127,7 +129,7 @@
         /* 🕺 Animation du coq */
         @keyframes coqFlap {
             0% { transform: rotate(0deg); }
-            100% { transform: rotate(10deg); }
+            100% { transform: rotate(30deg); }
         }
 
         /* 🐇 Ajout d’un lapin ultra-rapide */
@@ -252,35 +254,7 @@
 
     </header>
     <body>
-        <!-- <div class="header">
-            <button id="homeButton" onclick="window.location.href='index.html'">Accueil</button>
-            <button id="loginButton" onclick="window.location.href='login.html'">Se connecter</button>
-            <button id="logoutButton" onclick="logout()" style="display: none;">Déconnexion</button>
-            <button id="settingsButton" onclick="openSettings()" style="display: none;">Paramètres</button>
-        </div>
 
-        <div id="settingsModal" class="modal" style="display: none;">
-            <div class="modal-content">
-                <span class="close" onclick="closeSettings()">&times;</span>
-                <h2>Modifier votre profil</h2>
-                <form id="updateForm">
-                    <label>Email :</label>
-                    <input type="email" id="updateEmail" required><br>
-
-                    <label>Prénom :</label>
-                    <input type="text" id="updateFirstName" required><br>
-
-                    <label>Nom :</label>
-                    <input type="text" id="updateLastName" required><br>
-
-                    <label>Nouveau mot de passe :</label>
-                    <input type="password" id="updatePassword"><br>
-
-                    <button type="submit">Enregistrer</button>
-                </form>
-            </div>
-        </div>
-    </body> -->
 
 
     <div class="container mt-4">
@@ -289,16 +263,7 @@
         <div class="text-center my-3">
             <h2>Prochain tirage dans :
                 <span id="countdown" class="countdown-container"></span></h2>
-                <!-- <div class="countdown-container"> -->
-                    <!-- <span id="days">00</span>j
-                    <span id="hours">00</span>h
-                    <span id="minutes">00</span>m
-                    <span id="seconds">00</span>s -->
-                <!-- </div> -->
-                <!-- <div class="lapin">🐇</div>
-                <div class="roulette">🎡</div>
-                <div class="confetti"></div>
-                <div class="boule"></div> -->
+
 
         </div>
         <div class="text-center my-3">
@@ -334,84 +299,7 @@
                     </div>
                 </div>
             </div>
-            <!-- <style>
-            /* 📌 Effet glassy pour le modal */
-            .glassy {
-                background: rgba(255, 255, 255, 0.9);
-                backdrop-filter: blur(10px);
-                border-radius: 10px;
-                box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
-            }
 
-            /* 📌 Style des boules de loto */
-            .lottery-ball {
-                display: inline-block;
-                width: 50px;
-                height: 50px;
-                line-height: 50px;
-                text-align: center;
-                font-size: 1.2em;
-                font-weight: bold;
-                color: white;
-                border-radius: 50%;
-                margin: 5px;
-            }
-
-            .blue-ball { background-color: #007bff; }
-            .red-ball { background-color: #dc3545; }
-            .lucky-number { background: gold; color: black; font-size: 1.4em; }
-
-            </style> -->
-            <!-- </style>
-            /* 📌 Appliquer une largeur de 90% pour un meilleur affichage */
-            .container {
-                max-width: 90%;
-            }
-
-            /* 📌 Largeur améliorée des modals */
-            .modal-lg, .modal-xl {
-                max-width: 90% !important;
-            }
-
-            /* 📊 Agrandir le graphique */
-            #sortieRatesChart {
-                width: 100% !important;
-                height: 350px !important;
-            }
-
-            /* 🎯 Amélioration de l'affichage des numéros probables */
-            #predictedNumbers span, #predictedChance span {
-                font-size: 1.5rem;
-                padding: 15px;
-            }
-
-            /* 📌 Largeur augmentée des tableaux */
-            .table-responsive {
-                max-width: 100%;
-                overflow-x: auto;
-            }
-
-            /* 📌 Ajustement des boutons */
-            .btn {
-                font-size: 1rem;
-                padding: 12px 20px;
-            }
-
-            /* 📌 Centrer le contenu pour une meilleure lisibilité */
-            .text-center {
-                text-align: center;
-            }
-
-            /* 🔄 Meilleure répartition des colonnes sur grand écran */
-            @media (min-width: 992px) {
-                .row-cols-md-3 {
-                    display: flex;
-                    flex-wrap: wrap;
-                    justify-content: space-around;
-                }
-            }
-
-            </style> -->
 
 
 
@@ -510,8 +398,8 @@
 
         <h3 class="mt-4">Rechercher un tirage</h3>
         <div class="input-group mb-3">
-            <input type="date" id="startDate" class="form-control">
-            <input type="date" id="endDate" class="form-control">
+            <input type="date" id="startDate" class="form-control" placeholder="Date de début">
+            <input type="date" id="endDate" class="form-control" placeholder="Date de fin">
             <button class="btn btn-primary" onclick="searchTirages()">Rechercher</button>
         </div>
         <div id="searchResults" class="row row-cols-1 row-cols-md-3 g-4"></div>
@@ -951,6 +839,110 @@
             });
         });
 
+        // Fonction pour désactiver les jours de la semaine
+        function disableDays(inputId) {
+            const input = document.getElementById(inputId);
+
+            input.addEventListener('input', function () {
+                const date = new Date(this.value);
+                const day = date.getUTCDay();
+
+                // Désactiver Mardi (2), Vendredi (5), Dimanche (0)
+                // if ([0, 2, 5].includes(day)) {
+                    //alert("Le Mardi, Vendredi et Dimanche ne sont pas disponibles.");
+                    //this.value = '';
+                //}
+            });
+        }
+
+        // Appliquer la désactivation sur les deux calendriers
+        disableDays('startDate');
+        disableDays('endDate');
+
+        async function searchTirages() {
+            let startDate = document.getElementById("startDate").value;
+            let endDate = document.getElementById("endDate").value;
+
+            if (!startDate) {
+                alert("Veuillez sélectionner une date de début.");
+                return;
+            }
+
+            // ✅ Si endDate est vide, utiliser seulement startDate pour la recherche
+            let apiUrl;
+            if (!endDate) {
+                apiUrl = `http://localhost:8082/api/historique/last20/Detail/tirages?startDate=${startDate}`;
+            } else {
+                apiUrl = `http://localhost:8082/api/historique/last20/Detail/tirages?startDate=${startDate}&endDate=${endDate}`;
+            }
+
+            console.log("Requête API vers :", apiUrl);
+
+            // ✅ Conteneur des résultats
+            let container = document.getElementById("searchResults");
+            container.innerHTML = "";  // ✅ On vide le conteneur avant chaque nouvelle recherche
+            container.scrollTop = 0;   // ✅ On réinitialise le scroll
+
+            // ✅ Ajout d'un indicateur de chargement
+            let loadingIndicator = document.createElement("div");
+            loadingIndicator.className = "loading";
+            loadingIndicator.innerText = "Chargement en cours...";
+            container.appendChild(loadingIndicator);
+
+            try {
+                let response = await axios.get(apiUrl);
+                if (response.status === 200) {
+                    let data = Array.isArray(response.data) ? response.data : [response.data];
+                    container.innerHTML = "";  // ✅ On vide à nouveau après avoir reçu les données
+
+                    if (data.length === 0) {
+                        alert("Aucun tirage trouvé pour les dates sélectionnées.");
+                        return;
+                    }
+
+                    data.forEach(draw => {
+                        // ✅ Formatage de la date pour obtenir le jour de la semaine
+                        let dateParts = draw.dateDeTirage.split('/');
+                        let formattedDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
+                        let dateObj = new Date(formattedDate);
+
+                        // ✅ Utilisation du tableau des jours
+                        let jours = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
+                        let dayName = jours[dateObj.getDay()];
+
+                        // ✅ Création des cartes de tirages
+                        let card = document.createElement("div");
+                        card.className = "col";
+                        card.innerHTML = `
+                            <div class="card card-lottery text-center">
+                                <div class="card-body">
+                                    <h5>${dayName} ${draw.dateDeTirage}</h5>
+                                    <div>
+                                        <span class="lottery-ball">${draw.boule1}</span>
+                                        <span class="lottery-ball">${draw.boule2}</span>
+                                        <span class="lottery-ball">${draw.boule3}</span>
+                                        <span class="lottery-ball">${draw.boule4}</span>
+                                        <span class="lottery-ball">${draw.boule5}</span>
+                                        <span class="lottery-ball lucky-number">${draw.numeroChance}</span>
+                                    </div>
+                                    <button class="btn btn-outline-primary mt-2" onclick="viewDetails('${draw.dateDeTirage}')">Détail du Tirage</button>
+                                </div>
+                            </div>`;
+                        container.appendChild(card);
+                    });
+                } else {
+                    console.error("Erreur lors de la récupération des tirages", response);
+                }
+            } catch (error) {
+                console.error("Erreur lors de la récupération des tirages", error);
+            }
+        }
+
+
+
+
+
+
 
 
         /**
@@ -1182,17 +1174,11 @@
         <!-- <div class="footer-logo">
              <img src="loto_tracker.png" alt="Loto Français Tracker">
         </div> -->
-        <!-- <div class="footer-links">
-            <a href="#">Mentions légales</a>
-            <a href="#">Conditions d'utilisation</a>
-            <a href="#">Politique de confidentialité</a>
-        </div> -->
         <div class="footer-links">
             <a href="mentions_legales.html" class="footer-button">Mentions légales</a>
             <a href="conditions_utilisation.html" class="footer-button">Conditions d'utilisation</a>
             <a href="politique_confidentialite.html" class="footer-button">Politique de confidentialité</a>
         </div>
-
         <div class="footer-social">
             <a href="#"><i class="fab fa-facebook"></i></a>
             <a href="#"><i class="fab fa-twitter"></i></a>
@@ -1203,16 +1189,23 @@
     </div>
 </footer>
 <style>
+    body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+    .container {
+        flex: 1;
+    }
+
     /* 📌 Footer Compact & Fixé en Bas */
-
-
     .footer {
         background: linear-gradient(135deg, #212529, #343a40);
         color: #ffffff;
         padding: 8px 0;
         text-align: center;
         font-size: 0.9rem;
-        position: fixed;
+        position: relative;
         width: 100%;
         bottom: 0;
         left: 0;

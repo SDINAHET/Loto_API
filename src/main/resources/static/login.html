@@ -136,16 +136,54 @@
                 }
 
                 const data = await response.json();
-                localStorage.setItem("jwtToken", data.token); // ✅ Stockage du JWT
+                // localStorage.setItem("jwtToken", data.token); // ✅ Stockage du JWT -->
+                // document.cookie = `jwtToken=${data.token}; path=/; secure; HttpOnly`;
+                document.cookie = `jwtToken=${data.token}; path=/; HttpOnly`;
                 alert("Connexion réussie !");
+                console.log(document.cookie);
                 window.location.href = "index_connexion.html";
             } catch (error) {
                 alert(error.message);
             }
         });
 
+        //async function fetchUserData() {
+          //  const token = localStorage.getItem("jwtToken");
+            //if (!token) {
+              //  alert("Veuillez vous connecter !");
+                //window.location.href = "index.html";
+                //return;
+            //}
+
+            //try {
+              //  const response = await fetch("http://localhost:8082/api/protected/userinfo", {
+                //    method: "GET",
+                 //   headers: {
+                   //     "Authorization": `Bearer ${token}`,
+                     //   "Content-Type": "application/json"
+                   // }
+                //});
+
+               // if (!response.ok) {
+                //    throw new Error("Accès refusé.");
+               // }
+
+                //const userData = await response.json();
+               // console.log(userData);
+                //alert(`Bienvenue ${userData.username}`);
+               // console.log(document.cookie);
+            //} catch (error) {
+              //  alert(error.message);
+            //}
+        //}
+
         async function fetchUserData() {
-            const token = localStorage.getItem("jwtToken");
+            // ✅ Utilisation de cookies pour le token
+            const token = document.cookie
+                .split('; ')
+                .find(row => row.startsWith('jwtToken='))
+                ?.split('=')[1];
+
             if (!token) {
                 alert("Veuillez vous connecter !");
                 window.location.href = "index.html";
@@ -153,10 +191,11 @@
             }
 
             try {
+                // ✅ Utilisation de credentials: "include" pour envoyer automatiquement le cookie
                 const response = await fetch("http://localhost:8082/api/protected/userinfo", {
                     method: "GET",
+                    credentials: "include",
                     headers: {
-                        "Authorization": `Bearer ${token}`,
                         "Content-Type": "application/json"
                     }
                 });
@@ -168,10 +207,12 @@
                 const userData = await response.json();
                 console.log(userData);
                 alert(`Bienvenue ${userData.username}`);
+                console.log(document.cookie); // ✅ Vérification du cookie dans la console
             } catch (error) {
                 alert(error.message);
             }
         }
+
 
         document.addEventListener("DOMContentLoaded", async function() {
             await checkUserAuth(); // Vérifie l'authentification dès le chargement de la page
@@ -235,6 +276,7 @@
                 document.getElementById("updateEmail").value = userData.username;
                 document.getElementById("updateFirstName").value = userData.firstName || "";
                 document.getElementById("updateLastName").value = userData.lastName || "";
+                console.log("Données utilisateur :", userData);
 
                 document.getElementById("settingsModal").style.display = "block";
             } catch (error) {
