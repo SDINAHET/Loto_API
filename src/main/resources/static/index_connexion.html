@@ -11,6 +11,7 @@
     <link rel="icon" type="image/png" href="loto_tracker.png">
 
 
+
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/moment/min/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/moment-timezone/builds/moment-timezone-with-data.min.js"></script>
@@ -21,6 +22,7 @@
 
 
     <style>
+
         .lottery-ball {
             display: inline-block;
             width: 40px;
@@ -396,8 +398,8 @@
 
         <h3 class="mt-4">Rechercher un tirage</h3>
         <div class="input-group mb-3">
-            <input type="date" id="startDate" class="form-control">
-            <input type="date" id="endDate" class="form-control">
+            <input type="date" id="startDate" class="form-control" placeholder="Date de début">
+            <input type="date" id="endDate" class="form-control" placeholder="Date de fin">
             <button class="btn btn-primary" onclick="searchTirages()">Rechercher</button>
         </div>
         <div id="searchResults" class="row row-cols-1 row-cols-md-3 g-4"></div>
@@ -837,6 +839,110 @@
             });
         });
 
+        // Fonction pour désactiver les jours de la semaine
+        function disableDays(inputId) {
+            const input = document.getElementById(inputId);
+
+            input.addEventListener('input', function () {
+                const date = new Date(this.value);
+                const day = date.getUTCDay();
+
+                // Désactiver Mardi (2), Vendredi (5), Dimanche (0)
+                // if ([0, 2, 5].includes(day)) {
+                    //alert("Le Mardi, Vendredi et Dimanche ne sont pas disponibles.");
+                    //this.value = '';
+                //}
+            });
+        }
+
+        // Appliquer la désactivation sur les deux calendriers
+        disableDays('startDate');
+        disableDays('endDate');
+
+        async function searchTirages() {
+            let startDate = document.getElementById("startDate").value;
+            let endDate = document.getElementById("endDate").value;
+
+            if (!startDate) {
+                alert("Veuillez sélectionner une date de début.");
+                return;
+            }
+
+            // ✅ Si endDate est vide, utiliser seulement startDate pour la recherche
+            let apiUrl;
+            if (!endDate) {
+                apiUrl = `http://localhost:8082/api/historique/last20/Detail/tirages?startDate=${startDate}`;
+            } else {
+                apiUrl = `http://localhost:8082/api/historique/last20/Detail/tirages?startDate=${startDate}&endDate=${endDate}`;
+            }
+
+            console.log("Requête API vers :", apiUrl);
+
+            // ✅ Conteneur des résultats
+            let container = document.getElementById("searchResults");
+            container.innerHTML = "";  // ✅ On vide le conteneur avant chaque nouvelle recherche
+            container.scrollTop = 0;   // ✅ On réinitialise le scroll
+
+            // ✅ Ajout d'un indicateur de chargement
+            let loadingIndicator = document.createElement("div");
+            loadingIndicator.className = "loading";
+            loadingIndicator.innerText = "Chargement en cours...";
+            container.appendChild(loadingIndicator);
+
+            try {
+                let response = await axios.get(apiUrl);
+                if (response.status === 200) {
+                    let data = Array.isArray(response.data) ? response.data : [response.data];
+                    container.innerHTML = "";  // ✅ On vide à nouveau après avoir reçu les données
+
+                    if (data.length === 0) {
+                        alert("Aucun tirage trouvé pour les dates sélectionnées.");
+                        return;
+                    }
+
+                    data.forEach(draw => {
+                        // ✅ Formatage de la date pour obtenir le jour de la semaine
+                        let dateParts = draw.dateDeTirage.split('/');
+                        let formattedDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
+                        let dateObj = new Date(formattedDate);
+
+                        // ✅ Utilisation du tableau des jours
+                        let jours = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
+                        let dayName = jours[dateObj.getDay()];
+
+                        // ✅ Création des cartes de tirages
+                        let card = document.createElement("div");
+                        card.className = "col";
+                        card.innerHTML = `
+                            <div class="card card-lottery text-center">
+                                <div class="card-body">
+                                    <h5>${dayName} ${draw.dateDeTirage}</h5>
+                                    <div>
+                                        <span class="lottery-ball">${draw.boule1}</span>
+                                        <span class="lottery-ball">${draw.boule2}</span>
+                                        <span class="lottery-ball">${draw.boule3}</span>
+                                        <span class="lottery-ball">${draw.boule4}</span>
+                                        <span class="lottery-ball">${draw.boule5}</span>
+                                        <span class="lottery-ball lucky-number">${draw.numeroChance}</span>
+                                    </div>
+                                    <button class="btn btn-outline-primary mt-2" onclick="viewDetails('${draw.dateDeTirage}')">Détail du Tirage</button>
+                                </div>
+                            </div>`;
+                        container.appendChild(card);
+                    });
+                } else {
+                    console.error("Erreur lors de la récupération des tirages", response);
+                }
+            } catch (error) {
+                console.error("Erreur lors de la récupération des tirages", error);
+            }
+        }
+
+
+
+
+
+
 
 
         /**
@@ -1083,6 +1189,15 @@
     </div>
 </footer>
 <style>
+    body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+    .container {
+        flex: 1;
+    }
+
     /* 📌 Footer Compact & Fixé en Bas */
     .footer {
         background: linear-gradient(135deg, #212529, #343a40);
@@ -1090,7 +1205,7 @@
         padding: 8px 0;
         text-align: center;
         font-size: 0.9rem;
-        position: fixed;
+        position: relative;
         width: 100%;
         bottom: 0;
         left: 0;
