@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enregistrement Ticket Loto</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        form {
+            display: inline-block;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .number-select {
+            margin: 10px 0;
+        }
+
+        select {
+            padding: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            background: #007bff;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <!-- HEADER -->
+    <header class="header d-flex justify-content-between align-items-center p-3 bg-dark text-white">
+        <div class="d-flex align-items-center">
+            <img src="loto_tracker.png" alt="Logo Loto" class="logo">
+            <h1 class="m-0 ms-2">Tracker du Loto Français</h1>
+        </div>
+        <div id="authButtons">
+            <a href="login.html" class="btn btn-outline-light" id="loginButton">
+                <i class="fas fa-user"></i> Se connecter
+            </a>
+        </div>
+    </header>
+    <main>
+    <h1>Enregistrement Ticket Loto</h1>
+    <form action="#" method="post">
+        <div class="number-select">
+            <h2>Choisissez 5 Boules Bleues (1 à 49) :</h2>
+            <select name="boule_bleue_1">
+                <option value="">-- Sélectionner --</option>
+                <!-- Options 1 à 49 -->
+                <script>
+                    for(let i = 1; i <= 49; i++) {
+                        document.write(`<option value="${i}">${i}</option>`);
+                    }
+                </script>
+            </select>
+            <select name="boule_bleue_2">
+                <option value="">-- Sélectionner --</option>
+                <script>
+                    for(let i = 1; i <= 49; i++) {
+                        document.write(`<option value="${i}">${i}</option>`);
+                    }
+                </script>
+            </select>
+            <select name="boule_bleue_3">
+                <option value="">-- Sélectionner --</option>
+                <script>
+                    for(let i = 1; i <= 49; i++) {
+                        document.write(`<option value="${i}">${i}</option>`);
+                    }
+                </script>
+            </select>
+            <select name="boule_bleue_4">
+                <option value="">-- Sélectionner --</option>
+                <script>
+                    for(let i = 1; i <= 49; i++) {
+                        document.write(`<option value="${i}">${i}</option>`);
+                    }
+                </script>
+            </select>
+            <select name="boule_bleue_5">
+                <option value="">-- Sélectionner --</option>
+                <script>
+                    for(let i = 1; i <= 49; i++) {
+                        document.write(`<option value="${i}">${i}</option>`);
+                    }
+                </script>
+            </select>
+        </div>
+
+        <div class="number-select">
+            <h2>Numéro Chance (Rouge 1 à 9) :</h2>
+            <select name="numero_chance">
+                <option value="">-- Sélectionner --</option>
+                <script>
+                    for(let i = 1; i <= 9; i++) {
+                        document.write(`<option value="${i}">${i}</option>`);
+                    }
+                </script>
+            </select>
+        </div>
+
+        <button type="submit">Enregistrer le Ticket</button>
+    </form>
+</main>
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-links">
+                <a href="mentions_legales.html" class="footer-button">Mentions légales</a>
+                <a href="conditions_utilisation.html" class="footer-button">Conditions d'utilisation</a>
+                <a href="politique_confidentialite.html" class="footer-button">Politique de confidentialité</a>
+            </div>
+            <div class="footer-social">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+            </div>
+            <p class="footer-text">© 2025 Tracker du Loto Français / SDINAHET. Tous droits réservés.</p>
+        </div>
+    </footer>
+</body>
+</html>

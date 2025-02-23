@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuration Utilisateur</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <h1 class="text-center">Paramètres Utilisateur</h1>
+        <form id="updateForm">
+            <div class="mb-3">
+                <label for="updateEmail" class="form-label">Email :</label>
+                <input type="email" class="form-control" id="updateEmail" readonly>
+            </div>
+            <div class="mb-3">
+                <label for="updateFirstName" class="form-label">Prénom :</label>
+                <input type="text" class="form-control" id="updateFirstName">
+            </div>
+            <div class="mb-3">
+                <label for="updateLastName" class="form-label">Nom :</label>
+                <input type="text" class="form-control" id="updateLastName">
+            </div>
+            <div class="mb-3">
+                <label for="updatePassword" class="form-label">Nouveau mot de passe :</label>
+                <input type="password" class="form-control" id="updatePassword">
+            </div>
+            <button type="submit" class="btn btn-primary">Mettre à jour</button>
+        </form>
+    </div>
+
+    <script>
+        // Récupération des informations utilisateur
+        document.addEventListener("DOMContentLoaded", function () {
+            const token = localStorage.getItem("jwtToken");
+            if (!token) {
+                alert("Vous n'êtes pas connecté !");
+                window.location.href = "index.html";
+                return;
+            }
+
+            fetch("http://localhost:8082/api/protected/userinfo", {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            })
+            .then(response => response.json())
+            .then(userData => {
+                document.getElementById("updateEmail").value = userData.sub;
+                document.getElementById("updateFirstName").value = userData.firstName || "";
+                document.getElementById("updateLastName").value = userData.lastName || "";
+            })
+            .catch(error => {
+                console.error("Erreur lors de la récupération des informations utilisateur :", error);
+            });
+        });
+    </script>
+</body>
+</html>

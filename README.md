@@ -557,3 +557,17 @@ Le graphique généré permet une visualisation rapide de la dispersion des num�
 ![alt text](image-13.png)
 ![alt text](image-14.png)
 ![alt text](image-15.png)
+
+
+
+CREATE DATABASE loto_api_db;
+
+\1
+
+CREATE USER root WITH PASSWORD 'root';
+GRANT ALL PRIVILEGES ON DATABASE loto_api_db TO root;
+
+Dans psql, connecte-toi à la nouvelle base de données 
+\c loto_api_db
+\dt
+
