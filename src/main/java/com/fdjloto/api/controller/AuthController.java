@@ -24,7 +24,8 @@ import java.util.HashMap;
 import com.fdjloto.api.payload.MessageResponse;
 
 
-@CrossOrigin(origins = "http://127.0.0.1:5500") // 🔥 Autorise CORS pour Live Server
+// @CrossOrigin(origins = "http://127.0.0.1:5500") // 🔥 Autorise CORS pour Live Server
+@CrossOrigin(origins = "http://127.0.0.1:5500", allowCredentials = "true")
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -82,7 +83,7 @@ public class AuthController {
             // ✅ Réponse avec Token et Message
             Map<String, String> responseBody = new HashMap<>();
             responseBody.put("token", jwt);
-            // responseBody.put("message", "Connexion réussie");
+            responseBody.put("message", "Connexion réussie");
 
             return ResponseEntity.ok(responseBody);
 

@@ -248,9 +248,31 @@
             <br>
             <p class="text-centerr" id="current-time"></p>
         </div>
-        <a href="login.html" class="btn btn-outline-light">
+        <!-- <a href="login.html" class="btn btn-outline-light">
             <i class="fas fa-user"></i> Se connecter
-        </a>
+        </a> -->
+        <div id="authButtons">
+            <!-- Par défaut, le bouton de connexion -->
+            <a href="login.html" class="btn btn-outline-light" id="loginButton">
+                <i class="fas fa-user"></i> Se connecter
+            </a>
+
+            <!-- Si l'utilisateur est connecté, afficher l'engrenage et le bouton de déconnexion -->
+            <div class="d-flex align-items-center" id="userMenu" style="display: none;">
+                <span class="me-3">Bienvenue, <span id="userEmail"></span></span>
+                <!-- <button class="btn btn-outline-light" onclick="openSettingsModal()">
+                    <i class="fas fa-cog"></i>
+                </button> -->
+                <!-- Bouton Engrenage pour accéder à config.html -->
+                <a href="config.html" class="btn btn-outline-light" id="settingsButton" style="display: none;">
+                    <i class="fas fa-cog"></i>
+                </a>
+
+
+
+                <button class="btn btn-danger ms-2" onclick="logout()">Se déconnecter</button>
+            </div>
+        </div>
 
     </header>
     <body>
@@ -304,6 +326,41 @@
 
 
         </div>
+
+
+        <!-- MODAL DE MODIFICATION DES INFORMATIONS -->
+        <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="settingsModalLabel">Modifier mes informations</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="updateForm">
+                            <div class="mb-3">
+                                <label for="updateEmail" class="form-label">Email :</label>
+                                <input type="email" class="form-control" id="updateEmail" disabled>
+                            </div>
+                            <div class="mb-3">
+                                <label for="updateFirstName" class="form-label">Prénom :</label>
+                                <input type="text" class="form-control" id="updateFirstName">
+                            </div>
+                            <div class="mb-3">
+                                <label for="updateLastName" class="form-label">Nom :</label>
+                                <input type="text" class="form-control" id="updateLastName">
+                            </div>
+                            <div class="mb-3">
+                                <label for="updatePassword" class="form-label">Nouveau mot de passe :</label>
+                                <input type="password" class="form-control" id="updatePassword">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Mettre à jour</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
 
 
@@ -1158,6 +1215,150 @@
 
 
 
+
+
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+            checkUserAuth();  // Vérifie l'authentification à chaque chargement de page
+        });
+
+        // ✅ Vérifie si l'utilisateur est connecté via le JWT
+        async function checkUserAuth() {
+            try {
+                const response = await axios.get("http://localhost:8082/api/auth/me", {
+                    withCredentials: true
+                });
+
+                if (response.status === 200 && response.data.email) {
+                    document.getElementById("loginButton").style.display = "none";
+                    document.getElementById("userEmail").textContent = response.data.email;
+                    document.getElementById("userMenu").style.display = "flex";
+                } else {
+                    document.getElementById("loginButton").style.display = "inline-block";
+                    document.getElementById("userMenu").style.display = "none";
+                }
+            } catch (error) {
+                console.error("Erreur d'authentification :", error);
+                document.getElementById("loginButton").style.display = "inline-block";
+                document.getElementById("userMenu").style.display = "none";
+            }
+        }
+
+        // ✅ Déconnexion
+        async function logout() {
+            try {
+                await axios.post("http://localhost:8082/api/auth/logout", {}, {
+                    withCredentials: true
+                });
+                alert("Déconnexion réussie !");
+                window.location.reload();
+            } catch (error) {
+                console.error("Erreur lors de la déconnexion :", error);
+            }
+        }
+
+        // ✅ Ouvre le Modal de modification
+        async function openSettingsModal() {
+            try {
+                const response = await axios.get("http://localhost:8082/api/auth/me", {
+                    withCredentials: true
+                });
+
+                if (response.status === 200 && response.data) {
+                    document.getElementById("updateEmail").value = response.data.email;
+                    document.getElementById("updateFirstName").value = response.data.firstName;
+                    document.getElementById("updateLastName").value = response.data.lastName;
+                    new bootstrap.Modal(document.getElementById("settingsModal")).show();
+                }
+            } catch (error) {
+                console.error("Erreur lors du chargement des informations :", error);
+            }
+        }
+
+        // ✅ Mise à jour des informations utilisateur
+        document.getElementById("updateForm").addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            const updatedData = {
+                firstName: document.getElementById("updateFirstName").value,
+                lastName: document.getElementById("updateLastName").value,
+                password: document.getElementById("updatePassword").value || null
+            };
+
+            try {
+                const response = await axios.put("http://localhost:8082/api/auth/me", updatedData, {
+                    withCredentials: true
+                });
+
+                if (response.status === 200) {
+                    alert("Profil mis à jour avec succès !");
+                    document.getElementById("settingsModal").querySelector(".btn-close").click();
+                    checkUserAuth();
+                }
+            } catch (error) {
+                console.error("Erreur lors de la mise à jour :", error);
+            }
+        });
+
+        // Récupère le token JWT depuis localStorage
+        function getToken() {
+            return localStorage.getItem("jwtToken");
+        }
+
+        // Décode le token JWT pour obtenir l'email utilisateur
+        function parseJwt(token) {
+            try {
+                const base64Url = token.split('.')[1];
+                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                }).join(''));
+                return JSON.parse(jsonPayload);
+            } catch (e) {
+                console.error("Erreur de décodage du JWT :", e);
+                return null;
+            }
+        }
+
+        // Vérifie si l'utilisateur est connecté et affiche le bouton engrenage
+        function checkAuth() {
+            const token = getToken();
+            if (token) {
+                const userData = parseJwt(token);
+                if (userData && userData.sub) {
+                    // Affiche l'email de l'utilisateur
+                    document.getElementById("userEmail").textContent = userData.sub;
+                    // Affiche le menu utilisateur (engrenage + déconnexion)
+                    document.getElementById("userMenu").style.display = "flex";
+                    // Affiche le bouton engrenage pour la configuration
+                    document.getElementById("settingsButton").style.display = "inline-block";
+                    // Masque le bouton de connexion
+                    document.getElementById("loginButton").style.display = "none";
+                } else {
+                    // Si le token est invalide, déconnexion forcée
+                    logout();
+                }
+            } else {
+                // Si aucun token, masquer le menu utilisateur
+                document.getElementById("userMenu").style.display = "none";
+                document.getElementById("settingsButton").style.display = "none";
+                document.getElementById("loginButton").style.display = "inline-block";
+            }
+        }
+
+        // Déconnexion
+        function logout() {
+            localStorage.removeItem("jwtToken");
+            alert("Déconnexion réussie !");
+            window.location.href = "index.html";
+        }
+
+        // Vérifie l'authentification au chargement de la page
+        document.addEventListener("DOMContentLoaded", checkAuth);
+
+
+
     </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"> </script>
 <script>
@@ -1290,7 +1491,3 @@
 
 </body>
 </html>
-
-
-
-
