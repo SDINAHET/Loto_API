@@ -80,7 +80,7 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Utilisateur non authentifié"));
         }
 
-        String email = jwtUtils.getUserNameFromJwtToken(token);
+        String email = jwtUtils.getUserFromJwtToken(token);
 
         // ✅ Création d'une réponse sous forme de Map
         Map<String, String> response = new HashMap<>();
@@ -108,7 +108,7 @@ public class AuthController {
         // 🔥 Création du cookie sécurisé
         Cookie jwtCookie = new Cookie("jwtToken", jwt);
         jwtCookie.setHttpOnly(true); // ❌ Empêche l'accès via JS
-        jwtCookie.setSecure(true);   // 🔒 Seulement en HTTPS
+        jwtCookie.setSecure(false);   // 🔒 Seulement en HTTPS
         jwtCookie.setPath("/");      // 🌍 Disponible pour toute l’API
         jwtCookie.setMaxAge(24 * 60 * 60); // ⏳ Expire en 1 jour
 
