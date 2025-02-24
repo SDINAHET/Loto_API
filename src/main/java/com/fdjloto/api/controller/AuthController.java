@@ -1,5 +1,6 @@
 package com.fdjloto.api.controller;
 
+import com.fdjloto.api.model.LoginRequest;
 import com.fdjloto.api.model.User;
 import com.fdjloto.api.security.JwtUtils;
 import com.fdjloto.api.service.UserService;
@@ -12,12 +13,16 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.Cookie;
 import java.util.UUID;
 import java.util.Map;
 import java.util.HashMap;
+
+import com.fdjloto.api.payload.MessageResponse;
+
 
 @CrossOrigin(origins = "http://127.0.0.1:5500") // 🔥 Autorise CORS pour Live Server
 @RestController
@@ -29,6 +34,10 @@ public class AuthController {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
 
+    // Ajouter en haut de la classe AuthController
+    private static final String JWT_COOKIE_NAME = "jwtToken";
+
+
     public AuthController(AuthenticationManager authenticationManager, JwtUtils jwtUtils, UserService userService, PasswordEncoder passwordEncoder) {
         this.authenticationManager = authenticationManager;
         this.jwtUtils = jwtUtils;
@@ -36,15 +45,60 @@ public class AuthController {
         this.passwordEncoder = passwordEncoder;
     }
 
+    // @PostMapping("/login4")
+    // public ResponseEntity<String> authenticateUser(@RequestParam String email, @RequestParam String password) {
+    //     Authentication authentication = authenticationManager.authenticate(
+    //             new UsernamePasswordAuthenticationToken(email, password)
+    //     );
+    //     SecurityContextHolder.getContext().setAuthentication(authentication);
+    //     String jwt = jwtUtils.generateJwtToken(authentication);
+    //     return ResponseEntity.ok(jwt);
+    // }
+
     @PostMapping("/login3")
-    public ResponseEntity<String> authenticateUser(@RequestParam String email, @RequestParam String password) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(email, password)
-        );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
-        return ResponseEntity.ok(jwt);
+    public ResponseEntity<Map<String, String>> authenticateUserWithCookie(
+            @RequestBody LoginRequest loginRequest,
+            HttpServletResponse response
+    ) {
+        try {
+            // 🔐 Authentification
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
+            );
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            // 🔑 Génération du Token JWT
+            String jwt = jwtUtils.generateJwtToken(authentication);
+
+            // 🍪 Configuration du Cookie Sécurisé
+            Cookie jwtCookie = new Cookie(JWT_COOKIE_NAME, jwt);
+            jwtCookie.setHttpOnly(true);
+            jwtCookie.setSecure(false); // 🔒 À mettre à true en production
+            jwtCookie.setPath("/");
+            jwtCookie.setMaxAge(60 * 60); // 24h
+
+            response.addCookie(jwtCookie);
+
+            // ✅ Réponse avec Token et Message
+            Map<String, String> responseBody = new HashMap<>();
+            responseBody.put("token", jwt);
+            // responseBody.put("message", "Connexion réussie");
+
+            return ResponseEntity.ok(responseBody);
+
+        } catch (Exception e) {
+            // ❌ En cas d'erreur d'authentification
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("message", "Échec de la connexion");
+
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+        }
     }
+
+
+
+
+
 
     // @PostMapping("/login2")
     // public ResponseEntity<Map<String, String>> authenticateUser(@RequestBody Map<String, String> request) {
@@ -74,21 +128,40 @@ public class AuthController {
         return ResponseEntity.ok(userService.updateUser(id, user));
     }
 
+    // @GetMapping("/me")
+    // public ResponseEntity<Map<String, String>> getUserInfo(@CookieValue(name = "jwtToken", required = false) String token) {
+    //     if (token == null || !jwtUtils.validateJwtToken(token)) {
+    //         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Utilisateur non authentifié"));
+    //     }
+
+    //     String email = jwtUtils.getUserFromJwtToken(token);
+
+    //     // ✅ Création d'une réponse sous forme de Map
+    //     Map<String, String> response = new HashMap<>();
+    //     response.put("email", email);
+    //     response.put("message", "Utilisateur authentifié");
+
+    //     return ResponseEntity.ok(response);
+    // }
+
     @GetMapping("/me")
-    public ResponseEntity<Map<String, String>> getUserInfo(@CookieValue(name = "jwtToken", required = false) String token) {
+    public ResponseEntity<Map<String, String>> getUserInfo(
+            @CookieValue(name = "jwtToken", required = false) String token) {
+
         if (token == null || !jwtUtils.validateJwtToken(token)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Utilisateur non authentifié"));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                                .body(Map.of("error", "Utilisateur non authentifié"));
         }
 
         String email = jwtUtils.getUserFromJwtToken(token);
 
-        // ✅ Création d'une réponse sous forme de Map
         Map<String, String> response = new HashMap<>();
         response.put("email", email);
         response.put("message", "Utilisateur authentifié");
 
         return ResponseEntity.ok(response);
     }
+
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> authenticateUser(
@@ -127,6 +200,30 @@ public class AuthController {
 
         response.addCookie(jwtCookie);
         return ResponseEntity.ok("Déconnexion réussie !");
+    }
+
+    @GetMapping("/me/firstname")
+    public ResponseEntity<?> getFirstName(@CookieValue(name = "jwtToken", required = false) String token) {
+        // Vérifie la présence et la validité du token
+        if (token == null || !jwtUtils.validateJwtToken(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Utilisateur non authentifié");
+        }
+
+        // Récupère l'email de l'utilisateur depuis le token
+        String email = jwtUtils.getUserFromJwtToken(token);
+
+        // Cherche l'utilisateur dans la base de données
+        // User user = userService.findByEmail(email);
+        User user = userService.findByEmail(email)
+                       .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Utilisateur introuvable");
+        }
+
+        // Renvoie le prénom de l'utilisateur
+        Map<String, String> response = new HashMap<>();
+        response.put("firstname", user.getFirstName());
+        return ResponseEntity.ok(response);
     }
 
 

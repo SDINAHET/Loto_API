@@ -14,6 +14,11 @@ import java.util.UUID;
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
 
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
     private final UserRepository userRepository;
 
     public UserServiceImpl(UserRepository userRepository) {
@@ -76,4 +81,5 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 .roles(user.isAdmin() ? "ADMIN" : "USER")
                 .build();
     }
+
 }

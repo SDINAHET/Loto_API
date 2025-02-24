@@ -13,5 +13,6 @@ public interface UserService {
     User createUser(User user);
     User updateUser(UUID id, User user); // ✅ Garde UUID
     void deleteUser(UUID id); // ✅ Garde UUID
+    Optional<User> findByEmail(String email);
 }
 

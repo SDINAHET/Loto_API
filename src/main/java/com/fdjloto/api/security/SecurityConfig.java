@@ -74,10 +74,10 @@ public class SecurityConfig {
                         .requestMatchers("/api/predictions/generate", "/api/generate", "api/predictions/latest").permitAll()
                         .requestMatchers("/api/historique/last20/Detail/**").permitAll()
                         .requestMatchers("/api/tirages", "/api/tirages/**").permitAll()
-                        // .requestMatchers("/api/users/**", "/api/users").permitAll()  // Protégé par JWT
-                        .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
-                        // 🔐 Accès USER et ADMIN
-                        .requestMatchers("/api/user/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+                        .requestMatchers("/api/users/**", "/api/users").permitAll()  // Protégé par JWT
+                        // .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
+                        // // 🔐 Accès USER et ADMIN
+                        // .requestMatchers("/api/user/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                         // .requestMatchers("/api/protected/userinfo").hasAuthority("SCOPE_user") // Vérifie si l'utilisateur a le bon scope
                         // .requestMatchers("/api/user/**").authenticated()  // Protégé par JWT
                         .requestMatchers("/api/protected/**").authenticated()  // Protégé par JWT
