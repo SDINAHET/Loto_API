@@ -1,0 +1,6 @@
+SQLite version 3.37.2 2022-01-06 13:25:41
+Enter ".help" for usage hints.
+Connected to a [1mtransient in-memory database[0m.
+Use ".open FILENAME" to reopen on a persistent database.
+[?2004hsqlite> ^C[?2004l[?2004hsqlite3 loto.db
+[?2004l[?2004h   ...> sqlite3 loto.db[C[C[C[C[C[C[C[C[7P.tables;SELECT * FROM users;^C[?2004l[?2004h^C[?2004l[?2004h^C[?2004l
