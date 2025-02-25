@@ -76,7 +76,15 @@ public class AuthController {
             jwtCookie.setHttpOnly(false);
             jwtCookie.setSecure(false); // 🔒 À mettre à true en production
             jwtCookie.setPath("/");
-            jwtCookie.setMaxAge(60 * 60); // 1h
+            jwtCookie.setMaxAge(10 * 60); // 10min
+            // jwtCookie.setDomain("localhost");
+            // jwtCookie.setSameSite("Lax"); // Pour la gestion de CORS
+
+            // 🔥 Configuration SameSite pour le CORS
+            // 🚨 Utilisez "None" en production (HTTPS requis)
+            jwtCookie.setDomain("localhost"); // Correspond au domaine du frontend
+            response.addHeader("Set-Cookie", String.format("%s=%s; HttpOnly; Path=/; Max-Age=3600; SameSite=None; Secure=%b",
+                JWT_COOKIE_NAME, jwt, false)); // ⚠️ false pour HTTP en local, true en HTTPS
 
             response.addCookie(jwtCookie);
 
@@ -193,17 +201,17 @@ public class AuthController {
         return ResponseEntity.ok(Map.of("message", "Connexion réussie !"));
     }
 
-    @PostMapping("/logout")
-    public ResponseEntity<String> logout(HttpServletResponse response) {
-        Cookie jwtCookie = new Cookie("jwtToken", null);
-        jwtCookie.setHttpOnly(true);
-        jwtCookie.setSecure(true);
-        jwtCookie.setPath("/");
-        jwtCookie.setMaxAge(0); // ❌ Expire immédiatement
+    // @PostMapping("/logout")
+    // public ResponseEntity<String> logout(HttpServletResponse response) {
+    //     Cookie jwtCookie = new Cookie("jwtToken", null);
+    //     jwtCookie.setHttpOnly(true);
+    //     jwtCookie.setSecure(false);
+    //     jwtCookie.setPath("/");
+    //     jwtCookie.setMaxAge(0); // ❌ Expire immédiatement
 
-        response.addCookie(jwtCookie);
-        return ResponseEntity.ok("Déconnexion réussie !");
-    }
+    //     response.addCookie(jwtCookie);
+    //     return ResponseEntity.ok("Déconnexion réussie !");
+    // }
 
     @GetMapping("/me/firstname")
     public ResponseEntity<?> getFirstName(@CookieValue(name = "jwtToken", required = false) String token) {
@@ -228,6 +236,33 @@ public class AuthController {
         response.put("firstname", user.getFirstName());
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/logout")
+public ResponseEntity<Map<String, String>> logoutWithCookie(HttpServletResponse response) {
+    // 🔐 Invalidation du SecurityContext
+    SecurityContextHolder.clearContext();
+
+    // 🍪 Supprimer le Cookie JWT
+    Cookie jwtCookie = new Cookie(JWT_COOKIE_NAME, null);
+    jwtCookie.setHttpOnly(false);
+    jwtCookie.setSecure(false); // 🔒 À mettre à true en production
+    jwtCookie.setPath("/");
+    jwtCookie.setMaxAge(0); // ❌ Expire immédiatement
+
+    // 🔥 Configuration SameSite pour le CORS
+    // 🚨 Utilisez "None" en production (HTTPS requis)
+    jwtCookie.setDomain("localhost"); // Correspond au domaine du frontend
+    response.addHeader("Set-Cookie", String.format("%s=%s; HttpOnly; Path=/; Max-Age=0; SameSite=None; Secure=%b",
+            JWT_COOKIE_NAME, "", false)); // ⚠️ false pour HTTP en local, true en HTTPS
+
+    response.addCookie(jwtCookie);
+
+    // ✅ Réponse de succès
+    Map<String, String> responseBody = new HashMap<>();
+    responseBody.put("message", "Déconnexion réussie");
+    return ResponseEntity.ok(responseBody);
+}
+
 
 
 }

@@ -139,11 +139,14 @@
                     throw new Error("Identifiants incorrects ou serveur indisponible.");
                 }
 
-                alert("Connexion réussie !");
-                console.log("🔎 Cookies : ", document.cookie);
-                window.location.href = "index_connexion.html";
+                if (response.status === 200) {
+                    alert("Connexion réussie !");
+                    console.log("🔎 Cookies : ", document.cookie);
+                    window.location.href = "index_connexion.html";
+                }
             } catch (error) {
-                alert(error.message);
+                console.error("Erreur lors de la connexion :", error);
+                alert("Identifiants incorrects.");
             }
         });
 

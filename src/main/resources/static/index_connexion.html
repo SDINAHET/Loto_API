@@ -1258,17 +1258,17 @@
         }
 
         // ✅ Déconnexion
-        async function logout() {
-            try {
-                await axios.post("http://localhost:8082/api/auth/logout", {}, {
-                    withCredentials: true
-                });
-                alert("Déconnexion réussie !");
-                window.location.reload();
-            } catch (error) {
-                console.error("Erreur lors de la déconnexion :", error);
-            }
-        }
+        //async function logout() {
+          //  try {
+            //    await axios.post("http://localhost:8082/api/auth/logout", {}, {
+              //      withCredentials: true
+                //});
+                //alert("Déconnexion réussie !");
+                //window.location.reload();
+            //} catch (error) {
+              //  console.error("Erreur lors de la déconnexion :", error);
+            //}
+        //}
 
         // ✅ Ouvre le Modal de modification
         async function openSettingsModal() {
@@ -1313,61 +1313,6 @@
             }
         });
 
-        // Récupère le token JWT depuis localStorage
-        function getToken() {
-            return localStorage.getItem("jwtToken");
-        }
-
-        // Décode le token JWT pour obtenir l'email utilisateur
-        function parseJwt(token) {
-            try {
-                const base64Url = token.split('.')[1];
-                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-                const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-                }).join(''));
-                return JSON.parse(jsonPayload);
-            } catch (e) {
-                console.error("Erreur de décodage du JWT :", e);
-                return null;
-            }
-        }
-
-        // Vérifie si l'utilisateur est connecté et affiche le bouton engrenage
-        function checkAuth() {
-            const token = getToken();
-            if (token) {
-                const userData = parseJwt(token);
-                if (userData && userData.sub) {
-                    // Affiche l'email de l'utilisateur
-                    document.getElementById("userEmail").textContent = userData.sub;
-                    // Affiche le menu utilisateur (engrenage + déconnexion)
-                    document.getElementById("userMenu").style.display = "flex";
-                    // Affiche le bouton engrenage pour la configuration
-                    document.getElementById("settingsButton").style.display = "inline-block";
-                    // Masque le bouton de connexion
-                    document.getElementById("loginButton").style.display = "none";
-                } else {
-                    // Si le token est invalide, déconnexion forcée
-                    logout();
-                }
-            } else {
-                // Si aucun token, masquer le menu utilisateur
-                document.getElementById("userMenu").style.display = "none";
-                document.getElementById("settingsButton").style.display = "none";
-                document.getElementById("loginButton").style.display = "inline-block";
-            }
-        }
-
-        // Déconnexion
-        function logout() {
-            localStorage.removeItem("jwtToken");
-            alert("Déconnexion réussie !");
-            window.location.href = "index.html";
-        }
-
-        // Vérifie l'authentification au chargement de la page
-        document.addEventListener("DOMContentLoaded", checkAuth);
 
 
 
@@ -1375,14 +1320,17 @@
 
 
 
-        
+
+
 
         // ✅ Fonction pour lire le cookie JWT
         function getCookie(name) {
             const value = `; ${document.cookie}`;
             const parts = value.split(`; ${name}=`);
             if (parts.length === 2) return parts.pop().split(';').shift();
+            return null;
         }
+
 
         // ✅ Fonction pour décoder le token JWT
         function parseJwt(token) {
@@ -1402,36 +1350,32 @@
         // ✅ Vérifie si l'utilisateur est connecté via le JWT dans les cookies
         function checkAuth() {
             const token = getCookie("jwtToken");
-            console.log("🔎 Token trouvé dans les cookies :", token);  // 👉 Affiche le token trouvé
 
             if (token) {
                 const userData = parseJwt(token);
-                console.log("📢 Payload JWT :", userData);  // 👉 Affiche le contenu décodé du JWT
+                console.log("📢 Payload JWT :", userData);
 
                 // ✅ Utilisation de `sub` pour l'email
                 const email = userData?.sub;
                 if (email) {
-                    console.log("✅ Email extrait :", email);  // 👉 Affiche l'email trouvé
-
                     // 🔥 Affichage du menu utilisateur et mise à jour du header
                     document.getElementById("loginButton").style.display = "none";
                     document.getElementById("userEmail").textContent = email;
                     document.getElementById("userMenu").style.display = "flex";
-                    document.getElementById("logoutButton").style.display = "inline-block";
                 } else {
-                    console.error("❌ Email introuvable dans le token !");
-                    logout();
+                    logout(); // Si le token est invalide, déconnexion forcée
                 }
             } else {
-                console.error("❌ Aucun token trouvé dans les cookies !");
+                console.log("❌ Aucun token trouvé dans les cookies !");
+                // Masquer le menu utilisateur et afficher le bouton de connexion
                 document.getElementById("userMenu").style.display = "none";
                 document.getElementById("loginButton").style.display = "inline-block";
-                document.getElementById("logoutButton").style.display = "none";
             }
         }
 
+
         // ✅ Vérifie l'authentification au chargement de la page
-        document.addEventListener("DOMContentLoaded", checkAuth);
+        // document.addEventListener("DOMContentLoaded", checkAuth);
 
 
         // ✅ Déconnexion avec un appel POST à /api/auth/logout
@@ -1443,8 +1387,24 @@
 
                 if (response.status === 200) {
                     alert("Déconnexion réussie !");
+                    // 🔥 Supprimer le cookie côté client pour être sûr
                     document.cookie = "jwtToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-                    window.location.href = "index_connexion.html"; // Redirection après déconnexion
+
+                    // 🔥 Mettre à jour l'affichage après la déconnexion
+                    document.getElementById("loginButton").style.display = "inline-block";
+                    document.getElementById("userMenu").style.display = "none";
+
+                    // 🔄 Forcer l'appel à checkAuth() pour mettre à jour le DOM
+                    checkAuth();
+
+                    // 🔄 Recharger la page pour forcer la mise à jour de l'interface
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 100); // On attend un peu pour que le DOM soit mis à jour
+
+                    // ✅ Redirection vers index.html après déconnexion
+                    window.location.href = "index.html";
+                    
                 } else {
                     console.error("Erreur lors de la déconnexion :", response);
                     alert("Erreur lors de la déconnexion !");
@@ -1456,7 +1416,43 @@
         }
 
 
+        // ✅ Vérifie si l'utilisateur est connecté via le JWT dans les cookies
+        function checkAuth() {
+            const token = getCookie("jwtToken");
 
+            if (token) {
+                const userData = parseJwt(token);
+
+                // ✅ Utilisation de `sub` pour l'email
+                const email = userData?.sub;
+                if (email) {
+                    // 🔥 Affichage du menu utilisateur et mise à jour du header
+                    document.getElementById("loginButton").style.display = "none";
+                    document.getElementById("userEmail").textContent = email;
+                    document.getElementById("userMenu").style.display = "flex";
+                } else {
+                    logout(); // Si le token est invalide, déconnexion forcée
+                }
+            } else {
+                // Aucun token trouvé -> Affichage du bouton de connexion uniquement
+                console.log("❌ Aucun token trouvé dans les cookies !");
+                document.getElementById("loginButton").style.display = "inline-block";
+                document.getElementById("userMenu").style.display = "none";
+            }
+        }
+        // ✅ Fonction pour lire le cookie JWT
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return null;
+        }
+
+
+
+
+
+        // ✅ Vérifie l'authentification au chargement de la page
         document.addEventListener("DOMContentLoaded", checkAuth);
 
 
