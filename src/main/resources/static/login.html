@@ -118,6 +118,7 @@
         </div>
     </div>
     <script>
+       // 🔑 Gestion de la Connexion
         document.getElementById("loginForm").addEventListener("submit", async function(event) {
             event.preventDefault();
 
@@ -125,199 +126,71 @@
             const password = document.getElementById("password").value;
 
             try {
-                const response = await fetch("http://localhost:8082/api/auth/login", {
+                const response = await fetch("http://localhost:8082/api/auth/login3", {
                     method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ email, password })
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ email, password }),
+                    credentials: "include" // ✅ Permet d'envoyer et de recevoir le cookie
                 });
 
                 if (!response.ok) {
                     throw new Error("Identifiants incorrects ou serveur indisponible.");
                 }
 
-                const data = await response.json();
-                // localStorage.setItem("jwtToken", data.token); // ✅ Stockage du JWT -->
-                // document.cookie = `jwtToken=${data.token}; path=/; secure; HttpOnly`;
-                document.cookie = `jwtToken=${data.token}; path=/; HttpOnly`;
                 alert("Connexion réussie !");
-                console.log(document.cookie);
+                console.log("🔎 Cookies : ", document.cookie);
                 window.location.href = "index_connexion.html";
             } catch (error) {
                 alert(error.message);
             }
         });
 
-        //async function fetchUserData() {
-          //  const token = localStorage.getItem("jwtToken");
-            //if (!token) {
-              //  alert("Veuillez vous connecter !");
-                //window.location.href = "index.html";
-                //return;
-            //}
 
-            //try {
-              //  const response = await fetch("http://localhost:8082/api/protected/userinfo", {
-                //    method: "GET",
-                 //   headers: {
-                   //     "Authorization": `Bearer ${token}`,
-                     //   "Content-Type": "application/json"
-                   // }
-                //});
 
-               // if (!response.ok) {
-                //    throw new Error("Accès refusé.");
-               // }
 
-                //const userData = await response.json();
-               // console.log(userData);
-                //alert(`Bienvenue ${userData.username}`);
-               // console.log(document.cookie);
-            //} catch (error) {
-              //  alert(error.message);
-            //}
-        //}
 
-        async function fetchUserData() {
-            // ✅ Utilisation de cookies pour le token
-            const token = document.cookie
-                .split('; ')
-                .find(row => row.startsWith('jwtToken='))
-                ?.split('=')[1];
-
-            if (!token) {
-                alert("Veuillez vous connecter !");
-                window.location.href = "index.html";
-                return;
-            }
-
-            try {
-                // ✅ Utilisation de credentials: "include" pour envoyer automatiquement le cookie
-                const response = await fetch("http://localhost:8082/api/protected/userinfo", {
-                    method: "GET",
-                    credentials: "include",
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error("Accès refusé.");
-                }
-
-                const userData = await response.json();
-                console.log(userData);
-                alert(`Bienvenue ${userData.username}`);
-                console.log(document.cookie); // ✅ Vérification du cookie dans la console
-            } catch (error) {
-                alert(error.message);
-            }
+        // ✅ Fonction pour lire le cookie JWT
+        function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
         }
 
+        // ✅ Vérifie si l'utilisateur est connecté via le JWT dans les cookies
+        function checkAuth() {
+        const token = getCookie("jwtToken");
+        console.log("🔎 Token trouvé dans les cookies :", token);
 
-        document.addEventListener("DOMContentLoaded", async function() {
-            await checkUserAuth(); // Vérifie l'authentification dès le chargement de la page
-        });
-
-        // ✅ Vérifie si l'utilisateur est connecté via le cookie
-        async function checkUserAuth() {
-            try {
-                const response = await fetch("http://localhost:8082/api/protected/userinfo", {
-                    method: "GET",
-                    credentials: "include" // Envoie le cookie JWT automatiquement
-                });
-
-                if (response.ok) {
-                    const userData = await response.json();
-                    document.getElementById("loginButton").style.display = "none";
-                    document.getElementById("logoutButton").style.display = "inline-block";
-                    document.getElementById("settingsButton").style.display = "inline-block";
-
-                    console.log("Utilisateur connecté :", userData);
-                } else {
-                    document.getElementById("loginButton").style.display = "inline-block";
-                    document.getElementById("logoutButton").style.display = "none";
-                    document.getElementById("settingsButton").style.display = "none";
-                }
-            } catch (error) {
-                console.error("Erreur lors de la vérification de l'authentification :", error);
-            }
+        if (token) {
+            console.log("✅ Utilisateur authentifié !");
+            window.location.href = "index_connexion.html";
+        } else {
+            console.error("❌ Aucun token trouvé dans les cookies !");
         }
+        }
+
+        // ✅ Vérifie l'authentification au chargement de la page
+        document.addEventListener("DOMContentLoaded", checkAuth);
 
         // ✅ Déconnexion
         async function logout() {
-            try {
-                const response = await fetch("http://localhost:8082/api/auth/logout", {
-                    method: "POST",
-                    credentials: "include"
-                });
+        try {
+            const response = await fetch("http://localhost:8082/api/auth/logout", {
+                method: "POST",
+                credentials: "include"
+            });
 
-                if (response.ok) {
-                    alert("Déconnexion réussie !");
-                    window.location.href = "index.html";
-                }
-            } catch (error) {
-                alert("Erreur lors de la déconnexion.");
+            if (response.ok) {
+                alert("Déconnexion réussie !");
+                window.location.href = "index.html";
             }
+        } catch (error) {
+            alert("Erreur lors de la déconnexion.");
+        }
         }
 
-        // ✅ Ouvrir la modale de paramètres
-        async function openSettings() {
-            try {
-                const response = await fetch("http://localhost:8082/api/protected/userinfo", {
-                    method: "GET",
-                    credentials: "include"
-                });
-
-                if (!response.ok) {
-                    throw new Error("Impossible de récupérer les informations utilisateur.");
-                }
-
-                const userData = await response.json();
-                document.getElementById("updateEmail").value = userData.username;
-                document.getElementById("updateFirstName").value = userData.firstName || "";
-                document.getElementById("updateLastName").value = userData.lastName || "";
-                console.log("Données utilisateur :", userData);
-
-                document.getElementById("settingsModal").style.display = "block";
-            } catch (error) {
-                alert(error.message);
-            }
-        }
-
-        // ✅ Fermer la modale de paramètres
-        function closeSettings() {
-            document.getElementById("settingsModal").style.display = "none";
-        }
-
-        // ✅ Mise à jour des informations utilisateur
-        document.getElementById("updateForm").addEventListener("submit", async function(event) {
-            event.preventDefault();
-
-            const updatedData = {
-                email: document.getElementById("updateEmail").value,
-                firstName: document.getElementById("updateFirstName").value,
-                lastName: document.getElementById("updateLastName").value,
-                password: document.getElementById("updatePassword").value || null
-            };
-
-            try {
-                const response = await fetch("http://localhost:8082/api/users/me", {
-                    method: "PUT",
-                    headers: { "Content-Type": "application/json" },
-                    credentials: "include",
-                    body: JSON.stringify(updatedData)
-                });
-
-                if (!response.ok) {
-                    throw new Error("Mise à jour échouée.");
-                }
-
-                alert("Profil mis à jour avec succès !");
-                closeSettings();
-            } catch (error) {
-                alert(error.message);
-            }
-        });
     </script>
 </body>
 </html>

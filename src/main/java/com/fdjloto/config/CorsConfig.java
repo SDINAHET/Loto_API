@@ -40,10 +40,11 @@ public class CorsConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
+                registry.addMapping("/api/**")
                         .allowedOrigins("http://127.0.0.1:5500", "http://localhost:8082")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
+                        .exposedHeaders("Set-Cookie") // 🔑 Important pour voir le cookie dans le navigateur
                         .allowCredentials(true);
             }
         };

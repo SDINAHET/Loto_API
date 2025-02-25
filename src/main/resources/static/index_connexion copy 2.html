@@ -247,7 +247,7 @@
             <br>
             <br>
             <p class="text-centerr" id="current-time"></p>
-        </div>
+        <!-- </div> -->
         <!-- <a href="login.html" class="btn btn-outline-light">
             <i class="fas fa-user"></i> Se connecter
         </a> -->
@@ -283,7 +283,6 @@
             <span class="me-3">Bienvenue, <span id="userEmail"></span></span>
             <button class="btn btn-danger ms-2" onclick="logout()">Se déconnecter</button>
         </div>
-
 
 
     </header>
@@ -1373,18 +1372,14 @@
 
 
 
-
-
-        
-
-        // ✅ Fonction pour lire le cookie JWT
+        // ✅ Lit le cookie en fonction du nom
         function getCookie(name) {
             const value = `; ${document.cookie}`;
             const parts = value.split(`; ${name}=`);
             if (parts.length === 2) return parts.pop().split(';').shift();
         }
 
-        // ✅ Fonction pour décoder le token JWT
+        // ✅ Décode le token JWT pour obtenir l'email
         function parseJwt(token) {
             try {
                 const base64Url = token.split('.')[1];
@@ -1399,7 +1394,7 @@
             }
         }
 
-        // ✅ Vérifie si l'utilisateur est connecté via le JWT dans les cookies
+        // ✅ Vérifie si l'utilisateur est connecté et affiche l'email
         function checkAuth() {
             const token = getCookie("jwtToken");
             console.log("🔎 Token trouvé dans les cookies :", token);  // 👉 Affiche le token trouvé
@@ -1413,11 +1408,9 @@
                 if (email) {
                     console.log("✅ Email extrait :", email);  // 👉 Affiche l'email trouvé
 
-                    // 🔥 Affichage du menu utilisateur et mise à jour du header
                     document.getElementById("loginButton").style.display = "none";
                     document.getElementById("userEmail").textContent = email;
                     document.getElementById("userMenu").style.display = "flex";
-                    document.getElementById("logoutButton").style.display = "inline-block";
                 } else {
                     console.error("❌ Email introuvable dans le token !");
                     logout();
@@ -1426,13 +1419,8 @@
                 console.error("❌ Aucun token trouvé dans les cookies !");
                 document.getElementById("userMenu").style.display = "none";
                 document.getElementById("loginButton").style.display = "inline-block";
-                document.getElementById("logoutButton").style.display = "none";
             }
         }
-
-        // ✅ Vérifie l'authentification au chargement de la page
-        document.addEventListener("DOMContentLoaded", checkAuth);
-
 
         // ✅ Déconnexion avec un appel POST à /api/auth/logout
         async function logout() {
@@ -1443,8 +1431,7 @@
 
                 if (response.status === 200) {
                     alert("Déconnexion réussie !");
-                    document.cookie = "jwtToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-                    window.location.href = "index_connexion.html"; // Redirection après déconnexion
+                    window.location.href = "index.html"; // Redirection après déconnexion
                 } else {
                     console.error("Erreur lors de la déconnexion :", response);
                     alert("Erreur lors de la déconnexion !");
@@ -1454,7 +1441,6 @@
                 alert("Erreur lors de la déconnexion !");
             }
         }
-
 
 
         document.addEventListener("DOMContentLoaded", checkAuth);

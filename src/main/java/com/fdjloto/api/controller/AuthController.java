@@ -73,7 +73,7 @@ public class AuthController {
 
             // 🍪 Configuration du Cookie Sécurisé
             Cookie jwtCookie = new Cookie(JWT_COOKIE_NAME, jwt);
-            jwtCookie.setHttpOnly(true);
+            jwtCookie.setHttpOnly(false);
             jwtCookie.setSecure(false); // 🔒 À mettre à true en production
             jwtCookie.setPath("/");
             jwtCookie.setMaxAge(60 * 60); // 1h
@@ -84,6 +84,8 @@ public class AuthController {
             Map<String, String> responseBody = new HashMap<>();
             responseBody.put("token", jwt);
             responseBody.put("message", "Connexion réussie");
+            System.out.println("🔑 JWT généré : " + jwt);
+
 
             return ResponseEntity.ok(responseBody);
 
