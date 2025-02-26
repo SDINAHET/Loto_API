@@ -1,4 +1,4 @@
-ALTER TABLE users ADD COLUMN is_admin_temp INTEGER NOT NULL DEFAULT 0 CHECK (is_admin_temp IN (0, 1));
+lotolotousersALTER TABLE users ADD COLUMN is_admin_temp INTEGER NOT NULL DEFAULT 0 CHECK (is_admin_temp IN (0, 1));
 UPDATE users SET is_admin_temp = COALESCE(is_admin, 0);
 PRAGMA foreign_keys = OFF; -- Désactiver temporairement les clés étrangères
 

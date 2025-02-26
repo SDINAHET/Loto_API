@@ -143,9 +143,14 @@
                 const data = await response.json();
                 console.log("Réponse serveur :", data);
 
-                if (response.ok) {
+                // ✅ Vérifie le statut HTTP avant de lire le JSON
+                if (response.status === 200 || response.status === 201) {
                     alert("Inscription réussie !");
-                    window.location.href = "login.html";
+
+                    // ✅ Utilisation de setTimeout pour éviter le conflit avec alert()
+                    setTimeout(() => {
+                        window.location.href = "index.html";
+                    }, 100); // Attends 100ms pour que l'alerte soit fermée
                 } else {
                     console.error("Erreur serveur :", data);
                     alert("Erreur: " + (data.message || "Échec de l'inscription"));
@@ -155,6 +160,8 @@
                 alert("Erreur de connexion au serveur");
             }
         });
+
+
 
 
     </script>

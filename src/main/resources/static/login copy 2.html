@@ -214,12 +214,72 @@
             });
         }
 
-       
+        // Plugin pour ajouter le token dans le header Authorization
+        const cookieAndLocalStorageAuthPlugin = {
+            // Avant chaque requête, ajoute le token dans le header Authorization
+            requestInterceptor: (request) => {
+                //let token = localStorage.getItem('auth_token');
+                let token = localStorage.getItem('jwtToken');
+                if (!token) {
+                    token = getCookie('JwtToken'); // Récupère depuis le cookie si non présent dans Local Storage
+                }
+                if (token) {
+                    request.headers['Authorization'] = `Bearer ${token}`;
+                }
+                return request;
+            }
+        };
 
         // Ajout de l'intercepteur à Axios
         axios.interceptors.request.use(cookieAndLocalStorageAuthPlugin.requestInterceptor);
 
+        // Fonction pour envoyer les identifiants et stocker le token
+        document.getElementById("loginForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
 
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            try {
+                const response = await fetch("http://localhost:8082/api/auth/login4", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, password }),
+                    credentials: "include" // ✅ Permet d'envoyer et de recevoir le cookie
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+
+                    // ✅ Stocker le token dans le Local Storage
+                    localStorage.setItem('swagger_access_token', data.token);
+
+                    // ✅ Mise à jour de Swagger avec le token
+                    const token = `Bearer ${data.token}`;
+                    swaggerUI.authActions.authorize({
+                        bearerAuth: {
+                            name: "Authorization",
+                            schema: {
+                                type: "http",
+                                in: "header",
+                                scheme: "bearer",
+                                bearerFormat: "JWT"
+                            },
+                            value: token
+                        }
+                    });
+
+                    alert("Connexion réussie !");
+                    window.location.href = "index_connexion.html";
+                } else {
+                    const errorData = await response.json();
+                    alert("Erreur: " + (errorData.message || "Échec de la connexion"));
+                }
+            } catch (error) {
+                console.error("Erreur réseau :", error);
+                alert("Erreur de connexion au serveur");
+            }
+        });
 
         // Fonction pour lire le token depuis un cookie
         function getCookie(name) {

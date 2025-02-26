@@ -82,4 +82,35 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 .build();
     }
 
+    // @Override
+    // public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    //     User user = userRepository.findByEmail(email)
+    //             .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+
+    //     // 🔐 Mappe le rôle correctement en utilisant ROLE_ADMIN
+    //     String role = user.isAdmin() ? "ROLE_ADMIN" : "ROLE_USER";
+
+    //     return org.springframework.security.core.userdetails.User.builder()
+    //             .username(user.getEmail())
+    //             .password(user.getPassword())
+    //             .roles(role) // ✅ Utilise le rôle correctement mappé
+    //             .build();
+    // }
+
+
+    // @Override
+    // public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    //     User user = userRepository.findByEmail(email)
+    //             .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+
+    //     String role = user.isAdmin() ? "ROLE_ADMIN" : "ROLE_USER";
+
+    //     return org.springframework.security.core.userdetails.User.builder()
+    //             .username(user.getEmail())
+    //             .password(user.getPassword())
+    //             .roles(role)
+    //             .build();
+    // }
+
+
 }

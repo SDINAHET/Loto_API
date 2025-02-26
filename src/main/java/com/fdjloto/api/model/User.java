@@ -113,4 +113,9 @@ public class User {
 
     public boolean isAdmin() { return admin; } // ✅ Getter correct
     public void setAdmin(boolean admin) { this.admin = admin; } // ✅ Setter correct
+
+    // public boolean isAdmin() {
+    //     return this.admin;
+    // }
+
 }

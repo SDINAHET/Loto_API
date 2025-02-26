@@ -2,6 +2,10 @@ package com.fdjloto.api.controller;
 
 import com.fdjloto.api.model.Ticket;
 import com.fdjloto.api.service.TicketService;
+
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +17,9 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/tickets")
+@Tag(name = "Ticket Management", description = "Endpoints for managing Tickets for user accounts")
+@SecurityRequirement(name = "BearerAuth") // 🔐 Ajout de l'authentification JWT
+
 @CrossOrigin(origins = "http://127.0.0.1:5500") // 🔥 Autorise CORS pour Live Server
 public class TicketController {
 

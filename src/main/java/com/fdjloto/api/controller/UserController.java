@@ -112,6 +112,8 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/api/users")
 @Tag(name = "User Management", description = "Endpoints for managing users")
+@SecurityRequirement(name = "bearerAuth") // 🔐 Ajout de l'authentification JWT
+
 public class UserController {
 
     private final UserService userService;
@@ -185,4 +187,5 @@ public class UserController {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
+    
 }
