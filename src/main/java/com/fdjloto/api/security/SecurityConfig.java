@@ -79,7 +79,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**", "/api/hello", "/localhost:5500/**", "api/loto/scrape").permitAll()
                         // Endpoints protégés par JWT
                         // .requestMatchers("/api/protected/**").permitAll()
-                        .requestMatchers("/api/tickets/**").authenticated()
+                        // .requestMatchers("/api/tickets/**").authenticated()
+                        .requestMatchers("/api/tickets/**").hasAnyRole("USER", "ADMIN") // 🔐 Accès USER et ADMIN
                         .requestMatchers("/api/historique/last20").permitAll()
                         .requestMatchers("/api/predictions/generate", "/api/generate", "api/predictions/latest").permitAll()
                         .requestMatchers("/api/historique/last20/Detail/**").permitAll()
