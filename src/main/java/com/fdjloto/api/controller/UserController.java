@@ -103,16 +103,21 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import jakarta.validation.Valid;
+import java.util.Set;
+import java.util.HashSet;
+
 
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/users")
 @Tag(name = "User Management", description = "Endpoints for managing users")
 @SecurityRequirement(name = "bearerAuth") // 🔐 Ajout de l'authentification JWT
+@SecurityRequirement(name = "jwtCookieAuth") // 🔐 Ajout de l'authentification JWT via cookie
 
 public class UserController {
 
@@ -124,29 +129,52 @@ public class UserController {
         this.userService = userService;
     }
 
+    // @Operation(summary = "Retrieve all users (Admin only)")
+    // @ApiResponses(value = {
+    //     @ApiResponse(responseCode = "200", description = "List of users retrieved successfully"),
+    //     @ApiResponse(responseCode = "403", description = "Forbidden - Admin access required")
+    // })
+    // @GetMapping
+    // @PreAuthorize("hasRole('ROLE_ADMIN')")
+    // public ResponseEntity<List<User>> getAllUsers() {
+    //     return ResponseEntity.ok(userService.getAllUsers());
+    // }
     @Operation(summary = "Retrieve all users (Admin only)")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "List of users retrieved successfully"),
         @ApiResponse(responseCode = "403", description = "Forbidden - Admin access required")
     })
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<User>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    @Operation(summary = "Get user by ID (Admin only)")
+    @Operation(summary = "Get user by ID (Admin and User)")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "User retrieved successfully"),
         @ApiResponse(responseCode = "403", description = "Forbidden - Admin access required"),
         @ApiResponse(responseCode = "404", description = "User not found")
     })
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<User> getUserById(@PathVariable UUID id) {
         Optional<User> user = userService.getUserById(id);
         return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
+
+    // @Operation(summary = "Register a new user (Accessible to all)")
+    // @ApiResponses(value = {
+    //     @ApiResponse(responseCode = "201", description = "User registered successfully"),
+    //     @ApiResponse(responseCode = "400", description = "Invalid user data")
+    // })
+    // @PostMapping("/register")
+    // public ResponseEntity<User> registerUser(@RequestBody User user) {
+    //     user.setId(UUID.randomUUID().toString());
+    //     user.setPassword(passwordEncoder.encode(user.getPassword()));
+    //     user.setAdmin(false); // ✅ Définit admin par défaut à false
+    //     return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(user));
+    // }
 
     @Operation(summary = "Register a new user (Accessible to all)")
     @ApiResponses(value = {
@@ -157,7 +185,10 @@ public class UserController {
     public ResponseEntity<User> registerUser(@RequestBody User user) {
         user.setId(UUID.randomUUID().toString());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setAdmin(false); // ✅ Définit admin par défaut à false
+
+        // ✅ Par défaut, on assigne `admin = false`, donc rôle `USER`
+        user.setAdmin(false);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(user));
     }
 
@@ -169,7 +200,7 @@ public class UserController {
         @ApiResponse(responseCode = "404", description = "User not found")
     })
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<User> updateUser(@PathVariable UUID id, @Valid @RequestBody User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return ResponseEntity.ok(userService.updateUser(id, user));
@@ -182,10 +213,10 @@ public class UserController {
         @ApiResponse(responseCode = "404", description = "User not found")
     })
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')") // Utilisez 'ADMIN' sans le préfixe 'ROLE_'
     public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
-    
+
 }

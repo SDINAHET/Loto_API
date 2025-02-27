@@ -70,17 +70,54 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         userRepository.deleteById(id.toString());
     }
 
+    // @Override
+    // public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    //     User user = userRepository.findByEmail(email)
+    //             .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+
+    //     return org.springframework.security.core.userdetails.User.builder()
+    //             .username(user.getEmail())
+    //             .password(user.getPassword())
+    //             .roles(user.isAdmin() ? "ADMIN" : "USER")
+    //             .build();
+    // }
+
+    // @Override
+    // public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    //     User user = userRepository.findByEmail(email)
+    //             .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+
+    //     // ✅ Utilisation du getter pour obtenir le rôle
+    //     String role = user.getRole();
+
+    //     return org.springframework.security.core.userdetails.User.builder()
+    //             .username(user.getEmail())
+    //             .password(user.getPassword())
+    //             .roles(role) // ✅ Utilisation du rôle mappé
+    //             .build();
+    // }
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
 
+        // String role = user.getRole(); // Maintenant ROLE_ADMIN ou ROLE_USER
+        // Utilisation du getter pour obtenir le rôle
+        String role = user.getRole(); // ROLE_ADMIN ou ROLE_USER
+
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getEmail())
                 .password(user.getPassword())
-                .roles(user.isAdmin() ? "ADMIN" : "USER")
+                // .roles(role.replace("ROLE_", "")) // Supprime le préfixe ROLE_ pour Spring Security
+                // .roles(role)
+                // .roles(user.getRole())
+                .roles(role.replace("ROLE_", "")) // ⚠️ Supprime le préfixe ROLE_ pour Spring Security
                 .build();
     }
+
+
+
 
     // @Override
     // public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

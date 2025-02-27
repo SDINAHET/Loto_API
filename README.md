@@ -560,3 +560,10 @@ Le graphique généré permet une visualisation rapide de la dispersion des num�
 ![alt text](image-16.png)
 ![alt text](image-17.png)
 ![alt text](image-18.png)
+
+CREATE TABLE user_roles (
+  user_id TEXT NOT NULL,
+  role TEXT NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
+

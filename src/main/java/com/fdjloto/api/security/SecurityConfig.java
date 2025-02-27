@@ -7,8 +7,10 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.config.http.SessionCreationPolicy;
-// import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
@@ -21,9 +23,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final UserDetailsService userDetailsService;
 
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, UserDetailsService userDetailsService) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.userDetailsService = userDetailsService;
     }
 
     @Bean
@@ -35,6 +39,12 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    // @Bean
+    // public GrantedAuthorityDefaults grantedAuthorityDefaults() {
+    //     return new GrantedAuthorityDefaults(""); // Enlève le préfixe ROLE_
+    // }
+
 
     // @Bean
     // public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -52,10 +62,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .headers(headers -> headers
-                    .frameOptions(frame -> frame.sameOrigin()) // ✅ Autoriser les iframes depuis la même origine
-                    .xssProtection(xss -> xss.disable()) // ✅ Désactiver la protection XSS si nécessaire
-                )
+                // .headers(headers -> headers
+                //     .frameOptions(frame -> frame.sameOrigin()) // ✅ Autoriser les iframes depuis la même origine
+                //     .xssProtection(xss -> xss.disable()) // ✅ Désactiver la protection XSS si nécessaire
+                // )
                 .csrf(csrf -> csrf.disable()) // 🔴 Désactive CSRF pour les APIs REST stateless
                 // .csrf(AbstractHttpConfigurer::disable) // ✅ Version optimisée
                 // .anonymous(anonymous -> anonymous.disable()) // Supprime l'authentification anonyme
@@ -74,7 +84,12 @@ public class SecurityConfig {
                         .requestMatchers("/api/predictions/generate", "/api/generate", "api/predictions/latest").permitAll()
                         .requestMatchers("/api/historique/last20/Detail/**").permitAll()
                         .requestMatchers("/api/tirages", "/api/tirages/**").permitAll()
-                        .requestMatchers("/api/users/**", "/api/users").authenticated()  // Protégé par JWT
+                        // .requestMatchers("/api/users/**", "/api/users").authenticated()  // Protégé par JWT
+                        // .requestMatchers("/api/users/**").hasRole("ADMIN")
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")  // 🔐 Accès ADMIN
+                        // .requestMatchers("/api/users/**").hasAnyRole("USER", "ADMIN") // 🔐 Accès USER et ADMIN
+                        .requestMatchers("/api/users/**").hasRole("ADMIN")  // 🔐 Accès ADMIN
+                        .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN") // 🔐 Accès USER et ADMIN
                         // .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
                         // // 🔐 Accès USER et ADMIN
                         // .requestMatchers("/api/user/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
@@ -85,9 +100,14 @@ public class SecurityConfig {
                 )
                 // .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())));
                 // .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 🔴 JWT = stateless
-                // .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)  // 🔐 Ajoute le filtre JWT
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)  // 🔐 Ajoute le filtre JWT
                 .build();
     }
+
+    // @Bean
+    // public UserDetailsService userDetailsService() {
+    //     return email -> userDetailsService.loadUserByUsername(email);
+    // }
 
     // @Bean
     // public JwtAuthenticationConverter jwtAuthenticationConverter() {

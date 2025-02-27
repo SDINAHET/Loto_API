@@ -144,6 +144,13 @@ public class AuthController {
             // 📜 Log pour vérifier le JWT généré
             System.out.println("🔑 JWT généré : " + jwt);
 
+            // ✅ Stocker le token en Cookie sécurisé
+            // jwtUtils.setTokenInCookie(jwt, response);
+
+            // ✅ Stocker le token pour Swagger ou le Frontend
+            // Map<String, String> tokenMap = new HashMap<>();
+            // tokenMap.put("token", jwt);
+
             // ✅ Réponse avec le Token pour Local Storage et Cookie
             return ResponseEntity.ok(responseBody);
 

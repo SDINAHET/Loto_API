@@ -74,7 +74,32 @@ public class LotoApiApplication {
         SpringApplication.run(LotoApiApplication.class, args);
     }
 
-    @Bean
+//     @Bean
+//     public OpenAPI customOpenAPI() {
+//         return new OpenAPI()
+//                 .info(new io.swagger.v3.oas.models.info.Info()
+//                         .title("Loto Tracker API 🚀")
+//                         .version("v1.0.0")
+//                         .description("API pour suivre les résultats du Loto et gérer les comptes utilisateurs. <br> <b>Utilisation :</b> <ul><li>🔑 Authentification avec JWT</li><li>👤 Gestion des utilisateurs (Admin seulement)</li><li>📊 Accès public pour les résultats du Loto</li></ul>")
+//                         .contact(new io.swagger.v3.oas.models.info.Contact()
+//                                 .name("Stéphane Dinahet")
+//                                 .email("contact@fdjloto.com")
+//                                 .url("https://github.com/SDINAHET")
+//                         )
+//                         .license(new License().name("MIT License").url("https://opensource.org/licenses/MIT"))
+//                 )
+//                 .addSecurityItem(new io.swagger.v3.oas.models.security.SecurityRequirement().addList("bearerAuth"))
+//                 .components(new Components()
+//                         .addSecuritySchemes("bearerAuth",
+//                                 new io.swagger.v3.oas.models.security.SecurityScheme()
+//                                         .type(io.swagger.v3.oas.models.security.SecurityScheme.Type.HTTP)
+//                                         .scheme("bearer")
+//                                         .bearerFormat("JWT")
+//                         ))
+//                 .addServersItem(new Server().url("http://localhost:8082").description("Serveur local"))
+//                 .addServersItem(new Server().url("http://127.0.0.1:5500").description("Serveur local (Live Server)"));
+//    }
+   @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new io.swagger.v3.oas.models.info.Info()
@@ -88,14 +113,26 @@ public class LotoApiApplication {
                         )
                         .license(new License().name("MIT License").url("https://opensource.org/licenses/MIT"))
                 )
-                .addSecurityItem(new io.swagger.v3.oas.models.security.SecurityRequirement().addList("bearerAuth"))
+                .addSecurityItem(new io.swagger.v3.oas.models.security.SecurityRequirement()
+                        .addList("bearerAuth"))
+                .addSecurityItem(new io.swagger.v3.oas.models.security.SecurityRequirement()
+                        .addList("jwtCookieAuth"))
                 .components(new Components()
                         .addSecuritySchemes("bearerAuth",
                                 new io.swagger.v3.oas.models.security.SecurityScheme()
                                         .type(io.swagger.v3.oas.models.security.SecurityScheme.Type.HTTP)
                                         .scheme("bearer")
                                         .bearerFormat("JWT")
+                        )
+                        .addSecuritySchemes("jwtCookieAuth",
+                                new io.swagger.v3.oas.models.security.SecurityScheme()
+                                        .type(io.swagger.v3.oas.models.security.SecurityScheme.Type.APIKEY)
+                                        .in(io.swagger.v3.oas.models.security.SecurityScheme.In.COOKIE)
+                                        .name("jwtToken")
+                                        .description("JWT Token dans le cookie 'jwtToken'")
                         ))
-                .addServersItem(new Server().url("http://localhost:8082").description("Serveur local"));
+                .addServersItem(new Server().url("http://localhost:8082").description("Serveur local"))
+                .addServersItem(new Server().url("http://127.0.0.1:5500").description("Serveur local (Live Server)"));
     }
+
 }
