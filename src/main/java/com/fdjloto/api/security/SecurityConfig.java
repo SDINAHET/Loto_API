@@ -80,7 +80,7 @@ public class SecurityConfig {
                         // Endpoints protégés par JWT
                         // .requestMatchers("/api/protected/**").permitAll()
                         // .requestMatchers("/api/tickets/**").authenticated()
-                        .requestMatchers("/api/tickets/**").hasAnyRole("USER", "ADMIN") // 🔐 Accès USER et ADMIN
+                        .requestMatchers("/api/tickets/**", "/api/tickets").hasAnyRole("USER", "ADMIN") // 🔐 Accès USER et ADMIN
                         .requestMatchers("/api/historique/last20").permitAll()
                         .requestMatchers("/api/predictions/generate", "/api/generate", "api/predictions/latest").permitAll()
                         .requestMatchers("/api/historique/last20/Detail/**").permitAll()
@@ -90,7 +90,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")  // 🔐 Accès ADMIN
                         // .requestMatchers("/api/users/**").hasAnyRole("USER", "ADMIN") // 🔐 Accès USER et ADMIN
                         .requestMatchers("/api/users/**").hasRole("ADMIN")  // 🔐 Accès ADMIN
-                        .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN") // 🔐 Accès USER et ADMIN
+                        // .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN") // 🔐 Accès USER et ADMIN
                         // .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
                         // // 🔐 Accès USER et ADMIN
                         // .requestMatchers("/api/user/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")

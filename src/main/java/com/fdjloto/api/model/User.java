@@ -128,10 +128,15 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
+
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import java.util.List;
+
 
 @Schema(description = "Represents a user in the system")
 @Entity
@@ -163,6 +168,10 @@ public class User {
     @Schema(defaultValue = "false", description = "Defines if the user has admin privileges")
     @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
     private boolean admin;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Ticket> tickets;
+
 
     /** ✅ Génère automatiquement l'UUID avant l'insertion en base */
     @PrePersist
@@ -208,3 +217,16 @@ public class User {
         return this.admin ? "ROLE_ADMIN" : "ROLE_USER";
     }
 }
+
+
+
+
+// curl -X 'GET' \
+//   'http://localhost:8082/api/users' \
+//   -H 'accept: */*' \
+//   -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0NEBoYm5iLmNvbSIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNzQwNzMyNzA4LCJleHAiOjE3NDA4MTkxMDh9.xiN-umsuN1_R7Z5Fu3IBiR2btoqPMSLsfw_NoSjaiP4'
+
+// curl -X 'GET' \
+//   'http://localhost:8082/api/tickets?userId=7413b56e-9b24-44db-a0fa-a04b9ef82a31' \
+//   -H 'accept: */*'
+//   -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0NEBoYm5iLmNvbSIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNzQwNzMyNzA4LCJleHAiOjE3NDA4MTkxMDh9.xiN-umsuN1_R7Z5Fu3IBiR2btoqPMSLsfw_NoSjaiP4'
