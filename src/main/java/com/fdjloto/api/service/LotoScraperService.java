@@ -1526,10 +1526,6 @@
 
 package com.fdjloto.api.service;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -1539,6 +1535,8 @@ import java.util.List;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.io.*;
+import java.nio.file.*;
 
 
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
@@ -1618,6 +1616,7 @@ public class LotoScraperService {
                     if (entry.getName().endsWith(".csv")) {
                         System.out.println("✅ Fichier trouvé et extrait : " + entry.getName());
                         parseCSV(zipInputStream);
+						System.out.println("✅ Nettoyages des données pour l'affichage depuis le fichier : " + entry.getName());
                         break;
                     }
                 }
@@ -1626,6 +1625,28 @@ public class LotoScraperService {
             System.err.println("🚨 Erreur lors du téléchargement : " + e.getMessage());
         }
     }
+
+	public void saveCsvFile(String fileName, List<String[]> data) {
+		String resourceDirectory = "src/main/resources/files/";
+		Path filePath = Paths.get(resourceDirectory, fileName);
+
+		// Vérifier et créer le dossier si nécessaire
+		File directory = new File(resourceDirectory);
+		if (!directory.exists()) {
+			directory.mkdirs();
+		}
+
+		try (BufferedWriter writer = Files.newBufferedWriter(filePath, StandardCharsets.UTF_8)) {
+			for (String[] row : data) {
+				writer.write(String.join(";", row));
+				writer.newLine();
+			}
+			System.out.println("✅ Fichier CSV sauvegardé avec succès dans : " + filePath.toAbsolutePath());
+		} catch (IOException e) {
+			System.err.println("❌ Erreur lors de l'écriture du fichier CSV : " + e.getMessage());
+		}
+	}
+
 
 	private int parseInteger(String value, int defaultValue) {
 		try {
@@ -1660,6 +1681,12 @@ public class LotoScraperService {
 					row = Arrays.copyOf(row, 49);
 				}
 			}
+			// Définir un nom de fichier unique basé sur la date
+			String fileName = "loto_201911"+".csv";
+			// String fileName = "loto_results_" + System.currentTimeMillis() + ".csv";
+			saveCsvFile(fileName, records);  // Sauvegarde du fichier CSV dans resources/files
+
+
 			System.out.println("🟡 Nombre total de lignes : " + records.size());
 
 			if (records.isEmpty()) {
