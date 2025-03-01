@@ -150,7 +150,7 @@ import io.swagger.v3.oas.models.servers.Server;
                     <td style="border: 1px solid #ddd; padding: 2px;">🔑 <b>Authentification sécurisée</b></td>
                     <td style="border: 1px solid #ddd; padding: 2px;">
                         <ul style="padding-left: 20px; margin: 0;">
-                            <li>Utilisation de JWT pour protéger les endpoints sensibles.</li>
+                            <li>✔️ Utilisation de JWT pour protéger les endpoints sensibles.</li>
                         </ul>
                     </td>
                 </tr>
@@ -158,8 +158,9 @@ import io.swagger.v3.oas.models.servers.Server;
                     <td style="border: 1px solid #ddd; padding: 2px;">👤 <b>Gestion des utilisateurs</b></td>
                     <td style="border: 1px solid #ddd; padding: 2px;">
                         <ul style="padding-left: 20px; margin: 0;">
-                            <li>Inscription, Connexion, Déconnexion sécurisée avec JWT.</li>
-                            <li>Gestion des rôles (Admin et Utilisateur) pour contrôler les accès aux fonctionnalités.</li>
+                            <li>✔️ Inscription sans JWT.
+                            <li>✔️ Connexion, Déconnexion sécurisée avec JWT.</li>
+                            <li>✔️ Gestion des rôles (Admin et Utilisateur) pour contrôler les accès aux fonctionnalités.</li>
                         </ul>
                     </td>
                 </tr>
@@ -167,13 +168,13 @@ import io.swagger.v3.oas.models.servers.Server;
                     <td style="border: 1px solid #ddd; padding: 2px;">🎫 <b>Soumission et gestion des tickets</b></td>
                     <td style="border: 1px solid #ddd; padding: 2px;">
                         <ul style="padding-left: 20px; margin: 0;">
-                            <li>Création, mise à jour, suppression et consultation des tickets Loto.</li>
-                            <li>Stockage sécurisé des tickets en base de données.</li>
+                            <li>Création, mise à jour, suppression et consultation des tickets Loto (CRUD).</li>
+                            <li>✔️ Stockage sécurisé des tickets en base de données.</li>
                         </ul>
                     </td>
                 </tr>
                 <tr>
-                    <td style="border: 1px solid #ddd; padding: 2px;">💰 <b>Calcul automatique des gains</b></td>
+                    <td style="border: 1px solid #ddd; padding: 2px;">💰 <b>Calcul automatique des gains (🚧 En développement)</b></td>
                     <td style="border: 1px solid #ddd; padding: 2px;">
                         <ul style="padding-left: 20px; margin: 0;">
                             <li>Comparaison des numéros soumis avec les résultats officiels FDJ.</li>
@@ -182,7 +183,7 @@ import io.swagger.v3.oas.models.servers.Server;
                     </td>
                 </tr>
                 <tr>
-                    <td style="border: 1px solid #ddd; padding: 2px;">📅 <b>Historique des tickets</b></td>
+                    <td style="border: 1px solid #ddd; padding: 2px;">📅 <b>Historique des tickets du joueur(= user)</b></td>
                     <td style="border: 1px solid #ddd; padding: 2px;">
                         <ul style="padding-left: 20px; margin: 0;">
                             <li>Consultation de l'historique des tickets joués.</li>
@@ -190,12 +191,23 @@ import io.swagger.v3.oas.models.servers.Server;
                         </ul>
                     </td>
                 </tr>
+                                <tr>
+                    <td style="border: 1px solid #ddd; padding: 2px;">📅 <b>Historique des résultats du loto FDJ depuis 2019</b></td>
+                    <td style="border: 1px solid #ddd; padding: 2px;">
+                        <ul style="padding-left: 20px; margin: 0;">
+                            <li>✔️ Consultation de l'historique des résultats officiels (public).</li>
+                            <li>✔️ Accès aux détails des gains pour chaque tirage.</li>
+                            <li>✔️ Clin d'oeil aux C, pour le tri des numéros d'un tirage dans l'ordre croissant.</li>
+                            <li>✔️ Recherche d'un ancien tirage à une date précise ou une plage de dates.</li>
+                        </ul>
+                    </td>
+                </tr>
                 <tr>
-                    <td style="border: 1px solid #ddd; padding: 2px;">📊 <b>Visualisation des résultats</b></td>
+                    <td style="border: 1px solid #ddd; padding: 2px;">📊 <b>Visualisation des résultats (🚧 En développement) </b></td>
                     <td style="border: 1px solid #ddd; padding: 2px;">
                         <ul style="padding-left: 20px; margin: 0;">
                             <li>Affichage des résultats du Loto sous forme de graphiques dynamiques.</li>
-                            <li>Analyse des statistiques de tirage pour repérer des tendances.</li>
+                            <li>✔️ Analyse des statistiques de tirage pour repérer des tendances.</li>
                         </ul>
                     </td>
                 </tr>
@@ -203,8 +215,8 @@ import io.swagger.v3.oas.models.servers.Server;
                     <td style="border: 1px solid #ddd; padding: 2px;">📅 <b>Mise à jour automatique des résultats</b></td>
                     <td style="border: 1px solid #ddd; padding: 2px;">
                         <ul style="padding-left: 20px; margin: 0;">
-                            <li>Script journalier pour la récupération automatique des résultats FDJ.</li>
-                            <li>Synchronisation avec les bases de données pour un affichage en temps réel.</li>
+                            <li>✔️ Script journalier pour la récupération automatique des résultats FDJ (toute les 30 minutes).</li>
+                            <li>✔️ Synchronisation avec les bases de données pour un affichage en temps réel.</li>
                         </ul>
                     </td>
                 </tr>
@@ -212,13 +224,13 @@ import io.swagger.v3.oas.models.servers.Server;
                     <td style="border: 1px solid #ddd; padding: 2px;">🔒 <b>Sécurité avancée</b></td>
                     <td style="border: 1px solid #ddd; padding: 2px;">
                         <ul style="padding-left: 20px; margin: 0;">
-                            <li>Protection des endpoints API avec Spring Security et JWT.</li>
-                            <li>Contrôle d'accès basé sur les rôles (Admin et Utilisateur).</li>
+                            <li>✔️ Protection des endpoints API avec Spring Security et JWT.</li>
+                            <li>✔️ Contrôle d'accès basé sur les rôles (Admin et Utilisateur).</li>
                         </ul>
                     </td>
                 </tr>
                 <tr>
-                    <td style="border: 1px solid #ddd; padding: 2px;">🚀 <b>Déploiement et Hébergement</b></td>
+                    <td style="border: 1px solid #ddd; padding: 2px;">🚀 <b>Déploiement et Hébergement (🚧 En développement) </b></td>
                     <td style="border: 1px solid #ddd; padding: 2px;">
                         <ul style="padding-left: 20px; margin: 0;">
                             <li>Déploiement sur Alwaysdata avec bases de données MySQL et MongoDB.</li>
@@ -227,11 +239,11 @@ import io.swagger.v3.oas.models.servers.Server;
                     </td>
                 </tr>
                 <tr>
-                    <td style="border: 1px solid #ddd; padding: 2px;">🚧 En développement :
+                    <td style="border: 1px solid #ddd; padding: 2px;">🚧 En développement (dans le futur) :
                     <td style="border: 1px solid #ddd; padding: 2px;">
                         <ul style="padding-left: 20px; margin: 0;">
                             <li>🔔 Notifications push pour les résultats et les gains.</li>
-                            <li>🤖 Recommandations personnalisées basées sur l'historique des tickets.</li>
+                            <li>🤖 Recommandations personnalisées basées sur l'historique des tickets avec l'IA.</li>
                         </ul>
                 </tr>
             </tbody>
@@ -340,6 +352,7 @@ public class LotoApiApplication {
                                         .description("JWT Token dans le cookie 'jwtToken'")
                         ))
                 .addServersItem(new Server().url("http://localhost:8082").description("Serveur local"))
+                .addServersItem(new Server().url("http://127.0.0.1:5500").description("Serveur local (Live Server)"))
                 .addServersItem(new Server().url("http://localhost:8082/swagger-ui/index.html").description("Serveur local"))
                 .addServersItem(new Server().url("http://127.0.0.1:5500/src/main/resources/static/index.html").description("Serveur local (Live Server)"));
     }

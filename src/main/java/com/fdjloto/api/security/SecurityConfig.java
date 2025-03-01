@@ -75,12 +75,13 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Swagger UI accessible sans authentification
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/v1/api-docs/**", "/swagger-ui.html", "/login-swagger").permitAll() // ✅ Swagger accessible sans JWT
+                        // .requestMatchers("/api/health").permitAll()
                         // Auth API accessible sans authentification
                         .requestMatchers("/api/auth/**", "/api/hello", "/localhost:5500/**", "api/loto/scrape").permitAll()
                         // Endpoints protégés par JWT
                         // .requestMatchers("/api/protected/**").permitAll()
                         // .requestMatchers("/api/tickets/**").authenticated()
-                        .requestMatchers("/api/tickets/**", "/api/tickets").hasAnyRole("USER", "ADMIN") // 🔐 Accès USER et ADMIN
+                        .requestMatchers("/api/tickets/**", "/api/tickets", "/api/tickets/{ticketId}").hasAnyRole("USER", "ADMIN") // 🔐 Accès USER et ADMIN
                         .requestMatchers("/api/historique/last20").permitAll()
                         .requestMatchers("/api/predictions/generate", "/api/generate", "api/predictions/latest").permitAll()
                         .requestMatchers("/api/historique/last20/Detail/**").permitAll()

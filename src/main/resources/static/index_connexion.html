@@ -239,6 +239,16 @@
     </style>
 </head>
 <body class="bg-light">
+    <body class="bg-light">
+        <!-- 📌 Écran de chargement
+        <div id="loading-screen">
+            <div class="loader"></div>
+            <p>Chargement du site Loto Tracker... Veuillez patienter.</p>
+        </div>
+
+        📌 Contenu principal caché au départ
+        <div id="main-content" ;"> -->
+
     <!-- HEADER -->
     <header class="header d-flex justify-content-between align-items-center p-3 bg-dark text-white">
         <div class="d-flex align-items-center">
@@ -1404,7 +1414,7 @@
 
                     // ✅ Redirection vers index.html après déconnexion
                     window.location.href = "index.html";
-                    
+
                 } else {
                     console.error("Erreur lors de la déconnexion :", response);
                     alert("Erreur lors de la déconnexion !");
@@ -1472,6 +1482,7 @@
             console.log("Modal is fully shown");
         });
     });
+
 </script>
 <footer class="footer">
     <div class="footer-container">
@@ -1493,6 +1504,36 @@
     </div>
 </footer>
 <style>
+    /* 📌 Écran de chargement en plein écran */
+    #loading-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #f8f9fa;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+
+    /* 🎡 Loader animé */
+    .loader {
+        border: 8px solid #f3f3f3;
+        border-top: 8px solid #007bff;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
     body {
         display: flex;
         flex-direction: column;

@@ -1647,7 +1647,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
+
 import java.util.*;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
+
+
+@SpringBootApplication
+@EnableScheduling // ✅ Active la planification
 
 @Service
 public class PredictionTirageService {
@@ -1661,6 +1670,22 @@ public class PredictionTirageService {
     public PredictionTirageService(TirageRepository tirageRepository, PredictionRepository predictionRepository) {
         this.tirageRepository = tirageRepository;
         this.predictionRepository = predictionRepository;
+    }
+
+    // ✅ Planification automatique à 00h00 chaque jour
+    // @Scheduled(cron = "0 0 0 * * *", zone = "Europe/Paris")
+    // ✅ Planification 2 fois par heure : 00 et 30 minutes de chaque heure
+	@Scheduled(cron = "0 1,31 * * * *", zone = "Europe/Paris")
+
+
+    public void generatePredictionScheduled() {
+        logger.info("⏰ Exécution planifiée de la génération de prédiction...");
+        PredictionTirageModel prediction = generatePrediction();
+        if (prediction != null) {
+            logger.info("✅ Prédiction enregistrée avec succès : " + prediction);
+        } else {
+            logger.warn("❌ Aucune prédiction générée (probablement aucun tirage trouvé).");
+        }
     }
 
     public PredictionTirageModel generatePrediction() {

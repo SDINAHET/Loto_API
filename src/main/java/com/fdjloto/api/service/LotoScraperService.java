@@ -1555,7 +1555,13 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvException;
 
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
+
 @Service
+@SpringBootApplication
+@EnableScheduling // ✅ Active la planification
 public class LotoScraperService {
 
     private static final String ZIP_URL = "https://www.sto.api.fdj.fr/anonymous/service-draw-info/v3/documentations/1a2b3c4d-9876-4562-b3fc-2c963f66afp6";
@@ -1565,7 +1571,22 @@ public class LotoScraperService {
 
     // @Scheduled(fixedRate = 3600000)  // Exécution toutes les heures
 	// @Scheduled(fixedDelay = 300000)  // Attendre 5 minutes après la fin de l'exécution précédente
-	@Scheduled(fixedRate = 300000)  // Exécution toutes les 5 minutes
+	// @Scheduled(fixedRate = 300000)  // Exécution toutes les 5 minutes
+	// ✅ Planification 4 fois par jour : 00h00, 06h00, 12h00, 18h00
+	// @Scheduled(cron = "0 0 0,6,12,18 * * *", zone = "Europe/Paris")
+	// ✅ Planification 2 fois par heure : 00 et 30 minutes de chaque heure
+	@Scheduled(cron = "0 0,30 * * * *", zone = "Europe/Paris")
+	public void scrapeDataScheduled() {
+        System.out.println("⏰ Exécution planifiée du scraping des données...");
+        scrapeData();
+        long count = lotoRepository.count();
+        if (count > 0) {
+            System.out.println("✅ Scraping terminé avec succès. Nombre total d'entrées en base : " + count);
+        } else {
+            System.out.println("❌ Aucune donnée insérée. Vérifiez le fichier source.");
+        }
+    }
+
     public void scrapeData() {
         System.out.println("🟢 Démarrage du scraping...");
 
