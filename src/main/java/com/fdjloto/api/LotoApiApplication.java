@@ -134,7 +134,7 @@ import io.swagger.v3.oas.models.servers.Server;
 @OpenAPIDefinition(
     info = @Info(
         title = "Loto Tracker API - Portfolio 2025   Holberton School RENNES  🚀 ",
-        version = "v1.0.0",
+        version = "v2.0.0",
         description = """
         <h2>API permetttant de suivre les résultats du Loto, de gérer les comptes utilisateurs, et de calculer automatiquement les gains en comparant les tickets soumis avec les résultats officiels de la FDJ.</h2>
         <h3>Fonctionnalités principales :</h3>
@@ -215,7 +215,7 @@ import io.swagger.v3.oas.models.servers.Server;
                     <td style="border: 1px solid #ddd; padding: 2px;">📅 <b>Mise à jour automatique des résultats</b></td>
                     <td style="border: 1px solid #ddd; padding: 2px;">
                         <ul style="padding-left: 20px; margin: 0;">
-                            <li>✔️ Script journalier pour la récupération automatique des résultats FDJ (toute les 30 minutes).</li>
+                            <li>✔️ Script journalier pour la récupération automatique des résultats FDJ (toutes les 30 minutes).</li>
                             <li>✔️ Synchronisation avec les bases de données pour un affichage en temps réel.</li>
                         </ul>
                     </td>
@@ -233,13 +233,13 @@ import io.swagger.v3.oas.models.servers.Server;
                     <td style="border: 1px solid #ddd; padding: 2px;">🚀 <b>Déploiement et Hébergement (🚧 En développement) </b></td>
                     <td style="border: 1px solid #ddd; padding: 2px;">
                         <ul style="padding-left: 20px; margin: 0;">
-                            <li>Déploiement sur Alwaysdata avec bases de données MySQL et MongoDB.</li>
+                            <li>Déploiement sur Alwaysdata avec bases de données MySQL ou postgreSQL et MongoDB.</li>
                             <li>Hébergement sécurisé avec accès public aux résultats du Loto.</li>
                         </ul>
                     </td>
                 </tr>
                 <tr>
-                    <td style="border: 1px solid #ddd; padding: 2px;">🚧 En développement (dans le futur) :
+                    <td style="border: 1px solid #ddd; padding: 2px;">🚧 <b>En développement (dans le futur) :</b></td>
                     <td style="border: 1px solid #ddd; padding: 2px;">
                         <ul style="padding-left: 20px; margin: 0;">
                             <li>🔔 Notifications push pour les résultats et les gains.</li>
