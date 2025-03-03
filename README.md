@@ -2,6 +2,9 @@
 ![alt text](image-20.png)
 
 git clone https://github.com/SDINAHET/Loto_API.git
+mvn install spring-boot:run
+http://localhost:8082/swagger-ui/index.html
+http://127.0.0.1:5500/src/main/resources/static/index.html
 
 # 🎰 Loto API - Gestion et Calcul des Gains FDJ
 
@@ -16,7 +19,10 @@ L'application suit une architecture **Full-Stack** :
 - **Frontend** : React.js / Angular pour une interface utilisateur moderne et réactive.
 - **Backend** : Spring Boot 3.4.2 pour gérer l'API REST et la logique métier.
 - **Base de données** :
-  - **MySQL** : Stockage des utilisateurs et des tickets.
+  - **MySQL** : Stockage des utilisateurs et des tickets. --> non fait
+  - **Postgrès** : Stockage des utilisateurs et des tickets. --> ne fonctionne pas
+  - **SQLite** : Stockage des utilisateurs et des tickets. --> Fichier Loto.db dans le projet LOTO API Tracker
+
   - **MongoDB** : Stockage des résultats FDJ historiques.
 - **Automatisation** : Un script journalier récupère et met à jour les résultats de la FDJ à partir des fichiers ZIP fournis.
 
