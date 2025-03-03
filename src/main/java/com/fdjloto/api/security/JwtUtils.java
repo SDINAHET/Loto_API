@@ -6,11 +6,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+// import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.crypto.SecretKey;
@@ -30,15 +31,17 @@ public class JwtUtils {
     private static final long EXPIRATION_TIME = 86400000; // 1 jour en millisecondes
 
     // ✅ Génération du Token JWT avec HS256
-    public String generateJwtToken(Authentication authentication) {
+    public String generateJwtToken(Authentication authentication,UUID userId) {
         // Récupère le rôle de l'utilisateur
         List<String> roles = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
-                
+
         return Jwts.builder()
-                .setSubject(authentication.getName())
+                .setSubject(authentication.getName()) // Stocke l'email
+                .claim("userId", userId.toString())   // ✅ Ajout de l'UUID de l'utilisateur
                 .claim("roles", roles) // ✅ Ajout du role dans JWT)
+                // .claim("roles", roles.stream().map(role -> role.replace("ROLE_", "")).collect(Collectors.toList()))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(secretKey, SignatureAlgorithm.HS256)
@@ -56,15 +59,51 @@ public class JwtUtils {
     }
 
     // ✅ Extraction des rôles depuis le Token JWT
-    public List<String> getRolesFromJwtToken(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(secretKey)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+    // public List<String> getRolesFromJwtToken(String token) {
+    //     Claims claims = Jwts.parserBuilder()
+    //             .setSigningKey(secretKey)
+    //             .build()
+    //             .parseClaimsJws(token)
+    //             .getBody();
 
-        return claims.get("roles", List.class);
+    //     // return claims.get("roles", List.class);
+    //     return (List<String>) claims.get("roles");
+
+    // // }
+    // public List<String> getRolesFromJwtToken(String token) {
+    //     Claims claims = Jwts.parserBuilder()
+    //             .setSigningKey(secretKey)
+    //             .build()
+    //             .parseClaimsJws(token)
+    //             .getBody();
+
+    // //     Object roles = claims.get("roles");
+    // //     if (roles instanceof List<?>) {
+    // //         return ((List<?>) roles).stream()
+    // //                 .map(Object::toString)
+    // //                 .collect(Collectors.toList());
+    // //     }
+    // //     return List.of();
+    // // }
+    // List<String> roles = claims.get("roles", List.class);
+
+    //     // 🔥 S'assurer que les rôles sont bien sous la forme "ROLE_ADMIN"
+    //     return roles.stream()
+    //             .map(role -> role.startsWith("ROLE_") ? role : "ROLE_" + role)
+    //             .collect(Collectors.toList());
+    // }
+
+    public List<String> getRolesFromJwtToken(String token) {
+        Claims claims = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
+        Object roles = claims.get("roles");
+
+        if (roles instanceof List<?>) {
+            return ((List<?>) roles).stream().map(Object::toString).collect(Collectors.toList());
+        }
+        return List.of();
     }
+
+
 
 
     public boolean validateJwtToken(String token) {
@@ -95,6 +134,19 @@ public class JwtUtils {
                 .getBody();
         return claims.getSubject(); // 🔥 Retourne l'email ou l'username
     }
+    public String extractUserId(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        return claims.get("userId", String.class); // ✅ Retourne une String et non un UUID
+    }
+
+
+
+
 }
 
 // package com.fdjloto.api.security;

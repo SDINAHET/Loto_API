@@ -128,9 +128,6 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.JoinColumn;
-
 
 import java.util.HashSet;
 import java.util.Set;
@@ -216,6 +213,8 @@ public class User {
     public String getRole() {
         return this.admin ? "ROLE_ADMIN" : "ROLE_USER";
     }
+    public List<Ticket> getTickets() { return tickets; }
+    public void setTickets(List<Ticket> tickets) { this.tickets = tickets; }
 }
 
 

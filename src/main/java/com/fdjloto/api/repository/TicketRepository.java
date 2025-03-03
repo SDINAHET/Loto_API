@@ -26,6 +26,8 @@ public interface TicketRepository extends JpaRepository<Ticket, UUID> {
 
 
     // 🔥 Recherche des tickets par user_id en utilisant une jointure
+    // @Query("SELECT t FROM Ticket t WHERE t.user.id = :userId")
+    // List<Ticket> findByUserId(@Param("userId") UUID userId);
     @Query("SELECT t FROM Ticket t WHERE t.user.id = :userId")
     List<Ticket> findByUserId(@Param("userId") String userId);
 

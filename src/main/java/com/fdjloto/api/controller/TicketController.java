@@ -240,6 +240,9 @@
 package com.fdjloto.api.controller;
 
 import com.fdjloto.api.model.Ticket;
+import com.fdjloto.api.model.User;  // Import correct
+import com.fdjloto.api.repository.UserRepository; // Import correct
+
 import com.fdjloto.api.service.TicketService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -258,6 +261,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/api/tickets")
@@ -270,8 +275,14 @@ public class TicketController {
     private static final Logger logger = LoggerFactory.getLogger(TicketController.class);
 
 
-    @Autowired
     private TicketService ticketService;
+    private UserRepository userRepository; // ✅ Ajout de l'injection du repository
+
+
+    public TicketController(TicketService ticketService, UserRepository userRepository) {
+        this.ticketService = ticketService;
+        this.userRepository = userRepository;
+    }
 
     /**
      * 🔥 Récupère tous les tickets de l'utilisateur connecté ou tous les tickets pour un ADMIN.
@@ -322,57 +333,148 @@ public class TicketController {
     // @PreAuthorize("hasRole('ADMIN')")
     // @PreAuthorize("hasAuthority('ROLE_ADMIN') or principal.name == #userId.toString()")
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
-    // @GetMapping("/{ticketId}")
-    // public ResponseEntity<Ticket> getTicketById(@PathVariable UUID ticketId, Principal principal) {
-    //     Ticket ticket = ticketService.getTicketById(ticketId);
-
-    //     // 🔐 Vérification du propriétaire ou du rôle ADMIN
-    //     if (principal.getName().equals(ticket.getEmail()) || isAdmin()) {
-    //         return ResponseEntity.ok(ticket);
-    //     } else {
-    //         return ResponseEntity.status(403).build(); // 🔴 Accès refusé
-    //     }
-    // }
     @GetMapping("/{ticketId}")
-    public ResponseEntity<Ticket> getTicketById(@PathVariable UUID ticketId, Principal principal) {
-        Ticket ticket = ticketService.getTicketById(ticketId);
-
-    //     // 🔐 Vérification du propriétaire ou du rôle ADMIN
-    //     if (principal.getName().equals(ticket.getUserEmail()) || isAdmin()) {
-    //         return ResponseEntity.ok(ticket);
-    //     } else {
-    //         return ResponseEntity.status(403).build(); // 🔴 Accès refusé
-    //     }
-    // }
-
-        // // 🔐 Vérification du propriétaire ou du rôle ADMIN
-        // if (isAdmin() || principal.getName().equals(ticket.getUserEmail())) {
-        //     return ResponseEntity.ok(ticket);
-        // } else {
-        //     return ResponseEntity.status(403).build(); // 🔴 Accès refusé
-        // }
-
-        // ✅ Correction : Vérification du principal avec des logs
-        logger.info("🔐 Utilisateur connecté : {}", principal.getName());
-        logger.info("🎫 Email du propriétaire du ticket : {}", ticket.getUserEmail());
-
-        // 🔐 Vérification du rôle ADMIN ou si l'utilisateur est propriétaire du ticket
-        if (isAdmin() || principal.getName().equals(ticket.getUser().getEmail())) {
-            return ResponseEntity.ok(ticket);
-        } else {
-            logger.warn("⛔ Accès refusé : Utilisateur non autorisé.");
-            return ResponseEntity.status(403).build(); // 🔴 Accès refusé
-        }
+public ResponseEntity<Ticket> getTicketById(@PathVariable String ticketId, Principal principal) {
+    if (ticketId == null || ticketId.isEmpty()) {
+        logger.error("🚨 L'ID du ticket est vide ou null.");
+        return ResponseEntity.badRequest().body(null);
     }
 
-     /**
-     * 🔐 Vérifie si l'utilisateur connecté a le rôle ADMIN.
-     * @return true si l'utilisateur est ADMIN, sinon false.
-     */
+    try {
+        // UUID uuid = UUID.fromString(ticketId); // ✅ Conversion sécurisée String → UUID
+        // Ticket ticket = ticketService.getTicketById(uuid); // ✅ Récupération correcte
+        Ticket ticket = ticketService.getTicketById(ticketId); // Ne pas convertir en UUID
+
+
+        if (ticket == null) {
+            logger.warn("⚠️ Aucun ticket trouvé pour l'ID : {}", ticketId);
+            return ResponseEntity.notFound().build();
+        }
+
+        String currentUserEmail = principal.getName();
+        Optional<User> optionalUser = userRepository.findByEmail(currentUserEmail);
+
+        if (optionalUser.isEmpty()) {
+            logger.warn("⛔ Utilisateur non trouvé : {}", currentUserEmail);
+            return ResponseEntity.status(403).build();
+        }
+
+        User currentUser = optionalUser.get();
+        String currentUserId = currentUser.getId(); // ✅ Stocké en String dans SQLite
+
+        if (isAdmin() || (ticket.getUserId() != null && ticket.getUserId().equals(currentUserId))) {
+            logger.info("✅ Accès autorisé au ticket.");
+            return ResponseEntity.ok(ticket);
+        } else {
+            logger.warn("⛔ Accès refusé.");
+            return ResponseEntity.status(403).build();
+        }
+    } catch (IllegalArgumentException e) {
+        logger.error("🚨 Erreur de conversion de l'ID du ticket : {}", ticketId);
+        return ResponseEntity.badRequest().build();
+    }
+}
+
+
+    // @GetMapping("/{ticketId}")
+    // public ResponseEntity<Ticket> getTicketById(@PathVariable String ticketId, Principal principal) {
+    //     if (ticketId == null || ticketId.isEmpty()) {
+    //         logger.error("🚨 L'ID du ticket est vide ou null.");
+    //         return ResponseEntity.badRequest().body(null);
+    //     }
+
+    //     try {
+    //         UUID uuid = UUID.fromString(ticketId); // ✅ Conversion sécurisée String → UUID
+    //         Ticket ticket = ticketService.getTicketById(uuid);
+
+    //         if (ticket == null) {
+    //             logger.warn("⚠️ Aucun ticket trouvé pour l'ID : {}", ticketId);
+    //             return ResponseEntity.notFound().build();
+    //         }
+
+    //         String currentUserEmail = principal.getName();
+    //         Optional<User> optionalUser = userRepository.findByEmail(currentUserEmail);
+
+    //         if (optionalUser.isEmpty()) {
+    //             logger.warn("⛔ Utilisateur non trouvé : {}", currentUserEmail);
+    //             return ResponseEntity.status(403).build();
+    //         }
+
+    //         User currentUser = optionalUser.get();
+    //         UUID currentUserId = currentUser.getId();
+
+    //         if (isAdmin() || (ticket.getUserId() != null && currentUserId.equals(ticket.getUserId()))) {
+    //             logger.info("✅ Accès autorisé au ticket.");
+    //             return ResponseEntity.ok(ticket);
+    //         } else {
+    //             logger.warn("⛔ Accès refusé.");
+    //             return ResponseEntity.status(403).build();
+    //         }
+    //     } catch (IllegalArgumentException e) {
+    //         logger.error("🚨 Erreur de conversion de l'ID du ticket : {}", ticketId);
+    //         return ResponseEntity.badRequest().build();
+    //     }
+    // }
+
+
+
+    // private boolean isAdmin() {
+    //     return SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+    //             .map(GrantedAuthority::getAuthority)
+    //             .anyMatch(role -> role.equals("ROLE_ADMIN"));
+    // }
+
+    // private boolean isAdmin() {
+    //     var auth = SecurityContextHolder.getContext().getAuthentication();
+    //     if (auth == null) {
+    //         logger.warn("🔴 Aucun utilisateur authentifié !");
+    //         return false;
+    //     }
+
+    //     logger.info("🔍 Utilisateur connecté : {}", auth.getName());
+    //     logger.info("🔍 Rôles détectés : {}", auth.getAuthorities());
+
+    //     return auth.getAuthorities().stream()
+    //             .map(GrantedAuthority::getAuthority)
+    //             .anyMatch(role -> role.equals("ROLE_ADMIN"));
+    // }
+
     private boolean isAdmin() {
-        return SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null) {
+            return false;
+        }
+
+        return auth.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
-                .anyMatch(role -> role.equals("ROLE_ADMIN"));
+                .anyMatch(role -> role.equals("ROLE_ADMIN")); // ✅ Vérification correcte
+    }
+
+
+    /**
+     * 🔥 Crée un ticket en liant automatiquement l'ID utilisateur via JWT.
+     *
+     * @param ticket Objet ticket envoyé par l'utilisateur.
+     * @param principal L'utilisateur authentifié (JWT).
+     * @return Le ticket créé.
+     */
+    @PostMapping
+    public ResponseEntity<Ticket> createTicket(@RequestBody Ticket ticket, Principal principal) {
+        String userEmail = principal.getName();
+        logger.info("🔐 Création d'un ticket pour l'utilisateur : {}", userEmail);
+
+        Optional<User> optionalUser = userRepository.findByEmail(userEmail);
+        if (optionalUser.isEmpty()) {
+            logger.error("⛔ Utilisateur non trouvé avec l'email : {}", userEmail);
+            return ResponseEntity.status(403).build();
+        }
+
+        User user = optionalUser.get();
+        ticket.setUserId(user.getId()); // ✅ Utilisation correcte de `setUserId`
+
+        Ticket newTicket = ticketService.createTicket(ticket);
+        logger.info("✅ Ticket créé avec succès pour l'utilisateur {} avec ID {}", user.getEmail(), user.getId());
+        return ResponseEntity.ok(newTicket);
     }
 
 

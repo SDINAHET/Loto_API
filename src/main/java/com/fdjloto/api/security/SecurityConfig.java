@@ -89,8 +89,11 @@ public class SecurityConfig {
                         // .requestMatchers("/api/users/**", "/api/users").authenticated()  // Protégé par JWT
                         // .requestMatchers("/api/users/**").hasRole("ADMIN")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")  // 🔐 Accès ADMIN
-                        // .requestMatchers("/api/users/**").hasAnyRole("USER", "ADMIN") // 🔐 Accès USER et ADMIN
-                        .requestMatchers("/api/users/**").hasRole("ADMIN")  // 🔐 Accès ADMIN
+                        .requestMatchers("/api/users/**").hasAnyRole("USER", "ADMIN") // 🔐 Accès USER et ADMIN
+                        // .requestMatchers("/api/users/**").hasRole("ADMIN")  // 🔐 Accès ADMIN
+                        // .requestMatchers("/api/users/**").permitAll()
+                        // .requestMatchers("/api/tickets/**").permitAll()
+                        // .requestMatchers("/api/users/**").hasAuthority("ROLE_ADMIN")
                         // .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN") // 🔐 Accès USER et ADMIN
                         // .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
                         // // 🔐 Accès USER et ADMIN

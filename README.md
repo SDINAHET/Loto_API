@@ -567,3 +567,54 @@ CREATE TABLE user_roles (
   FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
+
+
+-- 1️⃣ Renommer l'ancienne table
+ALTER TABLE tickets RENAME TO tickets_old;
+
+-- 2️⃣ Créer une nouvelle table avec la clé étrangère
+CREATE TABLE tickets (
+    id TEXT PRIMARY KEY,
+    numbers TEXT NOT NULL,
+    lucky_number INTEGER NOT NULL,
+    draw_date TEXT NOT NULL,
+    draw_day TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    user_id TEXT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- 3️⃣ Insérer les anciennes données dans la nouvelle table
+INSERT INTO tickets (id, numbers, lucky_number, draw_date, draw_day, created_at, updated_at, user_id)
+SELECT id, numbers, lucky_number, draw_date, draw_day, created_at, updated_at, user_id FROM tickets_old;
+
+-- 4️⃣ Supprimer l'ancienne table
+DROP TABLE tickets_old;
+
+CREATE TABLE users (
+    id TEXT PRIMARY KEY,
+    first_name TEXT NOT NULL,
+    last_name TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL,
+    admin BOOLEAN NOT NULL DEFAULT 0,
+    role TEXT NOT NULL
+);
+
+CREATE TABLE tickets (
+    id TEXT PRIMARY KEY,
+    numbers TEXT NOT NULL,
+    lucky_number INTEGER NOT NULL,
+    draw_date TEXT NOT NULL,
+    draw_day TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now', 'utc')),
+    updated_at TEXT NOT NULL DEFAULT (datetime('now', 'utc')),
+    user_id TEXT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+PRAGMA foreign_key_list(tickets);
+
+![alt text](image-19.png)
+![alt text](image-20.png)
