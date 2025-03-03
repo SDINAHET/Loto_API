@@ -5,11 +5,11 @@
 git clone https://github.com/SDINAHET/Loto_API.git
 mvn install spring-boot:run
 
-Backend --> Swagger
+Backend --> Swagger Localhost 8082
 http://localhost:8082/swagger-ui/index.html
-mot de passe user1234 pour tous les user et admin
+mot de passe user1234 pour tous les users et admin
 
-Frontend -->
+Frontend --> Live server VSCODE localhost 5500
 http://127.0.0.1:5500/src/main/resources/static/index.html
 ```
 ![alt text](image-21.png)
