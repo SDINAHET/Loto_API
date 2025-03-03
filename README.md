@@ -1,6 +1,8 @@
 ![alt text](image-19.png)
 ![alt text](image-20.png)
 
+git clone https://github.com/SDINAHET/Loto_API.git
+
 # 🎰 Loto API - Gestion et Calcul des Gains FDJ
 
 ## 📌 Description du Projet
