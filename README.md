@@ -11,6 +11,9 @@ mot de passe user1234 pour tous les users et admin
 
 Frontend --> Live server VSCODE localhost 5500
 http://127.0.0.1:5500/src/main/resources/static/index.html
+
+
+npm install axios */pour l'utilisation d'axios à la place de fetch dans le front/*
 ```
 ![alt text](image-21.png)
 ![alt text](image-22.png)
