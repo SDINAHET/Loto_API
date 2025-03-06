@@ -296,6 +296,7 @@
         <div class="text-center my-3">
             <h2>Prochain tirage dans :
                 <span id="countdown" class="countdown-container"></span></h2>
+                <span id="animal" class="animated-animal">🐓</span>
 
 
         </div>
@@ -504,6 +505,32 @@
             }, 1000);
         }
         startCountdown();
+
+                // 🐓🐰🎡🏀🎇 Liste des animaux
+                const animals = ["🐓", "🐰", "🎡", "🏀", "🎇"];
+                let currentAnimalIndex = 0;
+
+                function changeAnimal() {
+                    const animalElement = document.getElementById("animal");
+
+                    // 🎭 Applique l'effet de fondu (disparaît)
+                    animalElement.style.opacity = "0";
+
+                    setTimeout(() => {
+                        // 🦄 Change l'animal après l'effet de sortie
+                        currentAnimalIndex = (currentAnimalIndex + 1) % animals.length;
+                        animalElement.textContent = animals[currentAnimalIndex];
+
+                        // 🌟 Réapparaît avec fondu
+                        animalElement.style.opacity = "1";
+                    }, 2000); // Attente de 2s avant de changer
+                }
+
+                // ⏳ Change toutes les 15 secondes
+                setInterval(changeAnimal, 15 * 1000); // 15 secondes
+
+                // 🚀 Premier affichage instantané
+                changeAnimal();
 
 
         function getDayName(dateString) {

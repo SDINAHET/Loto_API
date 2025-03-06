@@ -232,6 +232,32 @@
             100% { left: 100%; bottom: -50px; }
         }
 
+        .dashboard-cards {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .dashboard-card {
+            width: 250px;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            background: white;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+        }
+        .dashboard-card:hover {
+            transform: scale(1.05);
+        }
+        .dashboard-card h3 {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .dashboard-card button {
+            margin-top: 10px;
+        }
+
 
 
 
@@ -298,7 +324,30 @@
 
     </header>
     <body>
-
+        <div class="container text-center">
+            <div class="dashboard-cards">
+                <div class="dashboard-card">
+                    <h3>Compte</h3>
+                    <p>Gérez vos informations personnelles.</p>
+                    <button class="btn btn-primary">Modifier</button>
+                </div>
+                <div class="dashboard-card">
+                    <h3>Tickets</h3>
+                    <p>Ajoutez et suivez vos tickets.</p>
+                    <button class="btn btn-primary">Accéder</button>
+                </div>
+                <div class="dashboard-card">
+                    <h3>Statistiques</h3>
+                    <p>Consultez vos gains et tendances.</p>
+                    <button class="btn btn-primary">Voir</button>
+                </div>
+                <!-- <div class="dashboard-card">
+                    <h3>Résultats</h3>
+                    <p>Consultez les derniers tirages.</p>
+                    <button class="btn btn-primary">Explorer</button>
+                </div> -->
+            </div>
+        </div>
 
 
     <div class="container mt-4">

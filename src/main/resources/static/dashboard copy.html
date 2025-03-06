@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Loto Tracker</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="icon" type="image/png" href="loto_tracker.png">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .sidebar {
+            background-color: #212529;
+            color: white;
+            height: 100vh;
+            padding: 20px;
+        }
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .sidebar a:hover {
+            background-color: #495057;
+        }
+        .content {
+            padding: 20px;
+        }
+        .settings-icon {
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .profile-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar">
+                <h3 class="text-center">Loto Tracker</h3>
+                <a href="#" class="active"><i class="fas fa-home"></i> Dashboard</a>
+                <a href="#"><i class="fas fa-ticket-alt"></i> Mes Tickets</a>
+                <a href="#"><i class="fas fa-history"></i> Historique</a>
+                <a href="#"><i class="fas fa-chart-bar"></i> Statistiques</a>
+                <a href="#"><i class="fas fa-cogs"></i> Paramètres</a>
+                <a href="#"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
+            </nav>
+            <main class="col-md-9 col-lg-10 content">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h2>Bonjour, <span id="user-email">user1234@hbnb.com</span></h2>
+                    <i class="fas fa-cog fa-2x settings-icon" onclick="openSettingsModal()"></i>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="profile-card">
+                            <h4>Informations personnelles</h4>
+                            <p><strong>Nom:</strong> User1234</p>
+                            <p><strong>Email:</strong> user1234@hbnb.com</p>
+                            <button class="btn btn-primary" onclick="openSettingsModal()">Modifier</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="profile-card">
+                            <h4>Statut du compte</h4>
+                            <p><strong>Rôle:</strong> Administrateur</p>
+                            <p><strong>Tickets soumis:</strong> 12</p>
+                            <p><strong>Dernière connexion:</strong> 04/03/2025</p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script>
+        function openSettingsModal() {
+            alert("Ouverture des paramètres utilisateur...");
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

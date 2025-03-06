@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Loto Tracker</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+        }
+        .container {
+            flex: 1;
+            padding-top: 40px;
+        }
+        .header {
+            background-color: #212529;
+            padding: 15px 20px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .header h1 {
+            font-size: 1.8rem;
+            margin: 0;
+        }
+        .header img {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+        }
+        .dashboard-cards {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .dashboard-card {
+            width: 250px;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            background: white;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+        }
+        .dashboard-card:hover {
+            transform: scale(1.05);
+        }
+        .dashboard-card h3 {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .dashboard-card button {
+            margin-top: 10px;
+        }
+        .footer {
+            background-color: #212529;
+            color: #ffffff;
+            text-align: center;
+            padding: 15px 0;
+            margin-top: auto;
+        }
+        .footer a {
+            color: #ffeb3b;
+            font-weight: bold;
+            text-decoration: none;
+            transition: color 0.3s ease-in-out;
+        }
+        .footer a:hover {
+            color: #ff9800;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="d-flex align-items-center">
+            <img src="loto_tracker.png" alt="Loto Tracker">
+            <h1>Dashboard - Loto Tracker</h1>
+        </div>
+        <div>
+            <span>Bienvenue, <b id="userEmail">Utilisateur</b></span>
+            <button class="btn btn-danger ms-2">Se déconnecter</button>
+        </div>
+    </header>
+
+    <div class="container text-center">
+        <div class="dashboard-cards">
+            <div class="dashboard-card">
+                <h3>Compte</h3>
+                <p>Gérez vos informations personnelles.</p>
+                <button class="btn btn-primary">Modifier</button>
+            </div>
+            <div class="dashboard-card">
+                <h3>Tickets</h3>
+                <p>Ajoutez et suivez vos tickets.</p>
+                <button class="btn btn-primary">Accéder</button>
+            </div>
+            <div class="dashboard-card">
+                <h3>Statistiques</h3>
+                <p>Consultez vos gains et tendances.</p>
+                <button class="btn btn-primary">Voir</button>
+            </div>
+            <div class="dashboard-card">
+                <h3>Résultats</h3>
+                <p>Consultez les derniers tirages.</p>
+                <button class="btn btn-primary">Explorer</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div>
+            <a href="mentions_legales.html">Mentions légales</a> |
+            <a href="conditions_utilisation.html">Conditions d'utilisation</a> |
+            <a href="politique_confidentialite.html">Politique de confidentialité</a>
+        </div>
+        <p>© 2025 Tracker du Loto Français / SDINAHET. Tous droits réservés.</p>
+    </footer>
+</body>
+</html>
+
