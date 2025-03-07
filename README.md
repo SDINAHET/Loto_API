@@ -599,3 +599,25 @@ CREATE TABLE user_roles (
   FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
+-- 1️⃣ Création d'une nouvelle table avec FOREIGN KEY
+CREATE TABLE tickets_new (
+    id TEXT PRIMARY KEY,
+    numbers TEXT NOT NULL,
+    lucky_number INTEGER NOT NULL,
+    draw_date TEXT NOT NULL,
+    draw_day TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT,
+    user_id TEXT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- 2️⃣ Copie des données de l'ancienne table
+INSERT INTO tickets_new (id, numbers, lucky_number, draw_date, draw_day, created_at, updated_at, user_id)
+SELECT id, numbers, lucky_number, draw_date, draw_day, created_at, updated_at, user_id FROM tickets;
+
+-- 3️⃣ Suppression de l'ancienne table
+DROP TABLE tickets;
+
+-- 4️⃣ Renommage de la nouvelle table
+ALTER TABLE tickets_new RENAME TO tickets;

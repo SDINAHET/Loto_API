@@ -20,8 +20,11 @@ import jakarta.servlet.http.Cookie;
 import java.util.UUID;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Optional;
+
 
 import com.fdjloto.api.payload.MessageResponse;
+import com.fdjloto.api.repository.UserRepository;
 
 
 // @CrossOrigin(origins = "http://127.0.0.1:5500") // 🔥 Autorise CORS pour Live Server
@@ -34,16 +37,18 @@ public class AuthController {
     private final JwtUtils jwtUtils;
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository; // ✅ Ajout du repository
 
     // Ajouter en haut de la classe AuthController
     private static final String JWT_COOKIE_NAME = "jwtToken";
 
 
-    public AuthController(AuthenticationManager authenticationManager, JwtUtils jwtUtils, UserService userService, PasswordEncoder passwordEncoder) {
+    public AuthController(AuthenticationManager authenticationManager, JwtUtils jwtUtils, UserService userService, PasswordEncoder passwordEncoder, UserRepository userRepository) {
         this.authenticationManager = authenticationManager;
         this.jwtUtils = jwtUtils;
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
+        this.userRepository = userRepository; // ✅ Injection du repository
     }
 
     @PostMapping("/login4")
@@ -249,12 +254,46 @@ public class AuthController {
 
         String email = jwtUtils.getUserFromJwtToken(token);
 
+        // ✅ Récupérer l'utilisateur à partir de l'email
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                .body(Map.of("error", "Utilisateur introuvable"));
+        }
+
         Map<String, String> response = new HashMap<>();
         response.put("email", email);
+        response.put("first_name", user.get().getFirstName()); // Ajout du prénom
         response.put("message", "Utilisateur authentifié");
 
         return ResponseEntity.ok(response);
     }
+
+    // @GetMapping("/me")
+    // public ResponseEntity<Map<String, String>> getUserInfo(
+    //         @CookieValue(name = "jwtToken", required = false) String token) {
+
+    //     if (token == null || !jwtUtils.validateJwtToken(token)) {
+    //         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+    //                             .body(Map.of("error", "Utilisateur non authentifié"));
+    //     }
+
+    //     String email = jwtUtils.getUserFromJwtToken(token);
+    //     Optional<User> user = userRepository.findByEmail(email);
+
+    //     if (user.isEmpty()) {
+    //         return ResponseEntity.status(HttpStatus.NOT_FOUND)
+    //                             .body(Map.of("error", "Utilisateur introuvable"));
+    //     }
+
+    //     Map<String, String> response = new HashMap<>();
+    //     response.put("email", email);
+    //     response.put("first_name", user.get().getFirstName()); // Ajout du prénom
+    //     response.put("message", "Utilisateur authentifié");
+
+    //     return ResponseEntity.ok(response);
+    // }
+
 
 
     @PostMapping("/login")

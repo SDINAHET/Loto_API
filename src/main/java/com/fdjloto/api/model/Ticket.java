@@ -259,9 +259,12 @@ package com.fdjloto.api.model;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.Convert;
+import com.fdjloto.api.converter.LocalDateTimeAttributeConverter;
 
 @Entity
 @Table(name = "tickets")
@@ -281,14 +284,39 @@ public class Ticket {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate drawDate;
 
-    @Column(nullable = false, name = "draw_day")
+    @Column(nullable = true, name = "draw_day")
     private String drawDay;
 
-    @Column(nullable = false, updatable = false)
+    // @Column(nullable = false, updatable = false)
+    // private LocalDateTime createdAt;
+
+    // @Column(nullable = true) // ✅ `updatedAt` peut être `null` avant la première mise à jour
+    // private LocalDateTime updatedAt;
+
+    // @Column(name = "created_at", nullable = false, updatable = false, columnDefinition = "TEXT")
+    // private LocalDateTime createdAt;
+
+    // @Column(name = "updated_at", nullable = true, columnDefinition = "TEXT")
+    // private LocalDateTime updatedAt;
+
+    // @Column(name = "created_at", nullable = false, updatable = false, columnDefinition = "TEXT")
+    // @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    // private LocalDateTime createdAt;
+
+    // @Column(name = "updated_at", nullable = true, columnDefinition = "TEXT")
+    // @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    // private LocalDateTime updatedAt;
+
+    @Column(name = "created_at")
+    @Convert(converter = LocalDateTimeAttributeConverter.class)
     private LocalDateTime createdAt;
 
-    @Column(nullable = true) // ✅ `updatedAt` peut être `null` avant la première mise à jour
+    @Column(name = "updated_at")
+    @Convert(converter = LocalDateTimeAttributeConverter.class)
     private LocalDateTime updatedAt;
+
+
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
@@ -299,6 +327,30 @@ public class Ticket {
     public Ticket() {
         this.id = UUID.randomUUID().toString();
         this.createdAt = LocalDateTime.now();
+    }
+
+    // @PrePersist
+    // public void prePersist() {
+    //     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    //     this.createdAt = LocalDateTime.now().format(formatter);
+    //     this.updatedAt = LocalDateTime.now().format(formatter); // ✅ Initialisation
+    // }
+
+    // @PreUpdate
+    // public void preUpdate() {
+    //     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    //     this.updatedAt = LocalDateTime.now().format(formatter); // ✅ Met à jour `updatedAt`
+    // }
+
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.updatedAt = LocalDateTime.now();
     }
 
     // ✅ Getters et Setters
@@ -318,13 +370,47 @@ public class Ticket {
     public LocalDateTime getCreatedAt() { return createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; } // ✅ Ajout du getter
 
-    @PrePersist
-    public void prePersist() {
-        this.createdAt = LocalDateTime.now();
+    // @PrePersist
+    // public void prePersist() {
+    //     this.createdAt = LocalDateTime.now();  // ✅ Définit `created_at` à la date actuelle
+    //     // this.updatedAt = null; // ✅ S'assure que `updated_at` est NULL à la création
+    //     this.updatedAt = LocalDateTime.now();  // ✅ Définit `updated_at` à la date actuelle
+    // }
+
+    // @PreUpdate
+    // public void preUpdate() {
+    //     this.updatedAt = LocalDateTime.now(); // ✅ Définit `updated_at` uniquement lors d'une mise à jour
+    // }
+
+
+
+
+    // public void setCreatedAt(LocalDateTime createdAt) {
+    //     this.createdAt = createdAt;
+    // }
+
+    // public void setUpdatedAt(LocalDateTime updatedAt) {
+    //     this.updatedAt = updatedAt;
+    // }
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = LocalDateTime.parse(createdAt, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
-    @PreUpdate
-    public void preUpdate() {
-        this.updatedAt = LocalDateTime.now(); // ✅ Met à jour `updatedAt` à chaque modification
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = LocalDateTime.parse(updatedAt, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+
+
+
+
+
 }

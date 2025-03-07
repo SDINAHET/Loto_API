@@ -778,8 +778,73 @@ public class TicketController {
         }
     }
 
+    // @PostMapping
+    // @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    // public ResponseEntity<TicketDTO> createTicket(HttpServletRequest request, @RequestBody TicketDTO ticketDTO) {
+    //     Optional<String> jwtOpt = getJwtFromCookie(request);
+    //     if (jwtOpt.isEmpty()) {
+    //         return ResponseEntity.status(403).build();
+    //     }
+    //     String jwt = jwtOpt.get();
+    //     String email = jwtUtils.getUserFromJwtToken(jwt);
+    //     User user = userService.getUserByEmail(email)
+    //             .orElseThrow(() -> new RuntimeException("User not found"));
+
+    //     Ticket newTicket = ticketService.createTicket(user.getId(), ticketDTO);
+    //     return ResponseEntity.ok(new TicketDTO(newTicket));
+    // }
+
+    @PutMapping("/{ticketId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    public ResponseEntity<TicketDTO> updateTicket(@PathVariable String ticketId, @RequestBody TicketDTO ticketDTO, HttpServletRequest request) {
+        Optional<String> jwtOpt = getJwtFromCookie(request);
+        if (jwtOpt.isEmpty()) {
+            return ResponseEntity.status(403).build();
+        }
+        String jwt = jwtOpt.get();
+        String email = jwtUtils.getUserFromJwtToken(jwt);
+        User user = userService.getUserByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Ticket ticket = ticketService.getTicketById(ticketId);
+        if (user.isAdmin() || ticket.getUser().getId().equals(user.getId())) {
+            Ticket updatedTicket = ticketService.updateTicket(ticketId, ticketDTO);
+            return ResponseEntity.ok(new TicketDTO(updatedTicket));
+        } else {
+            return ResponseEntity.status(403).build(); // ⛔ Accès refusé
+        }
+    }
+
+    // @DeleteMapping("/{ticketId}")
+    // @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    // public ResponseEntity<Void> deleteTicket(@PathVariable String ticketId, HttpServletRequest request) {
+    //     Optional<String> jwtOpt = getJwtFromCookie(request);
+    //     if (jwtOpt.isEmpty()) {
+    //         return ResponseEntity.status(403).build();
+    //     }
+    //     String jwt = jwtOpt.get();
+    //     String email = jwtUtils.getUserFromJwtToken(jwt);
+    //     User user = userService.getUserByEmail(email)
+    //             .orElseThrow(() -> new RuntimeException("User not found"));
+
+    //     Ticket ticket = ticketService.getTicketById(ticketId);
+    //     if (user.isAdmin() || ticket.getUser().getId().equals(user.getId())) {
+    //         ticketService.deleteTicket(ticketId, user.getId());
+    //         return ResponseEntity.noContent().build();
+    //     } else {
+    //         return ResponseEntity.status(403).build(); // ⛔ Accès refusé
+    //     }
+    // }
+
+
+
+
+
+
+
     /**
      * 🔑 Récupère le JWT depuis le cookie "jwtToken".
+     * Ajoute cette méthode pour récupérer l'utilisateur à partir du JWT dans le cookie
      */
     private Optional<String> getJwtFromCookie(HttpServletRequest request) {
         if (request.getCookies() != null) {
@@ -790,4 +855,25 @@ public class TicketController {
         }
         return Optional.empty();
     }
+
+    @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    public ResponseEntity<TicketDTO> createTicket(@RequestBody TicketDTO ticketDTO, HttpServletRequest request) {
+        Optional<String> jwtOpt = getJwtFromCookie(request);
+        if (jwtOpt.isEmpty()) {
+            return ResponseEntity.status(403).body(null);
+        }
+        String jwt = jwtOpt.get();
+        String email = jwtUtils.getUserFromJwtToken(jwt);
+
+        // 🔍 Recherche de l'utilisateur par email
+        User user = userService.getUserByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // 🔥 Création du ticket pour l'utilisateur connecté
+        Ticket newTicket = ticketService.createTicket(user.getId(), ticketDTO);
+
+        return ResponseEntity.ok(new TicketDTO(newTicket));
+    }
+
 }

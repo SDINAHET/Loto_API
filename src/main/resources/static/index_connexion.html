@@ -1303,7 +1303,8 @@
 
                 if (response.status === 200 && response.data.email) {
                     document.getElementById("loginButton").style.display = "none";
-                    document.getElementById("userEmail").textContent = response.data.email;
+                    // document.getElementById("userEmail").textContent = response.data.email;
+                    document.getElementById("userEmail").textContent = response.data.first_name;
                     document.getElementById("userMenu").style.display = "flex";
                 } else {
                     document.getElementById("loginButton").style.display = "inline-block";
