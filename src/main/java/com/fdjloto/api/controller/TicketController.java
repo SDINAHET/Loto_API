@@ -680,7 +680,13 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import com.fdjloto.api.repository.TicketRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+
 
 @RestController
 @RequestMapping("/api/tickets")
@@ -700,6 +706,9 @@ public class TicketController {
         this.userService = userService;
         this.jwtUtils = jwtUtils;
     }
+    @Autowired
+    private TicketRepository ticketRepository;
+
 
     /**
      * 🔥 Récupère tous les tickets du joueur (via JWT Cookie).
@@ -794,26 +803,26 @@ public class TicketController {
     //     return ResponseEntity.ok(new TicketDTO(newTicket));
     // }
 
-    @PutMapping("/{ticketId}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
-    public ResponseEntity<TicketDTO> updateTicket(@PathVariable String ticketId, @RequestBody TicketDTO ticketDTO, HttpServletRequest request) {
-        Optional<String> jwtOpt = getJwtFromCookie(request);
-        if (jwtOpt.isEmpty()) {
-            return ResponseEntity.status(403).build();
-        }
-        String jwt = jwtOpt.get();
-        String email = jwtUtils.getUserFromJwtToken(jwt);
-        User user = userService.getUserByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    // @PutMapping("/{ticketId}")
+    // @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    // public ResponseEntity<TicketDTO> updateTicket(@PathVariable String ticketId, @RequestBody TicketDTO ticketDTO, HttpServletRequest request) {
+    //     Optional<String> jwtOpt = getJwtFromCookie(request);
+    //     if (jwtOpt.isEmpty()) {
+    //         return ResponseEntity.status(403).build();
+    //     }
+    //     String jwt = jwtOpt.get();
+    //     String email = jwtUtils.getUserFromJwtToken(jwt);
+    //     User user = userService.getUserByEmail(email)
+    //             .orElseThrow(() -> new RuntimeException("User not found"));
 
-        Ticket ticket = ticketService.getTicketById(ticketId);
-        if (user.isAdmin() || ticket.getUser().getId().equals(user.getId())) {
-            Ticket updatedTicket = ticketService.updateTicket(ticketId, ticketDTO);
-            return ResponseEntity.ok(new TicketDTO(updatedTicket));
-        } else {
-            return ResponseEntity.status(403).build(); // ⛔ Accès refusé
-        }
-    }
+    //     Ticket ticket = ticketService.getTicketById(ticketId);
+    //     if (user.isAdmin() || ticket.getUser().getId().equals(user.getId())) {
+    //         Ticket updatedTicket = ticketService.updateTicket(ticketId, ticketDTO);
+    //         return ResponseEntity.ok(new TicketDTO(updatedTicket));
+    //     } else {
+    //         return ResponseEntity.status(403).build(); // ⛔ Accès refusé
+    //     }
+    // }
 
     // @DeleteMapping("/{ticketId}")
     // @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
@@ -875,5 +884,84 @@ public class TicketController {
 
         return ResponseEntity.ok(new TicketDTO(newTicket));
     }
+
+    @PutMapping("/{ticketId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    public ResponseEntity<TicketDTO> updateTicket(@PathVariable String ticketId, @RequestBody TicketDTO ticketDTO, HttpServletRequest request) {
+        Optional<String> jwtOpt = getJwtFromCookie(request);
+        if (jwtOpt.isEmpty()) {
+            return ResponseEntity.status(403).body(null);
+        }
+
+        String jwt = jwtOpt.get();
+        String email = jwtUtils.getUserFromJwtToken(jwt);
+
+        // 🔍 Log pour vérifier l'utilisateur
+        System.out.println("✅ JWT extrait : " + jwt);
+        System.out.println("✅ Email récupéré : " + email);
+
+        User user = userService.getUserByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // 🔍 Vérification et récupération du ticket
+        Ticket existingTicket = ticketService.getTicketById(ticketId);
+        if (existingTicket == null) {
+            System.out.println("❌ Ticket introuvable avec ID : " + ticketId);
+            return ResponseEntity.status(404).build();
+        }
+
+        System.out.println("✅ Ticket trouvé : " + existingTicket.getId());
+
+        // 🔐 Vérification des permissions
+        if (!user.isAdmin() && !existingTicket.getUser().getId().equals(user.getId())) {
+            System.out.println("❌ Accès refusé : l'utilisateur n'est pas propriétaire de ce ticket.");
+            return ResponseEntity.status(403).build();
+        }
+
+        // 🔥 Mise à jour des champs
+        existingTicket.setNumbers(ticketDTO.getNumbers());
+
+        try {
+            existingTicket.setChanceNumber(Integer.parseInt(ticketDTO.getChanceNumber()));
+        } catch (NumberFormatException e) {
+            System.out.println("❌ Erreur de conversion du chanceNumber : " + ticketDTO.getChanceNumber());
+            return ResponseEntity.status(400).build();
+        }
+
+        if (ticketDTO.getDrawDate() != null && !ticketDTO.getDrawDate().isEmpty()) {
+            existingTicket.setDrawDate(LocalDate.parse(ticketDTO.getDrawDate()));
+        }
+
+        // ✅ Vérification et conversion de updatedAt
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        // if (ticketDTO.getUpdatedAt() != null && !ticketDTO.getUpdatedAt().isEmpty()) {
+        //     try {
+        //         existingTicket.setUpdatedAt(LocalDateTime.parse(ticketDTO.getUpdatedAt(), formatter));
+        //     } catch (Exception e) {
+        //         System.out.println("❌ Erreur de format du champ updatedAt : " + ticketDTO.getUpdatedAt());
+        //         return ResponseEntity.status(400).build();
+        //     }
+        // } else {
+        //     existingTicket.setUpdatedAt(LocalDateTime.now());
+        // }
+        if (ticketDTO.getUpdatedAt() != null && !ticketDTO.getUpdatedAt().isEmpty()) {
+            try {
+                existingTicket.setUpdatedAt(LocalDateTime.parse(ticketDTO.getUpdatedAt(), DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+            } catch (Exception e) {
+                System.out.println("❌ Erreur de format du champ updatedAt : " + ticketDTO.getUpdatedAt());
+                return ResponseEntity.status(400).build();
+            }
+        } else {
+            existingTicket.setUpdatedAt(LocalDateTime.now());
+        }
+
+
+        // ✅ Sauvegarde et retour de l'objet mis à jour
+        Ticket updatedTicket = ticketRepository.save(existingTicket);
+        System.out.println("✅ Ticket mis à jour : " + updatedTicket.getId());
+
+        return ResponseEntity.ok(new TicketDTO(updatedTicket));
+    }
+
 
 }
