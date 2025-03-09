@@ -263,7 +263,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Convert;
 import com.fdjloto.api.converter.LocalDateTimeAttributeConverter;
 
 @Entity
@@ -286,6 +285,12 @@ public class Ticket {
 
     @Column(nullable = true, name = "draw_day")
     private String drawDay;
+
+    // // ✅ Nouvelle colonne : statut du ticket (GAGNANT, PERDU, EN ATTENTE)
+    // private String statut = "EN ATTENTE";
+
+    // // ✅ Nouvelle colonne : montant du gain
+    // private double gain = 0.0;
 
     // @Column(nullable = false, updatable = false)
     // private LocalDateTime createdAt;
@@ -369,6 +374,11 @@ public class Ticket {
     public String getUserEmail() { return user.getEmail(); }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; } // ✅ Ajout du getter
+    // public String getStatut() { return statut; }
+    // public void setStatut(String statut) { this.statut = statut; }
+
+    // public double getGain() { return gain; }
+    // public void setGain(double gain) { this.gain = gain; }
 
     // @PrePersist
     // public void prePersist() {

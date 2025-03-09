@@ -45,13 +45,34 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userRepository.save(user);
     }
 
+    // @Override
+    // public User updateUser(UUID id, User user) { // ✅ Garde UUID
+    //     if (userRepository.existsById(id.toString())) {
+    //         user.setId(id.toString()); // ✅ Stocke UUID sous forme de String
+    //         return userRepository.save(user);
+    //     }
+    //     return null;
+    // }
+
     @Override
-    public User updateUser(UUID id, User user) { // ✅ Garde UUID
-        if (userRepository.existsById(id.toString())) {
-            user.setId(id.toString()); // ✅ Stocke UUID sous forme de String
+    public User updateUser(UUID id, User user) {
+        Optional<User> existingUserOpt = userRepository.findById(id.toString());
+
+        if (existingUserOpt.isPresent()) {
+            User existingUser = existingUserOpt.get();
+
+            // ⚠️ Ne pas modifier l'UUID
+            user.setId(existingUser.getId());
+
+            // ⚠️ Conserver les tickets existants si non fournis
+            if (user.getTickets() == null || user.getTickets().isEmpty()) {
+                user.setTickets(existingUser.getTickets());
+            }
+
             return userRepository.save(user);
         }
-        return null;
+
+        return null; // ou générer une exception pour un utilisateur introuvable
     }
 
     // @Override
