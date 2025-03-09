@@ -16,7 +16,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.http.HttpMethod;
+
+// import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import java.util.Arrays;
+import java.util.List;
+
 
 
 
@@ -87,6 +95,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/tickets/**").hasAnyRole("ADMIN", "USER") // 🔥 POST accessible aux admins et utilisateurs
                         .requestMatchers(HttpMethod.PUT, "/api/tickets/**").hasAnyRole("ADMIN", "USER") // 🔥 PUT accessible aux admins et utilisateurs
                         .requestMatchers(HttpMethod.DELETE, "/api/tickets/**").hasAnyRole("ADMIN", "USER") // 🔥 PUT accessible aux admins et utilisateurs
+                        .requestMatchers(HttpMethod.GET, "/api/users/**").hasAnyRole("ADMIN", "USER") // 🔥 GET accessible aux admins et utilisateurs
+                        .requestMatchers(HttpMethod.POST, "/api/users/**").hasAnyRole("ADMIN", "USER") // 🔥 POST accessible aux admins et utilisateurs
+                        .requestMatchers(HttpMethod.PUT, "/api/users/**").hasAnyRole("ADMIN", "USER") // 🔥 PUT accessible aux admins et utilisateurs
+                        .requestMatchers(HttpMethod.DELETE, "/api/users/**").hasAnyRole("ADMIN", "USER") // 🔥 PUT accessible aux admins et utilisateurs
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         // .requestMatchers(HttpMethod.DELETE, "/api/tickets/**").hasRole("ADMIN") // 🔥 DELETE réservé aux admins
                         // .requestMatchers("/api/tickets/**", "/api/tickets", "/api/tickets/{ticketId}").hasAnyRole("USER", "ADMIN") // 🔐 Accès USER et ADMIN
                         .requestMatchers("/api/historique/last20").permitAll()
@@ -96,7 +109,7 @@ public class SecurityConfig {
                         // .requestMatchers("/api/users/**", "/api/users").authenticated()  // Protégé par JWT
                         // .requestMatchers("/api/users/**").hasRole("ADMIN")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")  // 🔐 Accès ADMIN
-                        .requestMatchers("/api/users/**").hasAnyRole("USER", "ADMIN") // 🔐 Accès USER et ADMIN
+                        // .requestMatchers("/api/users/**").hasAnyRole("USER", "ADMIN") // 🔐 Accès USER et ADMIN
                         // .requestMatchers("/api/users/**").hasRole("ADMIN")  // 🔐 Accès ADMIN
                         // .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN") // 🔐 Accès USER et ADMIN
                         // .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
@@ -112,6 +125,21 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)  // 🔐 Ajoute le filtre JWT
                 .build();
     }
+
+    // ✅ Ajout de la configuration CORS dans SecurityConfig
+    // @Bean
+    // public CorsConfigurationSource corsConfigurationSource() {
+    //     CorsConfiguration configuration = new CorsConfiguration();
+    //     configuration.setAllowedOrigins(List.of("http://127.0.0.1:5500", "http://localhost:8082")); // 🔥 Autorise les requêtes depuis le frontend
+    //     configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+    //     configuration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
+    //     configuration.setExposedHeaders(List.of("Set-Cookie")); // 🔑 Permet d'exposer le cookie JWT
+    //     configuration.setAllowCredentials(true); // 🔥 Permet d'envoyer les cookies et headers d'authentification
+
+    //     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    //     source.registerCorsConfiguration("/**", configuration); // 🔥 Applique CORS à toutes les routes
+    //     return source;
+    // }
 
     // @Bean
     // public UserDetailsService userDetailsService() {

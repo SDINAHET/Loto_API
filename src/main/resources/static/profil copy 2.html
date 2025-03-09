@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifier mon profil - Loto Tracker</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bcryptjs/2.4.3/bcrypt.min.js"></script>
+</head>
+<body class="bg-light">
+
+<!-- ✅ Navbar -->
+<nav class="navbar navbar-dark bg-dark p-3">
+    <a class="navbar-brand" href="index_connexion.html">
+        <i class="fas fa-home"></i> Accueil
+    </a>
+    <button class="btn btn-danger" onclick="logout()">
+        <i class="fas fa-sign-out-alt"></i> Se déconnecter
+    </button>
+</nav>
+
+<!-- ✅ Contenu principal -->
+<div class="container mt-5">
+    <h2 class="text-center">Modifier mon profil</h2>
+
+    <form id="profileForm" class="mt-4">
+        <!-- ✅ Mot de passe actuel pour déverrouiller la modification -->
+        <div class="mb-3">
+            <label for="currentPassword" class="form-label">Mot de passe actuel :</label>
+            <div class="input-group">
+                <input type="password" class="form-control" id="currentPassword" required>
+                <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('currentPassword')">
+                    <i class="fas fa-eye"></i>
+                </button>
+                <button class="btn btn-outline-secondary" type="button" id="unlockEdit">
+                    <i class="fas fa-lock"></i>
+                </button>
+                <span id="authStatus" class="ms-2"></span>
+            </div>
+        </div>
+
+        <!-- ✅ Champ Email (non modifiable) -->
+        <div class="mb-3">
+            <label for="email" class="form-label">Email :</label>
+            <input type="email" class="form-control" id="email" disabled>
+        </div>
+
+        <!-- ✅ Champ Prénom -->
+        <div class="mb-3">
+            <label for="firstName" class="form-label">Prénom :</label>
+            <input type="text" class="form-control" id="firstName" disabled>
+        </div>
+
+        <!-- ✅ Champ Nom -->
+        <div class="mb-3">
+            <label for="lastName" class="form-label">Nom :</label>
+            <input type="text" class="form-control" id="lastName" disabled>
+        </div>
+
+        <!-- ✅ Nouveau mot de passe -->
+        <!-- <div class="mb-3">
+            <label for="newPassword" class="form-label">Nouveau mot de passe :</label>
+            <div class="input-group">
+                <input type="password" class="form-control" id="newPassword" disabled>
+                <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('newPassword')">
+                    <i class="fas fa-eye"></i>
+                </button>
+            </div>
+        </div> -->
+
+        <!-- ✅ Confirmation du mot de passe -->
+        <!-- <div class="mb-3">
+            <label for="confirmPassword" class="form-label">Confirmer le nouveau mot de passe :</label>
+            <div class="input-group">
+                <input type="password" class="form-control" id="confirmPassword" disabled>
+                <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('confirmPassword')">
+                    <i class="fas fa-eye"></i>
+                </button>
+            </div>
+        </div> -->
+
+        <!-- ✅ Bouton Enregistrer -->
+        <button type="submit" class="btn btn-primary w-100" id="saveChanges" disabled>
+            Enregistrer les modifications
+        </button>
+    </form>
+</div>
+
+<script>
+// ✅ Charger les infos utilisateur
+document.addEventListener("DOMContentLoaded", async function () {
+    await loadUserProfile();
+});
+
+async function loadUserProfile() {
+    try {
+        const response = await axios.get("http://localhost:8082/api/auth/me", { withCredentials: true });
+
+        console.log("🔎 Réponse API /me :", response.data);
+
+        if (!response.data || !response.data.id) {
+            console.error("❌ L'ID utilisateur est manquant !");
+            alert("Problème : L'ID utilisateur est invalide !");
+            return;
+        }
+
+        document.getElementById("email").value = response.data.email;
+        document.getElementById("firstName").value = response.data.first_name;
+        document.getElementById("lastName").value = response.data.last_name;
+
+        // ✅ Sauvegarde correcte de l'ID utilisateur
+        document.getElementById("profileForm").setAttribute("data-user-id", response.data.id);
+
+        console.log("✅ ID utilisateur enregistré :", response.data.id);
+    } catch (error) {
+        console.error("❌ Erreur API /me :", error);
+        alert("Erreur lors de la récupération du profil !");
+        window.location.href = "login.html";
+    }
+}
+
+
+// ✅ Vérification du mot de passe actuel et déverrouillage des champs
+document.getElementById("unlockEdit").addEventListener("click", async function () {
+    let password = document.getElementById("currentPassword").value;
+    let email = document.getElementById("email").value;
+
+    if (!password.trim()) {
+        alert("Veuillez entrer votre mot de passe actuel.");
+        return;
+    }
+
+    try {
+        let response = await axios.post("http://localhost:8082/api/auth/login3", {
+            email: email,
+            password: password
+        }, { withCredentials: true });
+
+        if (response.status === 200) {  // ✅ Vérifie le succès de la requête
+
+            document.getElementById("authStatus").innerHTML = '<i class="fas fa-check-circle text-success"></i>';
+            enableFields();
+        } else {
+            document.getElementById("authStatus").innerHTML = '<i class="fas fa-times-circle text-danger"></i>';
+            alert("Mot de passe incorrect. Vous allez être déconnecté.");
+            setTimeout(() => logout(), 2000);
+        }
+    } catch (error) {
+        alert("Erreur d'authentification !");
+    }
+});
+
+// ✅ Déverrouiller les champs après validation du mot de passe
+function enableFields() {
+    document.getElementById("firstName").disabled = false;
+    document.getElementById("lastName").disabled = false;
+    document.getElementById("newPassword").disabled = false;
+    document.getElementById("confirmPassword").disabled = false;
+    document.getElementById("saveChanges").disabled = false;
+}
+
+// ✅ Sauvegarde des modifications
+document.getElementById("profileForm").addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    let userId = this.getAttribute("data-user-id");
+    console.log("🔎 ID utilisateur pour PUT :", userId);
+
+    if (!userId || userId === "null") {
+        alert("❌ Problème : ID utilisateur invalide !");
+        return;
+    }
+
+    let firstName = document.getElementById("firstName").value;
+    let lastName = document.getElementById("lastName").value;
+    let newPassword = document.getElementById("newPassword").value;
+    let confirmPassword = document.getElementById("confirmPassword").value;
+
+    if (newPassword && newPassword !== confirmPassword) {
+        alert("Les mots de passe ne correspondent pas !");
+        return;
+    }
+
+    let updatedData = { first_name: firstName, last_name: lastName };
+    if (newPassword) updatedData.new_password = await hashPassword(newPassword);
+
+    try {
+        let response = await axios.put(`http://localhost:8082/api/users/${userId}`, updatedData, { withCredentials: true });
+
+        console.log("✅ Réponse du serveur PUT :", response.data);
+        alert("Modifications enregistrées !");
+        window.location.reload();
+    } catch (error) {
+        console.error("❌ Erreur PUT :", error.response?.data || error.message);
+        alert("Erreur lors de la mise à jour du profil.");
+    }
+});
+
+async function updateUser() {
+    let userId = document.getElementById("profileForm").getAttribute("data-user-id");
+
+    // Vérifie que l'ID utilisateur est valide
+    if (!userId || userId === "null") {
+        alert("❌ Problème : ID utilisateur invalide !");
+        return;
+    }
+
+    let updatedData = {
+        firstName: document.getElementById("firstName").value,
+        lastName: document.getElementById("lastName").value
+    };
+
+    try {
+        let response = await axios.put(`http://localhost:8082/api/users/${userId}`, updatedData, {
+            withCredentials: true, // 🔥 Important pour autoriser les cookies JWT
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("jwtToken")}` // 🔥 Ajoute le JWT si nécessaire
+            }
+        });
+
+        console.log("✅ Réponse PUT :", response.data);
+        alert("Modifications enregistrées !");
+        window.location.reload();
+    } catch (error) {
+        console.error("❌ Erreur PUT :", error.response?.data || error.message);
+        alert("Erreur lors de la mise à jour du profil.");
+    }
+}
+
+
+// ✅ Hachage du mot de passe avec bcrypt
+async function hashPassword(password) {
+    return bcrypt.hash(password, 10);
+}
+
+// ✅ Afficher/Masquer les mots de passe
+function togglePassword(field) {
+    let input = document.getElementById(field);
+    input.type = input.type === "password" ? "text" : "password";
+}
+
+// ✅ Déconnexion
+async function logout() {
+    await axios.post("http://localhost:8082/api/auth/logout", {}, { withCredentials: true });
+    window.location.href = "index.html";
+}
+</script>
+
+</body>
+</html>

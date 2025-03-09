@@ -693,7 +693,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Tag(name = "Ticket Management", description = "Endpoints for managing Tickets")
 @SecurityRequirement(name = "bearerAuth")
 @SecurityRequirement(name = "jwtCookieAuth")
-@CrossOrigin(origins = "http://127.0.0.1:5500", allowCredentials = "true")
+@CrossOrigin(
+    origins = "http://127.0.0.1:5500",
+    allowCredentials = "true",
+    allowedHeaders = "*",
+    methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE}
+)
+// @CrossOrigin(origins = "http://127.0.0.1:5500", allowCredentials = "true")
 public class TicketController {
 
     private final TicketService ticketService;

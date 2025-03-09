@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajouter un Ticket - Loto Tracker</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        .number-circle {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin: 5px;
+            cursor: pointer;
+            background-color: #bbb;
+            color: white;
+        }
+        .selected {
+            background-color: blue !important;
+        }
+        .chance-circle {
+            background-color: #8a0000;
+        }
+        .chance-circle.selected {
+            background-color: red !important;
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-dark bg-dark p-3">
+    <a class="navbar-brand" href="tickets.html">
+        <i class="fas fa-arrow-left"></i> Retour
+    </a>
+</nav>
+
+<div class="container mt-5">
+    <h2 class="text-center">Ajouter un Ticket</h2>
+
+    <div class="card shadow-sm p-4 mt-3">
+        <form id="ticketForm">
+            <!-- ✅ Sélection de la date du tirage -->
+            <div class="mb-3">
+                <label for="drawDate" class="form-label">Date du Tirage :</label>
+                <input type="date" class="form-control" id="drawDate" required>
+            </div>
+
+            <h6>Choisissez 5 numéros :</h6>
+            <div id="numberSelection" class="d-flex flex-wrap justify-content-center"></div>
+
+            <h6 class="mt-3">Choisissez 1 numéro chance :</h6>
+            <div id="chanceSelection" class="d-flex flex-wrap justify-content-center"></div>
+
+            <button type="submit" class="btn btn-success w-100 mt-3">Enregistrer</button>
+        </form>
+    </div>
+</div>
+
+<script>
+const API_URL = "http://localhost:8082/api/tickets";
+let userId = null; // Stockage de l'ID utilisateur
+
+document.addEventListener("DOMContentLoaded", async function () {
+    generateNumbers();
+    await checkUserAuth();
+});
+
+// ✅ Récupérer l'utilisateur via l'API `/auth/me`
+async function checkUserAuth() {
+    try {
+        console.log("🔹 Vérification de l'utilisateur...");
+        const response = await axios.get("http://localhost:8082/api/auth/me", { withCredentials: true });
+
+        if (response.status !== 200 || !response.data.id) {
+            alert("Vous devez être connecté pour ajouter un ticket.");
+            window.location.href = "login.html";
+            return;
+        }
+
+        userId = response.data.id;
+        console.log("✅ Utilisateur connecté :", response.data);
+
+    } catch (error) {
+        console.error("❌ Erreur lors de la vérification de l'utilisateur :", error);
+        alert("Session expirée. Veuillez vous reconnecter.");
+        window.location.href = "login.html";
+    }
+}
+
+// ✅ Générer les numéros 1-49 et les numéros chance 1-10
+function generateNumbers() {
+    let numberContainer = document.getElementById("numberSelection");
+    let chanceContainer = document.getElementById("chanceSelection");
+
+    for (let i = 1; i <= 49; i++) {
+        let numBtn = document.createElement("span");
+        numBtn.classList.add("number-circle");
+        numBtn.textContent = i;
+        numBtn.onclick = function () { toggleSelection(numBtn, 5); };
+        numberContainer.appendChild(numBtn);
+    }
+
+    for (let i = 1; i <= 10; i++) {
+        let chanceBtn = document.createElement("span");
+        chanceBtn.classList.add("number-circle", "chance-circle");
+        chanceBtn.textContent = i;
+        chanceBtn.onclick = function () { toggleSelection(chanceBtn, 1); };
+        chanceContainer.appendChild(chanceBtn);
+    }
+}
+
+// ✅ Sélectionner/Désélectionner un numéro
+function toggleSelection(btn, limit) {
+    let selected = btn.parentNode.querySelectorAll(".selected");
+    if (selected.length >= limit && !btn.classList.contains("selected")) return;
+    btn.classList.toggle("selected");
+}
+
+// ✅ Envoyer le ticket au backend
+document.getElementById("ticketForm").addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    let selectedNumbers = [...document.querySelectorAll("#numberSelection .selected")]
+        .map(e => e.textContent)
+        .sort((a, b) => a - b);
+
+    let chanceNumber = [...document.querySelectorAll("#chanceSelection .selected")]
+        .map(e => e.textContent)[0];
+
+    let drawDate = document.getElementById("drawDate").value;
+
+    // Vérifier si 5 numéros et 1 numéro chance sont sélectionnés
+    if (selectedNumbers.length !== 5 || !chanceNumber) {
+        alert("Vous devez choisir 5 numéros et 1 numéro chance !");
+        return;
+    }
+
+    let ticketData = {
+        userId: userId,
+        drawDate: drawDate,
+        numbers: selectedNumbers.join("-"),
+        chanceNumber: parseInt(chanceNumber)
+    };
+
+    try {
+        console.log("🔹 Envoi du ticket :", ticketData);
+
+        await axios.post(API_URL, ticketData, {
+            withCredentials: true,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        });
+
+        alert("✅ Ticket ajouté avec succès !");
+        window.location.href = "tickets.html";
+
+    } catch (error) {
+        console.error("❌ Erreur lors de l'ajout du ticket :", error.response?.data || error.message);
+        alert("Erreur lors de l'ajout du ticket : " + (error.response?.data?.message || error.message));
+    }
+});
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifier un Ticket - Loto Tracker</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        .number-circle {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin: 5px;
+            color: white;
+            background-color: #4a4a4a; /* Non sélectionné */
+            cursor: pointer;
+        }
+        .number-circle.selected {
+            background-color: blue !important;
+        }
+        .chance-circle {
+            background-color: #8a0000; /* Non sélectionné */
+        }
+        .chance-circle.selected {
+            background-color: red !important;
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+<!-- ✅ Navbar -->
+<nav class="navbar navbar-dark bg-dark p-3">
+    <a class="navbar-brand" href="tickets.html">
+        <i class="fas fa-arrow-left"></i> Retour
+    </a>
+</nav>
+
+<!-- ✅ Contenu principal -->
+<div class="container mt-5">
+    <h2 class="text-center">Modifier un Ticket</h2>
+
+    <div class="card shadow-sm p-4 mt-3">
+        <form id="ticketForm">
+            <input type="hidden" id="ticketId">
+
+            <!-- ✅ Champ de Date -->
+            <div class="mb-3">
+                <label for="ticketDate" class="form-label">Date :</label>
+                <input type="date" class="form-control" id="ticketDate" required>
+            </div>
+
+            <h6>Choisissez 5 numéros :</h6>
+            <div id="numberSelection" class="d-flex flex-wrap justify-content-center"></div>
+
+            <h6 class="mt-3">Choisissez 1 numéro chance :</h6>
+            <div id="chanceSelection" class="d-flex flex-wrap justify-content-center"></div>
+
+            <button type="submit" class="btn btn-success w-100 mt-3">Mettre à jour</button>
+        </form>
+    </div>
+</div>
+
+<!-- ✅ Scripts -->
+<script>
+document.addEventListener("DOMContentLoaded", async function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    const ticketId = urlParams.get("id");
+    if (!ticketId) {
+        alert("Aucun ticket sélectionné.");
+        window.location.href = "tickets.html";
+        return;
+    }
+
+    document.getElementById("ticketId").value = ticketId;
+    await loadTicketDetails(ticketId);
+});
+
+// ✅ Charger les détails du ticket existant
+async function loadTicketDetails(ticketId) {
+    try {
+        const response = await axios.get(`http://localhost:8082/api/tickets/${ticketId}`, { withCredentials: true });
+        const ticket = response.data;
+
+        document.getElementById("ticketDate").value = ticket.drawDate || "";
+
+        let numberContainer = document.getElementById("numberSelection");
+        let chanceContainer = document.getElementById("chanceSelection");
+
+        numberContainer.innerHTML = "";
+        chanceContainer.innerHTML = "";
+
+        let selectedNumbers = ticket.numbers ? ticket.numbers.split("-").map(num => parseInt(num)) : [];
+        let selectedChance = ticket.chanceNumber || null;
+
+        // Générer les numéros de 1 à 49
+        for (let i = 1; i <= 49; i++) {
+            let numButton = document.createElement("span");
+            numButton.classList.add("number-circle");
+            numButton.textContent = i;
+            if (selectedNumbers.includes(i)) numButton.classList.add("selected");
+            numButton.onclick = function() { toggleSelection(numButton, "blue"); };
+            numberContainer.appendChild(numButton);
+        }
+
+        // Générer les numéros chance de 1 à 10
+        for (let i = 1; i <= 10; i++) {
+            let chanceButton = document.createElement("span");
+            chanceButton.classList.add("number-circle", "chance-circle");
+            chanceButton.textContent = i;
+            if (selectedChance == i) chanceButton.classList.add("selected");
+            chanceButton.onclick = function() { toggleSelection(chanceButton, "red", true); };
+            chanceContainer.appendChild(chanceButton);
+        }
+    } catch (error) {
+        console.error("❌ Erreur lors du chargement du ticket:", error);
+        alert("Impossible de charger le ticket.");
+        window.location.href = "tickets.html";
+    }
+}
+
+// ✅ Sélectionner/Désélectionner un numéro
+function toggleSelection(element, color, isChance = false) {
+    let selected = document.querySelectorAll(isChance ? ".chance-circle.selected" : ".number-circle.selected:not(.chance-circle)");
+
+    if (isChance) {
+        selected.forEach(btn => btn.classList.remove("selected"));
+        element.classList.add("selected");
+    } else {
+        if (selected.length >= 5 && !element.classList.contains("selected")) {
+            return;
+        }
+        element.classList.toggle("selected");
+    }
+}
+
+// ✅ Mettre à jour un ticket (PUT)
+document.getElementById("ticketForm").addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    let ticketId = document.getElementById("ticketId").value;
+    let selectedNumbers = [...document.querySelectorAll(".number-circle.selected:not(.chance-circle)")]
+        .map(btn => parseInt(btn.textContent))
+        .sort((a, b) => a - b);
+
+    let chanceNumber = document.querySelector(".chance-circle.selected");
+
+    if (selectedNumbers.length !== 5 || !chanceNumber) {
+        alert("Vous devez choisir 5 numéros et 1 numéro chance !");
+        return;
+    }
+
+    let ticketData = {
+        drawDate: document.getElementById("ticketDate").value,
+        numbers: selectedNumbers.join("-"),
+        chanceNumber: parseInt(chanceNumber.textContent)
+    };
+
+    try {
+        await axios.put(`http://localhost:8082/api/tickets/${ticketId}`, ticketData, {
+            withCredentials: true,  // 🔥 Assure que la session est bien envoyée
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        });
+        alert("Ticket mis à jour avec succès !");
+        window.location.href = "tickets.html";
+    } catch (error) {
+        console.error("❌ Erreur lors de la mise à jour:", error.response?.data || error.message);
+        alert("Erreur lors de la mise à jour du ticket : " + (error.response?.data?.message || error.message));
+    }
+});
+
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

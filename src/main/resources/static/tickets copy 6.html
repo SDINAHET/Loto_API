@@ -20,13 +20,7 @@
 </nav>
 
 <div class="container mt-5">
-    <div class="d-flex justify-content-between align-items-center">
-        <h2 class="text-center">Mes Tickets Joués</h2>
-        <button class="btn btn-success" onclick="addTicket()">
-            <i class="fas fa-plus"></i> Ajouter un ticket
-        </button>
-    </div>
-
+    <h2 class="text-center">Mes Tickets Joués</h2>
     <div class="card shadow-sm p-4 mt-3">
         <table class="table table-striped text-center">
             <thead class="table-dark">
@@ -47,15 +41,13 @@
 
 <script>
 const API_URL = "http://localhost:8082/api/tickets";
-let userRole = "USER"; // Par défaut
-let userId = null; // Stocker l'ID utilisateur
 
 document.addEventListener("DOMContentLoaded", async function () {
     await checkUserAuth();
     await loadUserTickets();
 });
 
-// ✅ Vérifie si l'utilisateur est authentifié et stocke ses infos
+// ✅ Vérifie si l'utilisateur est authentifié via le cookie JWT
 async function checkUserAuth() {
     try {
         console.log("🔹 Vérification de l'utilisateur connecté...");
@@ -68,10 +60,7 @@ async function checkUserAuth() {
             return;
         }
 
-        userId = response.data.id;
-        userRole = response.data.role;
         console.log("✅ Utilisateur connecté :", response.data);
-
     } catch (error) {
         console.error("❌ Erreur lors de la vérification de l'utilisateur :", error.response || error);
         alert("Session expirée. Veuillez vous reconnecter.");
@@ -79,19 +68,13 @@ async function checkUserAuth() {
     }
 }
 
-// ✅ Charge les tickets du joueur ou tous les tickets si ADMIN
+// ✅ Charge les tickets en utilisant le JWT stocké dans le cookie
 async function loadUserTickets() {
     try {
         console.log("🔹 Chargement des tickets...");
-        let apiEndpoint = API_URL;
-
-        // Si ADMIN, récupérer tous les tickets
-        if (userRole === "ADMIN") {
-            apiEndpoint += "/all";
-        }
 
         // Envoie automatiquement le cookie JWT avec `withCredentials: true`
-        const response = await axios.get(apiEndpoint, { withCredentials: true });
+        const response = await axios.get(API_URL, { withCredentials: true });
 
         console.log("✅ Réponse API reçue :", response.data);
 
@@ -141,11 +124,6 @@ async function deleteTicket(id) {
             console.error("❌ Erreur lors de la suppression du ticket :", error.response || error);
         }
     }
-}
-
-// ✅ Ajoute un ticket (redirige vers une page d'ajout)
-function addTicket() {
-    window.location.href = "post_ticket.html";
 }
 
 // ✅ Formate la date au format français

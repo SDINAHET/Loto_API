@@ -243,6 +243,33 @@ public class AuthController {
     //     return ResponseEntity.ok(response);
     // }
 
+    // @GetMapping("/me")
+    // public ResponseEntity<Map<String, String>> getUserInfo(
+    //         @CookieValue(name = "jwtToken", required = false) String token) {
+
+    //     if (token == null || !jwtUtils.validateJwtToken(token)) {
+    //         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+    //                             .body(Map.of("error", "Utilisateur non authentifié"));
+    //     }
+
+    //     String email = jwtUtils.getUserFromJwtToken(token);
+
+    //     // ✅ Récupérer l'utilisateur à partir de l'email
+    //     Optional<User> user = userRepository.findByEmail(email);
+    //     if (user.isEmpty()) {
+    //         return ResponseEntity.status(HttpStatus.NOT_FOUND)
+    //                             .body(Map.of("error", "Utilisateur introuvable"));
+    //     }
+
+    //     Map<String, String> response = new HashMap<>();
+    //     response.put("email", email);
+    //     response.put("first_name", user.get().getFirstName()); // Ajout du prénom
+    //     response.put("last_name", user.get().getLastName()); // Ajout du prénom
+    //     response.put("message", "Utilisateur authentifié");
+
+    //     return ResponseEntity.ok(response);
+    // }
+
     @GetMapping("/me")
     public ResponseEntity<Map<String, String>> getUserInfo(
             @CookieValue(name = "jwtToken", required = false) String token) {
@@ -261,13 +288,17 @@ public class AuthController {
                                 .body(Map.of("error", "Utilisateur introuvable"));
         }
 
+        User u = user.get();
         Map<String, String> response = new HashMap<>();
+        response.put("id", u.getId().toString()); // ✅ Ajout de l'ID en String
         response.put("email", email);
-        response.put("first_name", user.get().getFirstName()); // Ajout du prénom
+        response.put("first_name", u.getFirstName());
+        response.put("last_name", u.getLastName());
         response.put("message", "Utilisateur authentifié");
 
         return ResponseEntity.ok(response);
     }
+
 
     // @GetMapping("/me")
     // public ResponseEntity<Map<String, String>> getUserInfo(
@@ -497,6 +528,14 @@ public class AuthController {
             errorResponse.put("message", "Échec de la connexion");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
         }
+    }
+
+    @GetMapping("/token")
+    public ResponseEntity<Map<String, String>> getToken(@CookieValue(name = "jwtToken", required = false) String jwtToken) {
+        if (jwtToken == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Token JWT introuvable"));
+        }
+        return ResponseEntity.ok(Map.of("jwtToken", jwtToken));
     }
 
 

@@ -40,12 +40,12 @@ public class CorsConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/api/**")
-                        .allowedOrigins("http://127.0.0.1:5500", "http://localhost:8082")
+                registry.addMapping("/api/**") // 🔥 Autorise les requêtes vers les endpoints API
+                        .allowedOrigins("http://127.0.0.1:5500", "http://localhost:8082") // 🔥 Autorise les requêtes depuis le frontend
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                        .allowedHeaders("*")
+                        .allowedHeaders("*") // 🔥 Autorise tous les headers
                         .exposedHeaders("Set-Cookie") // 🔑 Important pour voir le cookie dans le navigateur
-                        .allowCredentials(true);
+                        .allowCredentials(true); // 🔥 Autorise l'envoi des cookies et headers d'authentification
             }
         };
     }
