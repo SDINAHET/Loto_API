@@ -186,7 +186,7 @@ import io.swagger.v3.oas.models.servers.Server;
                     <td style="border: 1px solid #ddd; padding: 2px;">📅 <b>Historique des tickets du joueur(= user)</b></td>
                     <td style="border: 1px solid #ddd; padding: 2px;">
                         <ul style="padding-left: 20px; margin: 0;">
-                            <li>Consultation de l'historique des tickets joués.</li>
+                            <li>✔️ Consultation de l'historique des tickets joués.</li>
                             <li>Accès aux détails des gains pour chaque ticket.</li>
                         </ul>
                     </td>
