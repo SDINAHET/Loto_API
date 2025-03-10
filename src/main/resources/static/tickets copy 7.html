@@ -35,12 +35,11 @@
                     <th>Numéros</th>
                     <th>Numéro Chance</th>
                     <th>Statut</th>
-                    <th>Gains (€)</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody id="ticketsTable">
-                <tr><td colspan="6" class="text-center">Chargement des tickets...</td></tr>
+                <tr><td colspan="5" class="text-center">Chargement des tickets...</td></tr>
             </tbody>
         </table>
     </div>
@@ -48,8 +47,8 @@
 
 <script>
 const API_URL = "http://localhost:8082/api/tickets";
-let userRole = "USER";
-let userId = null;
+let userRole = "USER"; // Par défaut
+let userId = null; // Stocker l'ID utilisateur
 
 document.addEventListener("DOMContentLoaded", async function () {
     await checkUserAuth();
@@ -86,10 +85,12 @@ async function loadUserTickets() {
         console.log("🔹 Chargement des tickets...");
         let apiEndpoint = API_URL;
 
+        // Si ADMIN, récupérer tous les tickets
         if (userRole === "ADMIN") {
             apiEndpoint += "/all";
         }
 
+        // Envoie automatiquement le cookie JWT avec `withCredentials: true`
         const response = await axios.get(apiEndpoint, { withCredentials: true });
 
         console.log("✅ Réponse API reçue :", response.data);
@@ -99,7 +100,7 @@ async function loadUserTickets() {
 
         if (!response.data || response.data.length === 0) {
             console.warn("ℹ️ Aucun ticket trouvé.");
-            tableBody.innerHTML = "<tr><td colspan='6' class='text-center'>Aucun ticket trouvé.</td></tr>";
+            tableBody.innerHTML = "<tr><td colspan='5' class='text-center'>Aucun ticket trouvé.</td></tr>";
             return;
         }
 
@@ -110,8 +111,7 @@ async function loadUserTickets() {
                 <td>${formatDate(ticket.drawDate)}</td>
                 <td>${formatNumbers(ticket.numbers)}</td>
                 <td>${formatChance(ticket.chanceNumber)}</td>
-                <td>${formatStatus(ticket.status)}</td>
-                <td>${formatGain(ticket.gain)}</td>
+                <td>${formatStatus(ticket.status, ticket.gain)}</td>
                 <td>
                     <a class="btn btn-warning btn-sm" href="put_ticket.html?id=${ticket.id}">
                         <i class="fas fa-pen"></i>
@@ -126,7 +126,7 @@ async function loadUserTickets() {
 
     } catch (error) {
         console.error("❌ Erreur lors du chargement des tickets :", error.response || error);
-        document.getElementById("ticketsTable").innerHTML = "<tr><td colspan='6' class='text-center text-danger'>Erreur de chargement.</td></tr>";
+        document.getElementById("ticketsTable").innerHTML = "<tr><td colspan='5' class='text-center text-danger'>Erreur de chargement.</td></tr>";
     }
 }
 
@@ -166,20 +166,13 @@ function formatChance(num) {
 }
 
 // ✅ Formate le statut du ticket
-function formatStatus(status) {
-    switch (status) {
-        case "WIN":
-            return "<span class='badge bg-success'>Gagné</span>";
-        case "LOSE":
-            return "<span class='badge bg-danger'>Perdu</span>";
-        default:
-            return "<span class='badge bg-secondary'>En attente</span>";
+function formatStatus(status, gain) {
+    if (status === "WIN") {
+        return `<span class='badge bg-success'>Gagné: ${gain || 0} €</span>`;
+    } else if (status === "LOSE") {
+        return "<span class='badge bg-danger'>Perdu</span>";
     }
-}
-
-// ✅ Formate les gains
-function formatGain(gain) {
-    return gain !== undefined && gain !== null ? `<span class="fw-bold">${gain.toFixed(2)} €</span>` : "-";
+    return "<span class='badge bg-secondary'>En attente</span>";
 }
 
 // ✅ Gère la déconnexion en supprimant le cookie JWT

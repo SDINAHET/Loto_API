@@ -115,6 +115,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+// import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+// import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
@@ -127,6 +129,9 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.servers.Server;
 
+
+// @EnableJpaRepositories(basePackages = "com.fdjloto.api.repository.jpa")
+// @EnableMongoRepositories(basePackages = "com.fdjloto.api.repository.mongo")
 
 @EnableWebMvc
 @ComponentScan(basePackages = "com.fdjloto.api")
@@ -186,7 +191,7 @@ import io.swagger.v3.oas.models.servers.Server;
                     <td style="border: 1px solid #ddd; padding: 2px;">📅 <b>Historique des tickets du joueur(= user)</b></td>
                     <td style="border: 1px solid #ddd; padding: 2px;">
                         <ul style="padding-left: 20px; margin: 0;">
-                            <li>Consultation de l'historique des tickets joués.</li>
+                            <li>✔️ Consultation de l'historique des tickets joués.</li>
                             <li>Accès aux détails des gains pour chaque ticket.</li>
                         </ul>
                     </td>

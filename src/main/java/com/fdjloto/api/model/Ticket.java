@@ -254,16 +254,188 @@
 // }
 
 
+// package com.fdjloto.api.model;
+
+// import jakarta.persistence.*;
+// import java.time.LocalDate;
+// import java.time.LocalDateTime;
+// import java.time.format.DateTimeFormatter;
+// import java.util.UUID;
+// import com.fasterxml.jackson.annotation.JsonFormat;
+// import com.fasterxml.jackson.annotation.JsonIgnore;
+// import com.fdjloto.api.converter.LocalDateTimeAttributeConverter;
+
+// @Entity
+// @Table(name = "tickets")
+// public class Ticket {
+
+//     @Id
+//     @Column(name = "id", columnDefinition = "TEXT") // SQLite ne supporte pas UUID directement
+//     private String id;
+
+//     @Column(nullable = false)
+//     private String numbers;
+
+//     @Column(nullable = false, name = "lucky_number")
+//     private int chanceNumber;
+
+//     @Column(nullable = false, name = "draw_date")
+//     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+//     private LocalDate drawDate;
+
+//     @Column(nullable = true, name = "draw_day")
+//     private String drawDay;
+
+//     // // ✅ Nouvelle colonne : statut du ticket (GAGNANT, PERDU, EN ATTENTE)
+//     // private String statut = "EN ATTENTE";
+
+//     // // ✅ Nouvelle colonne : montant du gain
+//     // private double gain = 0.0;
+
+//     // @Column(nullable = false, updatable = false)
+//     // private LocalDateTime createdAt;
+
+//     // @Column(nullable = true) // ✅ `updatedAt` peut être `null` avant la première mise à jour
+//     // private LocalDateTime updatedAt;
+
+//     // @Column(name = "created_at", nullable = false, updatable = false, columnDefinition = "TEXT")
+//     // private LocalDateTime createdAt;
+
+//     // @Column(name = "updated_at", nullable = true, columnDefinition = "TEXT")
+//     // private LocalDateTime updatedAt;
+
+//     // @Column(name = "created_at", nullable = false, updatable = false, columnDefinition = "TEXT")
+//     // @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+//     // private LocalDateTime createdAt;
+
+//     // @Column(name = "updated_at", nullable = true, columnDefinition = "TEXT")
+//     // @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+//     // private LocalDateTime updatedAt;
+
+//     @Column(name = "created_at")
+//     @Convert(converter = LocalDateTimeAttributeConverter.class)
+//     private LocalDateTime createdAt;
+
+//     @Column(name = "updated_at")
+//     @Convert(converter = LocalDateTimeAttributeConverter.class)
+//     private LocalDateTime updatedAt;
+
+
+
+
+//     @ManyToOne(fetch = FetchType.LAZY)
+//     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+//     @JsonIgnore
+//     private User user;
+
+//     // ✅ Constructeur : Génère un UUID et initialise `createdAt`
+//     public Ticket() {
+//         this.id = UUID.randomUUID().toString();
+//         this.createdAt = LocalDateTime.now();
+//     }
+
+//     // @PrePersist
+//     // public void prePersist() {
+//     //     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+//     //     this.createdAt = LocalDateTime.now().format(formatter);
+//     //     this.updatedAt = LocalDateTime.now().format(formatter); // ✅ Initialisation
+//     // }
+
+//     // @PreUpdate
+//     // public void preUpdate() {
+//     //     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+//     //     this.updatedAt = LocalDateTime.now().format(formatter); // ✅ Met à jour `updatedAt`
+//     // }
+
+//     @PrePersist
+//     public void prePersist() {
+//         this.createdAt = LocalDateTime.now();
+//         this.updatedAt = LocalDateTime.now();
+//     }
+
+//     @PreUpdate
+//     public void preUpdate() {
+//         this.updatedAt = LocalDateTime.now();
+//     }
+
+//     // ✅ Getters et Setters
+//     public String getId() { return id; }
+//     public void setId(UUID id) { this.id = id.toString(); }
+//     public String getNumbers() { return numbers; }
+//     public void setNumbers(String numbers) { this.numbers = numbers; }
+//     public int getChanceNumber() { return chanceNumber; }
+//     public void setChanceNumber(int chanceNumber) { this.chanceNumber = chanceNumber; }
+//     public LocalDate getDrawDate() { return drawDate; }
+//     public void setDrawDate(LocalDate drawDate) { this.drawDate = drawDate; }
+//     public String getDrawDay() { return drawDay; }
+//     public void setDrawDay(String drawDay) { this.drawDay = drawDay; }
+//     public User getUser() { return user; }
+//     public void setUser(User user) { this.user = user; }
+//     public String getUserEmail() { return user.getEmail(); }
+//     public LocalDateTime getCreatedAt() { return createdAt; }
+//     public LocalDateTime getUpdatedAt() { return updatedAt; } // ✅ Ajout du getter
+//     // public String getStatut() { return statut; }
+//     // public void setStatut(String statut) { this.statut = statut; }
+
+//     // public double getGain() { return gain; }
+//     // public void setGain(double gain) { this.gain = gain; }
+
+//     // @PrePersist
+//     // public void prePersist() {
+//     //     this.createdAt = LocalDateTime.now();  // ✅ Définit `created_at` à la date actuelle
+//     //     // this.updatedAt = null; // ✅ S'assure que `updated_at` est NULL à la création
+//     //     this.updatedAt = LocalDateTime.now();  // ✅ Définit `updated_at` à la date actuelle
+//     // }
+
+//     // @PreUpdate
+//     // public void preUpdate() {
+//     //     this.updatedAt = LocalDateTime.now(); // ✅ Définit `updated_at` uniquement lors d'une mise à jour
+//     // }
+
+
+
+
+//     // public void setCreatedAt(LocalDateTime createdAt) {
+//     //     this.createdAt = createdAt;
+//     // }
+
+//     // public void setUpdatedAt(LocalDateTime updatedAt) {
+//     //     this.updatedAt = updatedAt;
+//     // }
+//     public void setCreatedAt(String createdAt) {
+//         this.createdAt = LocalDateTime.parse(createdAt, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+//     }
+
+//     public void setUpdatedAt(String updatedAt) {
+//         this.updatedAt = LocalDateTime.parse(updatedAt, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+//     }
+
+//     public void setCreatedAt(LocalDateTime createdAt) {
+//         this.createdAt = createdAt;
+//     }
+
+//     public void setUpdatedAt(LocalDateTime updatedAt) {
+//         this.updatedAt = updatedAt;
+//     }
+
+
+
+
+
+
+// }
+
 package com.fdjloto.api.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fdjloto.api.converter.LocalDateTimeAttributeConverter;
 
 @Entity
 @Table(name = "tickets")
@@ -274,7 +446,7 @@ public class Ticket {
     private String id;
 
     @Column(nullable = false)
-    private String numbers;
+    private String numbers; // Ex: "12-23-34-45-56"
 
     @Column(nullable = false, name = "lucky_number")
     private int chanceNumber;
@@ -286,66 +458,30 @@ public class Ticket {
     @Column(nullable = true, name = "draw_day")
     private String drawDay;
 
-    // // ✅ Nouvelle colonne : statut du ticket (GAGNANT, PERDU, EN ATTENTE)
-    // private String statut = "EN ATTENTE";
-
-    // // ✅ Nouvelle colonne : montant du gain
-    // private double gain = 0.0;
-
-    // @Column(nullable = false, updatable = false)
-    // private LocalDateTime createdAt;
-
-    // @Column(nullable = true) // ✅ `updatedAt` peut être `null` avant la première mise à jour
-    // private LocalDateTime updatedAt;
-
-    // @Column(name = "created_at", nullable = false, updatable = false, columnDefinition = "TEXT")
-    // private LocalDateTime createdAt;
-
-    // @Column(name = "updated_at", nullable = true, columnDefinition = "TEXT")
-    // private LocalDateTime updatedAt;
-
-    // @Column(name = "created_at", nullable = false, updatable = false, columnDefinition = "TEXT")
-    // @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    // private LocalDateTime createdAt;
-
-    // @Column(name = "updated_at", nullable = true, columnDefinition = "TEXT")
-    // @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    // private LocalDateTime updatedAt;
-
-    @Column(name = "created_at")
-    @Convert(converter = LocalDateTimeAttributeConverter.class)
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    @Convert(converter = LocalDateTimeAttributeConverter.class)
-    private LocalDateTime updatedAt;
-
-
-
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     @JsonIgnore
     private User user;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @Column(name = "guains")
+    private double gains;
+
+    @Column(name = "status")
+    private String status;
+
+
 
     // ✅ Constructeur : Génère un UUID et initialise `createdAt`
     public Ticket() {
         this.id = UUID.randomUUID().toString();
         this.createdAt = LocalDateTime.now();
     }
-
-    // @PrePersist
-    // public void prePersist() {
-    //     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    //     this.createdAt = LocalDateTime.now().format(formatter);
-    //     this.updatedAt = LocalDateTime.now().format(formatter); // ✅ Initialisation
-    // }
-
-    // @PreUpdate
-    // public void preUpdate() {
-    //     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    //     this.updatedAt = LocalDateTime.now().format(formatter); // ✅ Met à jour `updatedAt`
-    // }
 
     @PrePersist
     public void prePersist() {
@@ -358,69 +494,44 @@ public class Ticket {
         this.updatedAt = LocalDateTime.now();
     }
 
+    // ✅ Ajout de la méthode `getNumerosAsList()` pour convertir "12-23-34-45-56" en `List<Integer>`
+    public List<Integer> getNumerosAsList() {
+        return Arrays.stream(numbers.split("-"))
+                     .map(Integer::parseInt)
+                     .collect(Collectors.toList());
+    }
+
     // ✅ Getters et Setters
     public String getId() { return id; }
     public void setId(UUID id) { this.id = id.toString(); }
+
     public String getNumbers() { return numbers; }
     public void setNumbers(String numbers) { this.numbers = numbers; }
+
     public int getChanceNumber() { return chanceNumber; }
     public void setChanceNumber(int chanceNumber) { this.chanceNumber = chanceNumber; }
+
     public LocalDate getDrawDate() { return drawDate; }
     public void setDrawDate(LocalDate drawDate) { this.drawDate = drawDate; }
+
     public String getDrawDay() { return drawDay; }
     public void setDrawDay(String drawDay) { this.drawDay = drawDay; }
+
     public User getUser() { return user; }
     public void setUser(User user) { this.user = user; }
+
     public String getUserEmail() { return user.getEmail(); }
+
     public LocalDateTime getCreatedAt() { return createdAt; }
-    public LocalDateTime getUpdatedAt() { return updatedAt; } // ✅ Ajout du getter
-    // public String getStatut() { return statut; }
-    // public void setStatut(String statut) { this.statut = statut; }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
 
-    // public double getGain() { return gain; }
-    // public void setGain(double gain) { this.gain = gain; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 
-    // @PrePersist
-    // public void prePersist() {
-    //     this.createdAt = LocalDateTime.now();  // ✅ Définit `created_at` à la date actuelle
-    //     // this.updatedAt = null; // ✅ S'assure que `updated_at` est NULL à la création
-    //     this.updatedAt = LocalDateTime.now();  // ✅ Définit `updated_at` à la date actuelle
-    // }
+    public void setGains(double gains) { this.gains = gains; }
+    public void setStatus(String status) { this.status = status; }
 
-    // @PreUpdate
-    // public void preUpdate() {
-    //     this.updatedAt = LocalDateTime.now(); // ✅ Définit `updated_at` uniquement lors d'une mise à jour
-    // }
-
-
-
-
-    // public void setCreatedAt(LocalDateTime createdAt) {
-    //     this.createdAt = createdAt;
-    // }
-
-    // public void setUpdatedAt(LocalDateTime updatedAt) {
-    //     this.updatedAt = updatedAt;
-    // }
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = LocalDateTime.parse(createdAt, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-    }
-
-    public void setUpdatedAt(String updatedAt) {
-        this.updatedAt = LocalDateTime.parse(updatedAt, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-
-
-
-
-
+    // public int getLuckyNumber() { return this.luckyNumber; }
 }
+
+

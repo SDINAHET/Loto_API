@@ -464,6 +464,11 @@ public class TicketService {
         return date.getDayOfWeek().getDisplayName(java.time.format.TextStyle.FULL, Locale.FRENCH).toUpperCase();
     }
 
+    public List<Ticket> getAllPendingTickets() {
+        return ticketRepository.findByStatus("EN_ATTENTE");
+    }
+
+
     private String convertTimestampToDateTime(long timestamp) {
         LocalDateTime dateTime = Instant.ofEpochMilli(timestamp)
                                         .atZone(ZoneId.systemDefault())

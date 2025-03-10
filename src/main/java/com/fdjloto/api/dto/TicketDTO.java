@@ -173,6 +173,8 @@ public class TicketDTO {
     private String numbers;
     private String chanceNumber;
     private String drawDate;  // ✅ Ajout de drawDate
+    private double gains;
+    private String status;
     // private String createdAt;
     // private String updatedAt;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
@@ -234,6 +236,13 @@ public class TicketDTO {
     public String getDrawDate() { return drawDate; } // ✅ Ajout du getter
     public String getCreatedAt() { return createdAt; }
     public String getUpdatedAt() { return updatedAt; }
+    public double getGains() { // ✅ Ajout
+        return gains;
+    }
+
+    public String getStatus() { // ✅ Ajout
+        return status;
+    }
 
     // @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     // private LocalDateTime drawDate;
