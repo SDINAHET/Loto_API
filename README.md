@@ -621,3 +621,13 @@ DROP TABLE tickets;
 
 -- 4️⃣ Renommage de la nouvelle table
 ALTER TABLE tickets_new RENAME TO tickets;
+
+
+CREATE TABLE ticket_gains (
+    id TEXT PRIMARY KEY,
+    ticket_id TEXT NOT NULL,
+    matching_numbers INTEGER NOT NULL,
+    lucky_number_match BOOLEAN NOT NULL,
+    gain_amount REAL NOT NULL,
+    FOREIGN KEY(ticket_id) REFERENCES tickets(id) ON DELETE CASCADE
+);
