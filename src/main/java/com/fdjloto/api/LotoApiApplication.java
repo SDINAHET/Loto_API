@@ -168,7 +168,7 @@ import io.swagger.v3.oas.models.servers.Server;
                     <td style="border: 1px solid #ddd; padding: 2px;">🎫 <b>Soumission et gestion des tickets</b></td>
                     <td style="border: 1px solid #ddd; padding: 2px;">
                         <ul style="padding-left: 20px; margin: 0;">
-                            <li>Création, mise à jour, suppression et consultation des tickets Loto (CRUD).</li>
+                            <li>✔️ Création, mise à jour, suppression et consultation des tickets Loto (CRUD).</li>
                             <li>✔️ Stockage sécurisé des tickets en base de données.</li>
                         </ul>
                     </td>
@@ -177,8 +177,8 @@ import io.swagger.v3.oas.models.servers.Server;
                     <td style="border: 1px solid #ddd; padding: 2px;">💰 <b>Calcul automatique des gains (🚧 En développement)</b></td>
                     <td style="border: 1px solid #ddd; padding: 2px;">
                         <ul style="padding-left: 20px; margin: 0;">
-                            <li>Comparaison des numéros soumis avec les résultats officiels FDJ.</li>
-                            <li>Calcul des gains pour chaque ticket soumis.</li>
+                            <li>✔️ Comparaison des numéros soumis avec les résultats officiels FDJ.</li>
+                            <li>✔️ Calcul des gains pour chaque ticket soumis.</li>
                         </ul>
                     </td>
                 </tr>
@@ -187,7 +187,7 @@ import io.swagger.v3.oas.models.servers.Server;
                     <td style="border: 1px solid #ddd; padding: 2px;">
                         <ul style="padding-left: 20px; margin: 0;">
                             <li>✔️ Consultation de l'historique des tickets joués.</li>
-                            <li>Accès aux détails des gains pour chaque ticket.</li>
+                            <li>✔️ Accès aux détails des gains pour chaque ticket.</li>
                         </ul>
                     </td>
                 </tr>
@@ -206,7 +206,7 @@ import io.swagger.v3.oas.models.servers.Server;
                     <td style="border: 1px solid #ddd; padding: 2px;">📊 <b>Visualisation des résultats (🚧 En développement) </b></td>
                     <td style="border: 1px solid #ddd; padding: 2px;">
                         <ul style="padding-left: 20px; margin: 0;">
-                            <li>Affichage des résultats du Loto sous forme de graphiques dynamiques.</li>
+                            <li>✔️ Affichage des résultats du Loto sous forme de graphiques dynamiques.</li>
                             <li>✔️ Analyse des statistiques de tirage pour repérer des tendances.</li>
                         </ul>
                     </td>

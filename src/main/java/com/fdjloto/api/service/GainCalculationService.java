@@ -173,7 +173,8 @@ public class GainCalculationService {
     }
 
 // ✅ Planification : Exécution toutes les 30 minutes
-@Scheduled(cron = "0 */30 * * * *", zone = "Europe/Paris")
+// @Scheduled(cron = "0 */30 * * * *", zone = "Europe/Paris")
+@Scheduled(cron = "*/30 * * * * *", zone = "Europe/Paris")
 
     /**
      * 🔥 Calcule les gains pour tous les tickets et enregistre les résultats.
