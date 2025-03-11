@@ -11,14 +11,37 @@
 <body class="bg-light">
 
 <!-- ✅ Navbar -->
-<nav class="navbar navbar-dark bg-dark p-3">
+<!-- <nav class="navbar navbar-dark bg-dark p-3">
     <a class="navbar-brand" href="index_connexion.html">
         <i class="fas fa-home"></i> Accueil
     </a>
+    <span class="me-3">Bienvenue, <span id="userEmail"></span></span>
     <button class="btn btn-danger" onclick="logout()">
         <i class="fas fa-sign-out-alt"></i> Se déconnecter
     </button>
+</nav> -->
+<!-- <nav class="navbar navbar-dark bg-dark p-3">
+    <a class="navbar-brand" href="index_connexion.html">
+        <i class="fas fa-home"></i> Accueil
+    </a>
+    <span class="me-3 text-white">Bienvenue, <span id="userEmail"></span></span>
+    <button class="btn btn-danger" onclick="logout()">
+        <i class="fas fa-sign-out-alt"></i> Se déconnecter
+    </button>
+</nav> -->
+<nav class="navbar navbar-dark bg-dark p-3 d-flex justify-content-between">
+    <a class="navbar-brand" href="index_connexion.html">
+        <i class="fas fa-home"></i> Accueil
+    </a>
+
+    <div class="d-flex align-items-center">
+        <span class="me-3 text-white">Bienvenue, <span id="userEmail">Utilisateur</span></span>
+        <button class="btn btn-danger" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> Se déconnecter
+        </button>
+    </div>
 </nav>
+
 
 <!-- ✅ Contenu principal -->
 <div class="container mt-5">
@@ -162,6 +185,27 @@ document.getElementById("profileForm").addEventListener("submit", async function
         }
     }
 });
+
+async function checkUserAuth() {
+    try {
+        const response = await axios.get("http://localhost:8082/api/auth/me", { withCredentials: true });
+
+        if (response.status === 200 && response.data.email) {
+            // Vérifie si `first_name` existe, sinon affiche l'email
+            document.getElementById("userEmail").textContent = response.data.first_name || response.data.email;
+        } else {
+            document.getElementById("userEmail").textContent = "Utilisateur inconnu";
+        }
+    } catch (error) {
+        console.error("❌ Erreur d'authentification :", error);
+        document.getElementById("userEmail").textContent = "Utilisateur inconnu";
+    }
+}
+
+// Appel automatique lors du chargement de la page
+document.addEventListener("DOMContentLoaded", checkUserAuth);
+
+
 
 // ✅ Déconnexion
 async function logout() {
