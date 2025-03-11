@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes Tickets - Loto Tracker</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-dark bg-dark p-3">
+    <a class="navbar-brand" href="index_connexion.html">
+        <i class="fas fa-home"></i> Accueil
+    </a>
+    <button class="btn btn-danger" onclick="logout()">
+        <i class="fas fa-sign-out-alt"></i> Se déconnecter
+    </button>
+</nav>
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center">
+        <h2 class="text-center">Mes Tickets Joués</h2>
+        <button class="btn btn-success" onclick="addTicket()">
+            <i class="fas fa-plus"></i> Ajouter un ticket
+        </button>
+    </div>
+
+    <div class="card shadow-sm p-4 mt-3">
+        <table class="table table-striped text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th><b>Date</b></th>
+                    <th>Numéros</th>
+                    <th>Numéro Chance</th>
+                    <th>Statut</th>
+                    <th><b>Gains (€)</b></th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="ticketsTable">
+                <tr><td colspan="6" class="text-center">Chargement des tickets...</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+const API_URL = "http://localhost:8082/api/tickets";
+const API_GAINS = "http://localhost:8082/api/gains";
+const API_HISTORIQUE = "http://localhost:8082/api/historique/last20";
+let historiqueDates = new Set();
+
+async function loadHistorique() {
+    try {
+        const response = await axios.get(API_HISTORIQUE);
+        response.data.forEach(tirage => historiqueDates.add(tirage.date));
+    } catch (error) {
+        console.error("Erreur lors du chargement de l'historique :", error);
+    }
+}
+
+async function loadUserTickets() {
+    try {
+        const response = await axios.get(API_URL, { withCredentials: true });
+        const gainsResponse = await axios.get(API_GAINS, { withCredentials: true });
+
+        // ✅ Stocker les gains depuis SQLite
+        const gainsMap = new Map(gainsResponse.data.map(g => [g.ticketId, g.gainAmount]));
+
+        // Trier les tickets par date décroissante (les plus récents en haut)
+        response.data.sort((a, b) => new Date(b.drawDate) - new Date(a.drawDate));
+
+        let tableBody = document.getElementById("ticketsTable");
+        tableBody.innerHTML = "";
+
+        // ✅ Récupérer la date et l'heure actuelles
+        const now = new Date();
+        const today = now.toISOString().split('T')[0]; // Format YYYY-MM-DD
+        const yesterday = new Date(now);
+        yesterday.setDate(yesterday.getDate() - 1); // Date du jour -1
+        const yesterdayString = yesterday.toISOString().split('T')[0];
+
+        response.data.forEach(ticket => {
+            const drawDate = new Date(ticket.drawDate);
+            const drawDateString = drawDate.toISOString().split('T')[0]; // Format YYYY-MM-DD
+            const gain = gainsMap.get(ticket.id) ?? null; // Valeur par défaut : null
+
+            let status = "En attente";  // Par défaut
+            let statusClass = "bg-secondary text-white";  // ⏳ Jaune clair
+
+            // ✅ Si le tirage a eu lieu (Jour +1)
+            if (drawDateString < today) {
+                if (gain > 0) {
+                    status = "Gagné";
+                    statusClass = "bg-success text-white"; // 🟩 Vert
+                } else {
+                    status = "Perdu";
+                    statusClass = "bg-warning text-dark"; // 🔴 Rouge
+                }
+            } else if (drawDateString === today) {
+                status = "En attente"; // Tirage du jour en attente
+                statusClass = "bg-warning text-dark";
+            }
+
+            // ✅ Construire la ligne HTML
+            let row = `<tr>
+                <td><b>${formatDate(ticket.drawDate)}</b></td>
+                <td>${formatNumbers(ticket.numbers)}</td>
+                <td>${formatChance(ticket.chanceNumber)}</td>
+                <td><span class="badge ${statusClass}">${status}</span></td>
+                <td><b>${formatGain(gain)}</b></td>
+                <td>
+                    <a class="btn btn-warning btn-sm" href="put_ticket.html?id=${ticket.id}">
+                        <i class="fas fa-pen"></i>
+                    </a>
+                    <button class="btn btn-danger btn-sm" onclick="deleteTicket('${ticket.id}')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            </tr>`;
+            tableBody.innerHTML += row;
+        });
+    } catch (error) {
+        console.error("❌ Erreur lors du chargement des tickets :", error);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+function formatDate(dateStr) {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
+}
+
+function formatNumbers(numbersStr) {
+    return numbersStr ? numbersStr.split("-").map(num => `<span class="badge bg-primary">${num}</span>`).join(" ") : "N/A";
+}
+
+function formatChance(num) {
+    return num ? `<span class="badge bg-danger">${num}</span>` : "N/A";
+}
+
+function formatStatus(status) {
+    return status === "Gagné" ? "<span class='badge bg-success'>Gagné</span>"
+         : status === "Perdu" ? "<span class='badge bg-dark text-light'>Perdu</span>"
+         : "<span class='badge bg-secondary'>En attente</span>";
+}
+
+function formatGain(gain) {
+    return gain ? `${gain.toFixed(2)} €` : "-";
+}
+
+async function deleteTicket(id) {
+    if (confirm("Voulez-vous vraiment supprimer ce ticket ?")) {
+        await axios.delete(`${API_URL}/${id}`, { withCredentials: true });
+        loadUserTickets();
+    }
+}
+
+function viewResults(date) {
+    window.location.href = `historique_detail.html?date=${date}`;
+}
+
+function addTicket() {
+    window.location.href = "post_ticket.html";
+}
+
+document.addEventListener("DOMContentLoaded", loadUserTickets);
+</script>
+
+</body>
+</html>

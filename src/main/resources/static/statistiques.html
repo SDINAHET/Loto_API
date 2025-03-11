@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Statistiques - Loto Tracker</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -23,24 +24,41 @@
 <!-- ✅ Contenu principal -->
 <div class="container mt-5">
     <h2 class="text-center">Statistiques de mes Tirages</h2>
+
     <div class="row mt-4">
+        <!-- ✅ Tableau des tickets -->
         <div class="col-md-6">
-            <h5>📅 Historique des Tirages</h5>
-            <ul id="historiqueList" class="list-group"></ul>
+            <h5>📅 Historique des Tickets</h5>
+            <table class="table table-striped text-center">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Date</th>
+                        <th>Statut</th>
+                        <th>Gains (€)</th>
+                    </tr>
+                </thead>
+                <tbody id="ticketsTable">
+                    <tr><td colspan="3" class="text-center">Chargement des tickets...</td></tr>
+                </tbody>
+            </table>
         </div>
+
+        <!-- ✅ Graphique -->
         <div class="col-md-6">
             <canvas id="statsChart"></canvas>
+            <div class="text-center mt-3">
+                <h4>Total Dépensé : <span id="totalDepense" class="text-danger">0</span> €</h4>
+                <h4>Total Gagné : <span id="totalGagne" class="text-success">0</span> €</h4>
+            </div>
         </div>
-    </div>
-
-    <div class="text-center mt-4">
-        <h4>Total Dépensé : <span id="totalDepense" class="text-danger">0</span> €</h4>
-        <h4>Total Gagné : <span id="totalGagne" class="text-success">0</span> €</h4>
     </div>
 </div>
 
 <!-- ✅ Scripts -->
 <script>
+const API_URL = "http://localhost:8082/api/tickets";
+const API_GAINS = "http://localhost:8082/api/gains";
+
 document.addEventListener("DOMContentLoaded", async function () {
     await checkUserAuth();
     await loadUserStats();
@@ -63,35 +81,65 @@ async function checkUserAuth() {
 // ✅ Charger les statistiques de l'utilisateur
 async function loadUserStats() {
     try {
-        const response = await axios.get("http://localhost:8082/api/statistiques", { withCredentials: true });
+        const response = await axios.get(API_URL, { withCredentials: true });
+        const gainsResponse = await axios.get(API_GAINS, { withCredentials: true });
+        const gainsMap = new Map(gainsResponse.data.map(g => [g.ticketId, g.gainAmount]));
 
-        let totalDepense = response.data.totalGrilles * 2.20;
-        let totalGagne = response.data.totalGains;
-        let historique = response.data.historique;
+        let totalDepense = response.data.length * 2.20; // Chaque grille coûte 2.20 €
+        let totalGagne = 0;
 
-        document.getElementById("totalDepense").textContent = totalDepense.toFixed(2);
-        document.getElementById("totalGagne").textContent = totalGagne.toFixed(2);
-
-        let historiqueList = document.getElementById("historiqueList");
-        historiqueList.innerHTML = "";
+        let tableBody = document.getElementById("ticketsTable");
+        tableBody.innerHTML = "";
 
         let labels = [];
         let depensesData = [];
         let gainsData = [];
 
-        historique.forEach(entry => {
-            labels.push(entry.date);
-            depensesData.push(entry.grilles * 2.20);
-            gainsData.push(entry.gain);
+        const now = new Date();
+        const today = now.toISOString().split('T')[0];
 
-            let listItem = document.createElement("li");
-            listItem.className = "list-group-item d-flex justify-content-between";
-            listItem.innerHTML = `<strong>${entry.date}</strong> - 🎟 ${entry.grilles} grilles (💰 ${entry.gain} € gagnés)`;
-            historiqueList.appendChild(listItem);
+        // ✅ Trier les tickets du plus récent au plus ancien
+        response.data.sort((a, b) => new Date(b.drawDate) - new Date(a.drawDate));
+
+        response.data.forEach(ticket => {
+            if (!ticket.drawDate) return;
+            const drawDate = new Date(ticket.drawDate);
+            const drawDateString = drawDate.toISOString().split('T')[0];
+            const gain = gainsMap.get(ticket.id) ?? 0;
+            totalGagne += gain;
+
+            let status = "En attente";
+            let statusClass = "bg-secondary text-white";
+
+            if (drawDateString < today) {
+                if (gain > 0) {
+                    status = "Gagné";
+                    statusClass = "bg-success text-white";
+                } else {
+                    status = "Perdu";
+                    statusClass = "bg-warning text-dark";
+                }
+            } else if (drawDateString === today) {
+                status = "En attente";
+                statusClass = "bg-warning text-dark";
+            }
+
+            let row = `<tr>
+                <td><b>${formatDate(ticket.drawDate)}</b></td>
+                <td><span class="badge ${statusClass}">${status}</span></td>
+                <td><b>${gain.toFixed(2)}</b></td>
+            </tr>`;
+            tableBody.innerHTML += row;
+
+            labels.push(formatDate(ticket.drawDate));
+            depensesData.push(2.20);
+            gainsData.push(gain);
         });
 
-        generateChart(labels, depensesData, gainsData);
+        document.getElementById("totalDepense").textContent = totalDepense.toFixed(2);
+        document.getElementById("totalGagne").textContent = totalGagne.toFixed(2);
 
+        generateChart(labels, depensesData, gainsData);
     } catch (error) {
         console.error("Erreur lors du chargement des statistiques", error);
     }
@@ -102,23 +150,23 @@ function generateChart(labels, depensesData, gainsData) {
     let ctx = document.getElementById("statsChart").getContext("2d");
 
     new Chart(ctx, {
-        type: "line",
+        type: "bar",
         data: {
             labels: labels,
             datasets: [
                 {
                     label: "💸 Dépenses (€)",
                     data: depensesData,
+                    backgroundColor: "rgba(255, 0, 0, 0.7)",
                     borderColor: "red",
-                    backgroundColor: "rgba(255, 0, 0, 0.2)",
-                    fill: true
+                    borderWidth: 1
                 },
                 {
                     label: "🏆 Gains (€)",
                     data: gainsData,
+                    backgroundColor: "rgba(0, 255, 0, 0.7)",
                     borderColor: "green",
-                    backgroundColor: "rgba(0, 255, 0, 0.2)",
-                    fill: true
+                    borderWidth: 1
                 }
             ]
         },
@@ -138,9 +186,13 @@ async function logout() {
     await axios.post("http://localhost:8082/api/auth/logout", {}, { withCredentials: true });
     window.location.href = "index.html";
 }
+
+function formatDate(dateStr) {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
+}
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
 </body>
 </html>
