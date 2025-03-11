@@ -631,3 +631,37 @@ CREATE TABLE ticket_gains (
     gain_amount REAL NOT NULL,
     FOREIGN KEY(ticket_id) REFERENCES tickets(id) ON DELETE CASCADE
 );
+
+CREATE TABLE loto_results (
+    id TEXT PRIMARY KEY,
+    annee_numero_de_tirage INTEGER,
+    jour_de_tirage TEXT,
+    date_de_tirage TEXT NOT NULL, -- Stocké en format "yyyy-MM-dd"
+    date_de_forclusion TEXT,
+    boule1 INTEGER NOT NULL,
+    boule2 INTEGER NOT NULL,
+    boule3 INTEGER NOT NULL,
+    boule4 INTEGER NOT NULL,
+    boule5 INTEGER NOT NULL,
+    numero_chance INTEGER NOT NULL,
+    combinaison_gagnante TEXT,
+    nombre_de_gagnant_au_rang1 INTEGER,
+    rapport_du_rang1 REAL,
+    nombre_de_gagnant_au_rang2 INTEGER,
+    rapport_du_rang2 REAL,
+    nombre_de_gagnant_au_rang3 INTEGER,
+    rapport_du_rang3 REAL,
+    nombre_de_gagnant_au_rang4 INTEGER,
+    rapport_du_rang4 REAL,
+    nombre_de_gagnant_au_rang5 INTEGER,
+    rapport_du_rang5 REAL,
+    nombre_de_gagnant_au_rang6 INTEGER,
+    rapport_du_rang6 REAL,
+    nombre_de_gagnant_au_rang7 INTEGER,
+    rapport_du_rang7 REAL,
+    nombre_de_gagnant_au_rang8 INTEGER,
+    rapport_du_rang8 REAL,
+    nombre_de_gagnant_au_rang9 INTEGER,
+    rapport_du_rang9 REAL
+);
+

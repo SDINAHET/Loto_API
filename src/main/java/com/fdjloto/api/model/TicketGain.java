@@ -27,6 +27,18 @@ public class TicketGain {
         this.gainAmount = gainAmount;
     }
 
+    public TicketGain(String id, int matchingNumbers, boolean luckyNumberMatch, double gainAmount) {
+        this.id = id;
+        this.matchingNumbers = matchingNumbers;
+        this.luckyNumberMatch = luckyNumberMatch;
+        this.gainAmount = gainAmount;
+    }
+
+    // ✅ Ajoute un setter si nécessaire
+    public void setTicket(Ticket ticket) {
+        this.ticket = ticket;
+    }
+
     public String getId() {
         return id;
     }
