@@ -219,6 +219,12 @@ function formatGain(gain) {
     return gain ? `${gain.toFixed(2)} €` : "-";
 }
 
+// ✅ Déconnexion
+async function logout() {
+    await axios.post("http://localhost:8082/api/auth/logout", {}, { withCredentials: true });
+    window.location.href = "index.html";
+}
+
 document.addEventListener("DOMContentLoaded", loadUserTickets);
 </script>
 
