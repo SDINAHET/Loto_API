@@ -52,10 +52,14 @@ public class TicketGainService {
 
     /**
      * Récupère un gain spécifique par l'ID du ticket
-     */
+    //  */
+    // public Optional<TicketGain> getGainByTicketId(String ticketId) {
+    //     return Optional.ofNullable(ticketGainRepository.findByTicketId(ticketId));
+    // }
     public Optional<TicketGain> getGainByTicketId(String ticketId) {
-        return Optional.ofNullable(ticketGainRepository.findByTicketId(ticketId));
+        return ticketGainRepository.findByTicketId(ticketId); // ✅ CORRECTION
     }
+
 
     /**
      * Supprime tous les gains enregistrés (utile avant recalcul)

@@ -1,6 +1,67 @@
+// package com.fdjloto.api.controller;
+
+// import com.fdjloto.api.dto.GainResultDTO;
+// import com.fdjloto.api.model.TicketGain;
+// import com.fdjloto.api.repository.TicketGainRepository;
+// import com.fdjloto.api.service.GainCalculationService;
+
+// import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+// import io.swagger.v3.oas.annotations.tags.Tag;
+
+// import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.web.bind.annotation.*;
+
+// import java.util.List;
+// import java.util.Optional;
+
+// @RestController
+// @RequestMapping("/api/gains")
+// @Tag(name = "Ticket Gains Management", description = "Endpoints for managing Tickets for searching and calculating gains.")
+// @SecurityRequirement(name = "bearerAuth")
+// @SecurityRequirement(name = "jwtCookieAuth")
+// @CrossOrigin(
+//     origins = "http://127.0.0.1:5500",
+//     allowCredentials = "true",
+//     allowedHeaders = "*",
+//     methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE}
+// )
+// public class GainController {
+
+//     @Autowired
+//     private GainCalculationService gainCalculationService;
+
+//     @Autowired
+//     private TicketGainRepository ticketGainRepository;
+
+//     /**
+//      * 🚀 Calcule et enregistre les gains des tickets.
+//      */
+//     @GetMapping("/calculate")
+//     public List<GainResultDTO> calculateGains() {
+//         return gainCalculationService.calculerGains();
+//     }
+
+//     /**
+//      * 🔍 Récupère tous les gains enregistrés en base.
+//      */
+//     @GetMapping
+//     public List<TicketGain> getAllGains() {
+//         return ticketGainRepository.findAll();
+//     }
+
+//     /**
+//      * 🔍 Récupère les gains d'un ticket spécifique par ID.
+//      */
+//     @GetMapping("/{ticketId}")
+//     public Optional<TicketGain> getGainByTicketId(@PathVariable String ticketId) {
+//         return Optional.ofNullable(ticketGainRepository.findByTicketId(ticketId));
+//     }
+// }
+
 package com.fdjloto.api.controller;
 
 import com.fdjloto.api.dto.GainResultDTO;
+import com.fdjloto.api.dto.TicketGainDTO;
 import com.fdjloto.api.model.TicketGain;
 import com.fdjloto.api.repository.TicketGainRepository;
 import com.fdjloto.api.service.GainCalculationService;
@@ -9,7 +70,11 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -23,37 +88,82 @@ import java.util.Optional;
     origins = "http://127.0.0.1:5500",
     allowCredentials = "true",
     allowedHeaders = "*",
-    methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE}
+    methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS}
 )
 public class GainController {
 
-    @Autowired
-    private GainCalculationService gainCalculationService;
+    private static final Logger logger = LoggerFactory.getLogger(GainController.class);
 
-    @Autowired
-    private TicketGainRepository ticketGainRepository;
+    // @Autowired
+    // private GainCalculationService gainCalculationService;
+
+    // @Autowired
+    // private TicketGainRepository ticketGainRepository;
+
+    private final GainCalculationService gainCalculationService;
+    private final TicketGainRepository ticketGainRepository;
+
+    // ✅ Correction : Injection via le constructeur
+    public GainController(GainCalculationService gainCalculationService, TicketGainRepository ticketGainRepository) {
+        this.gainCalculationService = gainCalculationService;
+        this.ticketGainRepository = ticketGainRepository;
+    }
 
     /**
      * 🚀 Calcule et enregistre les gains des tickets.
      */
     @GetMapping("/calculate")
-    public List<GainResultDTO> calculateGains() {
-        return gainCalculationService.calculerGains();
+    public ResponseEntity<List<GainResultDTO>> calculateGains() {
+        logger.info("🔄 Lancement du calcul des gains...");
+        List<GainResultDTO> results = gainCalculationService.calculerGains();
+        logger.info("✅ Calcul des gains terminé ! {} résultats générés.", results.size());
+        return ResponseEntity.ok(results);
     }
 
-    /**
-     * 🔍 Récupère tous les gains enregistrés en base.
-     */
     @GetMapping
-    public List<TicketGain> getAllGains() {
-        return ticketGainRepository.findAll();
+    public List<TicketGainDTO> getAllGains() {
+        return ticketGainRepository.findAll()
+            .stream()
+            .map(TicketGainDTO::new) // ❗ On convertit en DTO pour éviter `User`
+            .toList();
     }
 
-    /**
-     * 🔍 Récupère les gains d'un ticket spécifique par ID.
-     */
     @GetMapping("/{ticketId}")
-    public Optional<TicketGain> getGainByTicketId(@PathVariable String ticketId) {
-        return Optional.ofNullable(ticketGainRepository.findByTicketId(ticketId));
+    public ResponseEntity<TicketGainDTO> getGainByTicketId(@PathVariable String ticketId) {
+        return ticketGainRepository.findByTicketId(ticketId)
+            .map(TicketGainDTO::new)
+            .map(ResponseEntity::ok)
+            .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
+    // /**
+    //  * 🔍 Récupère tous les gains enregistrés en base.
+    //  */
+    // @GetMapping
+    // public ResponseEntity<List<TicketGain>> getAllGains() {
+    //     logger.info("🔍 Récupération de tous les gains...");
+    //     List<TicketGain> gains = ticketGainRepository.findAll();
+    //     logger.info("✅ {} gains trouvés.", gains.size());
+    //     return ResponseEntity.ok(gains);
+    // }
+
+    // /**
+    //  * 🔍 Récupère les gains d'un ticket spécifique par ID.
+    //  */
+    // @GetMapping("/{ticketId}")
+    // // public ResponseEntity<TicketGain> getGainByTicketId(@PathVariable String ticketId) {
+    // //     logger.info("🔍 Recherche du gain pour le ticket ID: {}", ticketId);
+    // //     Optional<TicketGain> gain = ticketGainRepository.findByTicketId(ticketId);
+
+    // //     if (gain.isPresent()) {
+    // //         logger.info("✅ Gain trouvé pour le ticket ID {}", ticketId);
+    // //         return ResponseEntity.ok(gain.get());
+    // //     } else {
+    // //         logger.warn("❌ Aucun gain trouvé pour le ticket ID {}", ticketId);
+    // //         return ResponseEntity.notFound().build();
+    // //     }
+    // // }
+    // public Optional<TicketGain> getGainByTicketId(@PathVariable String ticketId) {
+    //     return ticketGainRepository.findByTicketId(ticketId);
+    // }
 }
