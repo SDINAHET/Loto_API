@@ -1,5 +1,5 @@
-![alt text](image-19.png)
-![alt text](image-20.png)
+![alt text](/images/image-19.png)
+![alt text](/images/image-20.png)
 
 ```Bach
 git clone https://github.com/SDINAHET/Loto_API.git
@@ -15,17 +15,17 @@ http://127.0.0.1:5500/src/main/resources/static/index.html
 
 npm install axios */pour l'utilisation d'axios à la place de fetch dans le front/*
 ```
-![alt text](image-21.png)
-![alt text](image-22.png)
-![alt text](image-23.png)
-![alt text](image-24.png)
-![alt text](image-25.png)
-![alt text](image-26.png)
-![alt text](image-27.png)
-![alt text](image-28.png)
-![alt text](image-29.png)
-![alt text](image-30.png)
-![alt text](image-31.png)
+![alt text](/images/image-21.png)
+![alt text](/images/image-22.png)
+![alt text](/images/mage-23.png)
+![alt text](/images/image-24.png)
+![alt text](/images/image-25.png)
+![alt text](/images/image-26.png)
+![alt text](/images/image-27.png)
+![alt text](/images/image-28.png)
+![alt text](/images/image-29.png)
+![alt text](/images/image-30.png)
+![alt text](/images/image-31.png)
 
 # 🎰 Loto API - Gestion et Calcul des Gains FDJ
 
@@ -76,7 +76,7 @@ L'application suit une architecture **Full-Stack** :
 
 #### Tools
 Test API:
-- [Insomnia] (https://insomnia.rest/download)
+<!-- - [Insomnia] (https://insomnia.rest/download) -->
 - [Postman] (https://www.postman.com/downloads/)
 
 Test bases de données;
