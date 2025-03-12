@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Loto Tracker - Connexion</title>
     <link rel="stylesheet" href="styles.css">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="loto_tracker.png">
     <style>
         body {
             background: linear-gradient(to right, #000428, #004e92);
@@ -214,7 +216,7 @@
             });
         }
 
-       
+
 
         // Ajout de l'intercepteur à Axios
         axios.interceptors.request.use(cookieAndLocalStorageAuthPlugin.requestInterceptor);
