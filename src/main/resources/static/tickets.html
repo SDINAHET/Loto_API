@@ -248,6 +248,22 @@ function formatGain(gain) {
     return gain ? `${gain.toFixed(2)} €` : "-";
 }
 
+async function deleteTicket(ticketId) {
+    if (!confirm("Voulez-vous vraiment supprimer ce ticket ?")) return;
+
+    try {
+        await axios.delete(`${API_URL}/${ticketId}`, { withCredentials: true });
+
+        // Supprime l'entrée du tableau après suppression réussie
+        document.getElementById(`ticket-${ticketId}`)?.remove();
+
+        alert("✅ Ticket supprimé avec succès !");
+    } catch (error) {
+        console.error("❌ Erreur lors de la suppression du ticket :", error);
+        alert("⚠️ Impossible de supprimer ce ticket. Vérifiez votre connexion et réessayez.");
+    }
+}
+
 async function checkUserAuth() {
     try {
         const response = await axios.get("http://localhost:8082/api/auth/me", { withCredentials: true });

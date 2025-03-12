@@ -92,7 +92,8 @@ public class SecurityConfig {
                         // .requestMatchers("/api/protected/**").permitAll()
                         // .requestMatchers("/api/tickets/**").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/tickets/**").hasAnyRole("ADMIN", "USER") // 🔥 GET accessible aux admins et utilisateurs
-                        .requestMatchers(HttpMethod.POST, "/api/tickets/**").hasAnyRole("ADMIN", "USER") // 🔥 POST accessible aux admins et utilisateurs
+                        // .requestMatchers(HttpMethod.POST, "/api/tickets/**").hasAnyRole("ADMIN", "USER") // 🔥 POST accessible aux admins et utilisateurs
+                        .requestMatchers(HttpMethod.POST, "/api/tickets/**").permitAll() // 🔥 POST accessible tout le monde
                         .requestMatchers(HttpMethod.PUT, "/api/tickets/**").hasAnyRole("ADMIN", "USER") // 🔥 PUT accessible aux admins et utilisateurs
                         .requestMatchers(HttpMethod.DELETE, "/api/tickets/**").hasAnyRole("ADMIN", "USER") // 🔥 PUT accessible aux admins et utilisateurs
                         .requestMatchers(HttpMethod.GET, "/api/users/**").hasAnyRole("ADMIN", "USER") // 🔥 GET accessible aux admins et utilisateurs

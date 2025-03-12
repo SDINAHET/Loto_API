@@ -631,3 +631,11 @@ CREATE TABLE ticket_gains (
     gain_amount REAL NOT NULL,
     FOREIGN KEY(ticket_id) REFERENCES tickets(id) ON DELETE CASCADE
 );
+
+root@UID7E:/mnt/c/Users/steph/Documents/portfolio/portfolio/Loto_API# python3 add_tickets.py
+🎯 Total des tirages générés : 1252
+🚀 Tous les tickets ont été insérés dans SQLite !
+root@UID7E:/mnt/c/Users/steph/Documents/portfolio/portfolio/Loto_API#
+
+
+python3 add_tickets.py
