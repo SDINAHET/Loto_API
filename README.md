@@ -342,7 +342,7 @@ http://localhost:8080/swagger-ui/index.html
 http://localhost:8080/login
 http://localhost:8080
 
-![alt text](image.png)
+![alt text](/images/image.png)
 
 📂 Organisation des fichiers
 Voici les fichiers que je vais générer pour toi, basés sur ta structure :
@@ -430,13 +430,13 @@ Aperçu des premières lignes du CSV:
 Connexion MongoDB réussie !
 823 documents insérés avec succès dans loto_database.historique
 ```
-![alt text](image-1.png)
+![alt text](/images/image-1.png)
 mongodb 27017
 localhost:5000 affichage du tableau scrappé  (collection historique)
-![alt text](image-2.png)
+![alt text](/images/image-2.png)
 lsof -i :5000
 
-![alt text](image-3.png)
+![alt text](/images/image-3.png)
 
 db.getCollection('historique').find(
   {},
@@ -450,7 +450,7 @@ db.getCollection('historique').find(
   }
 );
 
-![alt text](image-4.png)
+![alt text](/images/image-4.png)
 db.getCollection('historique').find(
   {},
   {
@@ -516,7 +516,7 @@ Version	Spring Boot 3.4.2	Java 21	Stabilité
 
 👉 Va pour 0.11.5 et ton JWT fonctionnera sans problème avec Spring Boot 3.4.2 et Java 21 ! 🔥🚀
 
-![alt text](image-5.png)
+![alt text](/images/image-5.png)
 
 
 TicketController.java (Contrôleur REST pour les tickets)
@@ -528,13 +528,13 @@ GameResult.java (Modèle MongoDB pour les résultats FDJ)
 ResultFetcherService.java (Service pour récupérer et mettre à jour les résultats FDJ)
 
 
-![alt text](image-6.png)
+![alt text](/images/image-6.png)
 
-![alt text](image-7.png)
-![alt text](image-8.png)
-![alt text](image-9.png)
-![alt text](image-10.png)
-![alt text](image-11.png)
+![alt text](/images/image-7.png)
+![alt text](/images/image-8.png)
+![alt text](/images/image-9.png)
+![alt text](/images/image-10.png)
+![alt text](/images/image-11.png)
 
 
 🔬 Explication scientifique et professionnelle
@@ -585,13 +585,13 @@ Un écart-type faible ➜ Les numéros sont fréquemment tirés avec peu de vari
 Un écart-type élevé ➜ Les numéros sont tirés de manière très irrégulière.
 Le graphique généré permet une visualisation rapide de la dispersion des numéros probables, aidant à identifier les numéros les plus stables et ceux qui varient fortement.
 
-![alt text](image-12.png)
-![alt text](image-13.png)
-![alt text](image-14.png)
-![alt text](image-15.png)
-![alt text](image-16.png)
-![alt text](image-17.png)
-![alt text](image-18.png)
+![alt text](/images/image-12.png)
+![alt text](/images/image-13.png)
+![alt text](/images/image-14.png)
+![alt text](/images/image-15.png)
+![alt text](/images/image-16.png)
+![alt text](/images/image-17.png)
+![alt text](/images/image-18.png)
 
 CREATE TABLE user_roles (
   user_id TEXT NOT NULL,
