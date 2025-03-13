@@ -72,7 +72,7 @@
     </div>
 </div>
 
-<!-- MODAL POUR LES DÉTAILS DU TIRAGE -->
+<!-- MODAL POUR LES DÉTAILS DU TIRAGE
 <div class="modal fade" id="tirageModal" tabindex="-1" aria-labelledby="tirageModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -85,7 +85,26 @@
             </div>
         </div>
     </div>
+</div> -->
+
+<!-- MODAL POUR LES DÉTAILS DU TIRAGE -->
+<div class="modal fade" id="tirageModal" tabindex="-1" aria-labelledby="tirageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold" id="tirageModalLabel">Détails du Tirage</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modalTirageBody">
+                <p class="text-center">Chargement...</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
 </div>
+
 
 <script>
 const API_URL = "http://localhost:8082/api/tickets";
@@ -153,47 +172,62 @@ async function loadUserTickets() {
     try {
         const response = await axios.get(API_URL, { withCredentials: true });
         const gainsResponse = await axios.get(API_GAINS, { withCredentials: true });
+
+        // 🏆 On récupère les gains et on les stocke dans une Map pour un accès rapide
         const gainsMap = new Map(gainsResponse.data.map(g => [g.ticketId, g.gainAmount]));
 
+        // 📌 Trier les tickets par date décroissante
         response.data.sort((a, b) => new Date(b.drawDate) - new Date(a.drawDate));
 
         let tableBody = document.getElementById("ticketsTable");
         tableBody.innerHTML = "";
 
-        const now = new Date();
-        const today = now.toISOString().split('T')[0];
+        // 🕒 Correction : Normalisation de la date actuelle en UTC
+        const nowUTC = new Date();
+        const todayUTC = new Date(Date.UTC(nowUTC.getUTCFullYear(), nowUTC.getUTCMonth(), nowUTC.getUTCDate()))
+            .toISOString().split('T')[0];
 
         response.data.forEach(ticket => {
+            // 🕒 Correction : Normalisation de la date du ticket en UTC
             const drawDate = new Date(ticket.drawDate);
-            const drawDateString = drawDate.toISOString().split('T')[0];
-            const gain = gainsMap.get(ticket.id) ?? null;
+            const drawDateUTC = new Date(Date.UTC(drawDate.getUTCFullYear(), drawDate.getUTCMonth(), drawDate.getUTCDate()))
+                .toISOString().split('T')[0];
 
-            let status = "En attente";
+            const gain = gainsMap.has(ticket.id) ? gainsMap.get(ticket.id) : undefined; // 🏆 Vérification des gains
+
+            let status = "En attente"; // 📌 Par défaut : en attente
             let statusClass = "bg-secondary text-white";
-            let eyeClass = "btn-light";
+            let eyeClass = "btn-light"; // Désactivé par défaut
 
-            if (drawDateString < today) {
-                if (gain > 0) {
-                    status = "Gagné";
-                    statusClass = "bg-success text-white";
-                    eyeClass = "btn-info";
-                } else {
-                    status = "Perdu";
-                    statusClass = "bg-warning text-dark";
-                    eyeClass = "btn-info";
-                }
-            } else if (drawDateString === today) {
-                status = "En attente";
-                statusClass = "bg-secondary text-white";
-                eyeClass = "btn-light";
+            // ✅ Vérification du jour du tirage (Lundi = 1, Mercredi = 3, Samedi = 6)
+            const dayOfWeek = drawDate.getUTCDay();
+            if (![1, 3, 6].includes(dayOfWeek)) {
+                status = "Erreur Date";
+                statusClass = "bg-danger text-white";
+                eyeClass = "btn-light"; // Désactiver le bouton "voir"
             }
+            else if (drawDateUTC < todayUTC) { // 📌 Si le tirage est passé et valide
+                if (gain !== undefined) { // ✅ Correction ici : vérifier `undefined` au lieu de `null`
+                    if (gain > 0) {
+                        status = "Gagné";
+                        statusClass = "bg-success text-white";
+                    } else {
+                        status = "Perdu";
+                        statusClass = "bg-warning text-dark";
+                    }
+                    eyeClass = "btn-info"; // Activation du bouton "Voir"
+                }
+            }
+
+            // 🔎 **DEBUG : Vérification de la console**
+            console.log(`Ticket ${ticket.id} - Tirage: ${drawDateUTC}, Aujourd'hui: ${todayUTC}, Gain: ${gain}, Statut: ${status}`);
 
             let row = `<tr>
                 <td><b>${formatDate(ticket.drawDate)}</b></td>
                 <td>${formatNumbers(ticket.numbers)}</td>
                 <td>${formatChance(ticket.chanceNumber)}</td>
                 <td><span class="badge ${statusClass}">${status}</span></td>
-                <td><b>${formatGain(gain)}</b></td>
+                <td><b>${gain !== undefined ? formatGain(gain) : "-"}</b></td>
                 <td class="text-end">
                     <button class="btn btn-sm ${eyeClass}" onclick="showTirageDetails('${ticket.drawDate}')" ${eyeClass === "btn-light" ? "disabled" : ""}>
                         <i class="fas fa-eye"></i>
@@ -215,23 +249,114 @@ async function loadUserTickets() {
 
 async function showTirageDetails(date) {
     try {
-        let formattedDate = date.split("/").reverse().join("-");
-        let response = await axios.get(API_TIRAGE + formattedDate);
+        let formattedDate = new Date(date).toISOString().split("T")[0]; // Normalisation ISO
+        console.log(`🔍 Requête API vers : ${API_TIRAGE}${formattedDate}`);
 
-        document.getElementById("modalTirageBody").innerHTML = `
-            <h5 class="text-center">Tirage du ${date}</h5>
-            <div class="text-center">
-                ${response.data.boules.map(num => `<span class='badge bg-primary m-1 p-2'>${num}</span>`).join('')}
-                <span class='badge bg-danger m-1 p-2'>${response.data.numeroChance}</span>
+        let response = await axios.get(`${API_TIRAGE}${formattedDate}`);
+        let data = response.data;
+
+        if (!data || Object.keys(data).length === 0) {
+            document.getElementById("modalTirageBody").innerHTML = "<p class='text-center text-warning'>Aucun détail trouvé.</p>";
+            new bootstrap.Modal(document.getElementById("tirageModal")).show();
+            return;
+        }
+
+        // Extraction des données et sécurité contre les valeurs nulles
+        let numeros = [data.boule1, data.boule2, data.boule3, data.boule4, data.boule5].filter(Boolean);
+        let secondTirage = [data.boule1SecondTirage, data.boule2SecondTirage, data.boule3SecondTirage, data.boule4SecondTirage, data.boule5SecondTirage].filter(Boolean);
+
+        let modalContent = `
+            <div class="container-fluid">
+                <h4 class="text-center text-danger fw-bold">Résultat Loto du ${data.jourDeTirage} ${data.dateDeTirage}</h4>
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                        <h5 class="fw-bold">Le tirage</h5>
+                        <div id="numbersContainer" class="mb-3">
+                            ${numeros.map(num => `<span class="lottery-ball">${num}</span>`).join('')}
+                            <span class="lottery-ball lucky-number">${data.numeroChance || "❌"}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6 text-center">
+                        <h5 class="fw-bold">Second tirage</h5>
+                        <div class="mb-3">
+                            ${secondTirage.length ? secondTirage.map(num => `<span class="lottery-ball">${num}</span>`).join('') : "❌ Non disponible"}
+                        </div>
+                    </div>
+                </div>
+
+                <h5 class="text-center text-primary fw-bold">Jackpot annoncé : <span class="text-dark">${data.rapportDuRang1.toLocaleString()} €</span></h5>
+
+                <hr>
+
+                <h5 class="text-center fw-bold">Rapports du tirage :</h5>
+                <div class="table-responsive">
+                    <table class="table table-striped text-center">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Rang</th>
+                                <th>Gagnants</th>
+                                <th>Gain (€)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${[1, 2, 3, 4, 5, 6, 7, 8, 9].map(rang => `
+                                <tr>
+                                    <td>${rang}</td>
+                                    <td><strong>${data[`nombreDeGagnantAuRang${rang}`]}</strong></td>
+                                    <td><strong>${data[`rapportDuRang${rang}`] ? data[`rapportDuRang${rang}`].toLocaleString() + " €" : "-"}</strong></td>
+                                </tr>`).join('')}
+                        </tbody>
+                    </table>
+                </div>
+
+                <hr>
+                <h5 class="text-center fw-bold">Joker+ : <span class="text-primary">${data.numeroJokerplus || "❌ Non disponible"}</span></h5>
             </div>
-            <p class="text-center mt-3">Jackpot annoncé : <b>${response.data.jackpot.toLocaleString()} €</b></p>
+
+            <style>
+            .lottery-ball {
+                display: inline-block;
+                width: 40px;
+                height: 40px;
+                line-height: 40px;
+                text-align: center;
+                font-size: 1.2em;
+                font-weight: bold;
+                color: white;
+                border-radius: 50%;
+                margin: 5px;
+                background-color: #007bff;
+            }
+            .lucky-number {
+                background-color: #dc3545;
+            }
+            </style>
         `;
 
+        document.getElementById("modalTirageBody").innerHTML = modalContent;
+
         new bootstrap.Modal(document.getElementById("tirageModal")).show();
+
     } catch (error) {
         console.error("❌ Erreur lors du chargement du tirage :", error);
+        document.getElementById("modalTirageBody").innerHTML = "<p class='text-center text-danger'>❌ Erreur lors de la récupération des données.</p>";
+        new bootstrap.Modal(document.getElementById("tirageModal")).show();
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function formatDate(dateStr) {
     const date = new Date(dateStr);

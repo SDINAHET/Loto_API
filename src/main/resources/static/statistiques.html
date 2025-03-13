@@ -110,20 +110,15 @@ async function loadUserStats() {
         const gainsResponse = await axios.get(API_GAINS, { withCredentials: true });
         const gainsMap = new Map(gainsResponse.data.map(g => [g.ticketId, g.gainAmount]));
 
-        let totalDepense = response.data.length * 2.20; // Chaque grille coûte 2.20 €
+        let totalDepense = response.data.length * 2.20;
         let totalGagne = 0;
 
         let tableBody = document.getElementById("ticketsTable");
         tableBody.innerHTML = "";
 
-        let labels = [];
-        let depensesData = [];
-        let gainsData = [];
+        let labels = [], depensesData = [], gainsData = [];
+        const today = new Date().toISOString().split('T')[0];
 
-        const now = new Date();
-        const today = now.toISOString().split('T')[0];
-
-        // ✅ Trier les tickets du plus récent au plus ancien
         response.data.sort((a, b) => new Date(b.drawDate) - new Date(a.drawDate));
 
         response.data.forEach(ticket => {
@@ -135,18 +130,14 @@ async function loadUserStats() {
 
             let status = "En attente";
             let statusClass = "bg-secondary text-white";
+            const dayOfWeek = drawDate.getUTCDay();
 
-            if (drawDateString < today) {
-                if (gain > 0) {
-                    status = "Gagné";
-                    statusClass = "bg-success text-white";
-                } else {
-                    status = "Perdu";
-                    statusClass = "bg-warning text-dark";
-                }
-            } else if (drawDateString === today) {
-                status = "En attente";
-                statusClass = "bg-secondary text-white";
+            if (![1, 3, 6].includes(dayOfWeek)) {
+                status = "Erreur Date";
+                statusClass = "bg-danger text-white";
+            } else if (drawDateString < today) {
+                status = gain > 0 ? "Gagné" : "Perdu";
+                statusClass = gain > 0 ? "bg-success text-white" : "bg-warning text-dark";
             }
 
             let row = `<tr>
@@ -169,6 +160,7 @@ async function loadUserStats() {
         console.error("Erreur lors du chargement des statistiques", error);
     }
 }
+
 
 // ✅ Générer le graphique
 function generateChart(labels, depensesData, gainsData) {

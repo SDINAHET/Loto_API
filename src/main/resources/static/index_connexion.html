@@ -932,7 +932,7 @@
             document.getElementById("predictionButton").addEventListener("click", function () {
                 let paypalUrl = "https://www.paypal.com/paypalme/TON_COMPTE_PAYPAL/5"; // Remplace par ton lien PayPal
 
-                let confirmation = confirm("Pour accéder à la prédiction du prochain tirage, un paiement de 5€ est requis. Voulez-vous continuer ?");
+                let confirmation = confirm("Pour accéder aux statistiques du prochain tirage, un paiement de 5€ est requis. Voulez-vous continuer ?");
                 if (confirmation) {
                     // 🔹 Ouvrir PayPal dans un nouvel onglet
                     let paypalWindow = window.open(paypalUrl, "_blank");
@@ -1527,6 +1527,46 @@
         // ✅ Vérifie l'authentification au chargement de la page
         document.addEventListener("DOMContentLoaded", checkAuth);
 
+        document.addEventListener("DOMContentLoaded", function () {
+            const updateForm = document.getElementById("updateForm");
+
+            if (updateForm) {
+                updateForm.addEventListener("submit", async function (event) {
+                    event.preventDefault();
+
+                    let jwtToken = await getValidToken(); // Vérifie et met à jour le token
+                    if (!jwtToken) return; // Si pas de token valide, arrêter ici
+
+                    let updatedData = {
+                        firstName: document.getElementById("updateFirstName").value,
+                        lastName: document.getElementById("updateLastName").value,
+                        password: document.getElementById("updatePassword").value || null
+                    };
+
+                    try {
+                        let response = await axios.put("http://localhost:8082/api/users/me", updatedData, {
+                            withCredentials: true,
+                            headers: {
+                                "Content-Type": "application/json",
+                                "Authorization": `Bearer ${jwtToken}`
+                            }
+                        });
+
+                        if (response.status === 200) {
+                            alert("✅ Modifications enregistrées !");
+                            setTimeout(() => {
+                                window.location.href = "index_connexion.html";
+                            }, 2000);
+                        }
+                    } catch (error) {
+                        console.error("❌ Erreur lors de la mise à jour :", error);
+                        alert("Erreur lors de la mise à jour du profil.");
+                    }
+                });
+            }
+        });
+
+
 
 
 
@@ -1558,7 +1598,7 @@
         </div>
         <div class="footer-social">
             <a href="#"><i class="fab fa-facebook"></i></a>
-            <a href="#"><i class="fab fa-twitter"></i></a>
+            <!-- <a href="#"><i class="fab fa-twitter"></i></a> -->
             <a href="#"><i class="fab fa-instagram"></i></a>
             <a href="#"><i class="fab fa-youtube"></i></a>
         </div>

@@ -11,11 +11,6 @@ public class DataSourceConfig {
 
     @Bean
     public DataSource dataSource() {
-    //     DriverManagerDataSource dataSource = new DriverManagerDataSource();
-    //     dataSource.setDriverClassName("org.sqlite.JDBC");
-    //     dataSource.setUrl("jdbc:sqlite:data/loto.db");
-    //     return dataSource;
-    // }
         return DataSourceBuilder.create()
             .driverClassName("org.sqlite.JDBC")
             .url("jdbc:sqlite:loto.db")

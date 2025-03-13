@@ -253,31 +253,9 @@ import io.swagger.v3.oas.models.servers.Server;
             name = "Stéphane DINAHET",
             email = "stephane.dinahet@gmail.com",
             url = "https://github.com/SDINAHET"
-            // url = "https://www.linkedin.com/in/st%C3%A9phane-dinahet-3b363189/")
-
-        // termsOfService = "https://hbnb.alwaysdata.net/terms_License",
-        // .license(new License()
-        //     .name = "MIT License"
-        //     .url = "https://opensource.org/licenses/MIT"
             )
         ),
-    // security = {@SecurityRequirement(name = "bearerAuth")}
 
-
-// @EnableWebMvc
-// @ComponentScan(basePackages = "com.fdjloto.api")
-// @SpringBootApplication(scanBasePackages = {"com.fdjloto"})
-// @OpenAPIDefinition(
-//     info = @Info(
-//         title = "Loto Tracker API 🚀",
-//         version = "v1.0.0  Portfolio 2025 Loto Tracker API",
-//         description = "API pour suivre les résultats du Loto et gérer les comptes utilisateurs. <br> <b>Fonctionnalités :</b> <ul><li>🔑 Authentification avec JWT</li><li>👤 Gestion des utilisateurs (Admin seulement)</li><li>📊 Accès public pour les résultats du Loto</li></ul>",
-//         contact = @Contact(
-//             name = "Stéphane Dinahet",
-//             email = "stephane.dinahet@gmail.com",
-//             url = "https://github.com/SDINAHET"
-//         )
-//     ),
     security = {
         @SecurityRequirement(name = "bearerAuth"),
         @SecurityRequirement(name = "jwtCookieAuth")
@@ -294,31 +272,6 @@ public class LotoApiApplication {
         SpringApplication.run(LotoApiApplication.class, args);
     }
 
-//     @Bean
-//     public OpenAPI customOpenAPI() {
-//         return new OpenAPI()
-//                 .info(new io.swagger.v3.oas.models.info.Info()
-//                         .title("Loto Tracker API 🚀")
-//                         .version("v1.0.0")
-//                         .description("API pour suivre les résultats du Loto et gérer les comptes utilisateurs. <br> <b>Utilisation :</b> <ul><li>🔑 Authentification avec JWT</li><li>👤 Gestion des utilisateurs (Admin seulement)</li><li>📊 Accès public pour les résultats du Loto</li></ul>")
-//                         .contact(new io.swagger.v3.oas.models.info.Contact()
-//                                 .name("Stéphane Dinahet")
-//                                 .email("contact@fdjloto.com")
-//                                 .url("https://github.com/SDINAHET")
-//                         )
-//                         .license(new License().name("MIT License").url("https://opensource.org/licenses/MIT"))
-//                 )
-//                 .addSecurityItem(new io.swagger.v3.oas.models.security.SecurityRequirement().addList("bearerAuth"))
-//                 .components(new Components()
-//                         .addSecuritySchemes("bearerAuth",
-//                                 new io.swagger.v3.oas.models.security.SecurityScheme()
-//                                         .type(io.swagger.v3.oas.models.security.SecurityScheme.Type.HTTP)
-//                                         .scheme("bearer")
-//                                         .bearerFormat("JWT")
-//                         ))
-//                 .addServersItem(new Server().url("http://localhost:8082").description("Serveur local"))
-//                 .addServersItem(new Server().url("http://127.0.0.1:5500").description("Serveur local (Live Server)"));
-//    }
    @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
