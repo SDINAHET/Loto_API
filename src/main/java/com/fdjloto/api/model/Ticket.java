@@ -374,34 +374,7 @@ public class Ticket {
     public String getUserEmail() { return user.getEmail(); }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; } // ✅ Ajout du getter
-    // public String getStatut() { return statut; }
-    // public void setStatut(String statut) { this.statut = statut; }
 
-    // public double getGain() { return gain; }
-    // public void setGain(double gain) { this.gain = gain; }
-
-    // @PrePersist
-    // public void prePersist() {
-    //     this.createdAt = LocalDateTime.now();  // ✅ Définit `created_at` à la date actuelle
-    //     // this.updatedAt = null; // ✅ S'assure que `updated_at` est NULL à la création
-    //     this.updatedAt = LocalDateTime.now();  // ✅ Définit `updated_at` à la date actuelle
-    // }
-
-    // @PreUpdate
-    // public void preUpdate() {
-    //     this.updatedAt = LocalDateTime.now(); // ✅ Définit `updated_at` uniquement lors d'une mise à jour
-    // }
-
-
-
-
-    // public void setCreatedAt(LocalDateTime createdAt) {
-    //     this.createdAt = createdAt;
-    // }
-
-    // public void setUpdatedAt(LocalDateTime updatedAt) {
-    //     this.updatedAt = updatedAt;
-    // }
     public void setCreatedAt(String createdAt) {
         this.createdAt = LocalDateTime.parse(createdAt, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
@@ -417,10 +390,5 @@ public class Ticket {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
-
-
-
-
-
 
 }

@@ -49,26 +49,7 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-    // @Bean
-    // public GrantedAuthorityDefaults grantedAuthorityDefaults() {
-    //     return new GrantedAuthorityDefaults(""); // Enlève le préfixe ROLE_
-    // }
-
-
-    // @Bean
-    // public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    //     http.csrf(csrf -> csrf.disable())
-    //         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-    //         .authorizeHttpRequests(auth -> auth
-    //             .requestMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**", "/api/hello").permitAll()
-    //             .anyRequest().authenticated()
-    //         )
-    //         .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-    //         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-
-    //     return http.build();
-    // }
+    
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
@@ -128,100 +109,4 @@ public class SecurityConfig {
                 .build();
     }
 
-    // ✅ Ajout de la configuration CORS dans SecurityConfig
-    // @Bean
-    // public CorsConfigurationSource corsConfigurationSource() {
-    //     CorsConfiguration configuration = new CorsConfiguration();
-    //     configuration.setAllowedOrigins(List.of("http://127.0.0.1:5500", "http://localhost:8082")); // 🔥 Autorise les requêtes depuis le frontend
-    //     configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-    //     configuration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
-    //     configuration.setExposedHeaders(List.of("Set-Cookie")); // 🔑 Permet d'exposer le cookie JWT
-    //     configuration.setAllowCredentials(true); // 🔥 Permet d'envoyer les cookies et headers d'authentification
-
-    //     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    //     source.registerCorsConfiguration("/**", configuration); // 🔥 Applique CORS à toutes les routes
-    //     return source;
-    // }
-
-    // @Bean
-    // public UserDetailsService userDetailsService() {
-    //     return email -> userDetailsService.loadUserByUsername(email);
-    // }
-
-    // @Bean
-    // public JwtAuthenticationConverter jwtAuthenticationConverter() {
-    //     return new JwtAuthenticationConverter();
-    // }
-//     @Bean
-//     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//         return http
-//                 .csrf(AbstractHttpConfigurer::disable) // ✅ Désactive CSRF pour API stateless
-//                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 🔴 JWT = stateless
-//                 .authorizeHttpRequests(auth -> auth
-//                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll() // ✅ Swagger accessible sans JWT
-//                         .requestMatchers("/api/auth/**").permitAll() // 🔓 Auth accessible sans token
-//                         .requestMatchers("/api/protected/**").authenticated() // 🔐 JWT obligatoire
-//                 )
-//                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)  // 🔐 Ajoute le filtre JWT
-//                 .build();
-//     }
 }
-
-// package com.fdjloto.api.security;
-
-// import org.springframework.context.annotation.Bean;
-// import org.springframework.context.annotation.Configuration;
-// import org.springframework.security.authentication.AuthenticationManager;
-// import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-// import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-// import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-// import org.springframework.security.config.http.SessionCreationPolicy;
-// import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-// import org.springframework.security.crypto.password.PasswordEncoder;
-// import org.springframework.security.web.SecurityFilterChain;
-// import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-// @Configuration
-// @EnableWebSecurity
-// public class SecurityConfig {
-
-//     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-
-//     public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
-//         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-//     }
-
-//     @Bean
-//     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-//         return authenticationConfiguration.getAuthenticationManager();
-//     }
-
-//     @Bean
-//     public PasswordEncoder passwordEncoder() {
-//         return new BCryptPasswordEncoder();
-//     }
-
-//     @Bean
-//     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//         return http
-//                 .csrf(csrf -> csrf.disable()) // ✅ Désactive CSRF pour API REST
-//                 .cors(cors -> cors.disable()) // 🔴 Désactive CORS (peut être remplacé par une config spécifique)
-//                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // ✅ JWT = Stateless
-//                 .authorizeHttpRequests(auth -> auth
-//                         // Endpoints publics (sans authentification)
-//                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
-//                         .requestMatchers("/api/auth/**", "/api/hello", "/localhost:5500/**", "/api/loto/scrape").permitAll()
-
-//                         // Routes accessibles aux utilisateurs connectés
-//                         .requestMatchers("/api/users/**").authenticated()  // 🔐 JWT obligatoire pour users
-//                         .requestMatchers("/api/protected/**").authenticated()  // 🔐 JWT obligatoire
-
-//                         // Routes spécifiques aux admins
-//                         // .requestMatchers("/api/admin/**").hasRole("ADMIN")  // 🔐 Accessible uniquement aux admins
-//                 )
-//                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)  // 🔐 Ajout du filtre JWT
-//                 // .oauth2Login() // ✅ Ajout OAuth2 Login si besoin
-//                 .build();
-//     }
-// }
-

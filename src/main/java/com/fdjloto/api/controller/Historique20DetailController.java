@@ -33,20 +33,6 @@ public class Historique20DetailController {
                      .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
     }
 
-     // 🔹 Recherche par plage de dates
-    // @GetMapping("/tirages")
-    // public ResponseEntity<List<Historique20Detail>> getTiragesParPlageDeDates(
-    //         @RequestParam String startDate,
-    //         @RequestParam String endDate) {
-
-    //     List<Historique20Detail> result = lotoService.getTiragesParPlageDeDates(startDate, endDate);
-    //     if (result.isEmpty()) {
-    //         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
-    //     }
-    //     return ResponseEntity.ok(result);
-    // }
-
-
 @GetMapping("/tirages")
 public ResponseEntity<List<Historique20Detail>> getTiragesParPlageDeDates(
         @RequestParam String startDate,

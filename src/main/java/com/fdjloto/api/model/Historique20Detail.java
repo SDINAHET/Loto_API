@@ -8,47 +8,6 @@ import java.util.Date;
 
 @Document(collection = "historique")
 public class Historique20Detail {
-//     @Id
-//     private String id;
-
-//     private int anneeNumeroDeTirage;
-
-//     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Europe/Paris")
-//     private Date dateDeTirage;
-
-//     private String dateDeForclusion;
-//     private int boule1, boule2, boule3, boule4, boule5, numeroChance;
-//     private String combinaisonGagnante;
-
-//     private int boule1SecondTirage, boule2SecondTirage, boule3SecondTirage, boule4SecondTirage, boule5SecondTirage;
-//     private String combinaisonGagnanteSecondTirage;
-
-//     private int nombreDeGagnantAuRang1, nombreDeGagnantAuRang2, nombreDeGagnantAuRang3;
-//     private double rapportDuRang1, rapportDuRang2, rapportDuRang3;
-
-//     private String codesGagnants;
-//     private int numeroJokerplus;
-//     private String devise;
-
-//     // ✅ Constructeur vide
-//     public Historique20Detail() {}
-
-//     // ✅ Getters et Setters
-//     public String getId() { return id; }
-//     public void setId(String id) { this.id = id; }
-
-//     public Date getDateDeTirage() { return dateDeTirage; }
-//     public void setDateDeTirage(Date dateDeTirage) { this.dateDeTirage = dateDeTirage; }
-
-//     public String getCombinaisonGagnante() { return combinaisonGagnante; }
-//     public void setCombinaisonGagnante(String combinaisonGagnante) { this.combinaisonGagnante = combinaisonGagnante; }
-
-//     public int getNumeroJokerplus() { return numeroJokerplus; }
-//     public void setNumeroJokerplus(int numeroJokerplus) { this.numeroJokerplus = numeroJokerplus; }
-
-//     public String getCodesGagnants() { return codesGagnants; }
-//     public void setCodesGagnants(String codesGagnants) { this.codesGagnants = codesGagnants; }
-// }
 @Id
     private String id;
     private int anneeNumeroDeTirage;

@@ -45,15 +45,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userRepository.save(user);
     }
 
-    // @Override
-    // public User updateUser(UUID id, User user) { // ✅ Garde UUID
-    //     if (userRepository.existsById(id.toString())) {
-    //         user.setId(id.toString()); // ✅ Stocke UUID sous forme de String
-    //         return userRepository.save(user);
-    //     }
-    //     return null;
-    // }
-
     @Override
     public User updateUser(UUID id, User user) {
         Optional<User> existingUserOpt = userRepository.findById(id.toString());
@@ -75,48 +66,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return null; // ou générer une exception pour un utilisateur introuvable
     }
 
-    // @Override
-    // public User updateUser(UUID id, User user) { // ✅ Garde UUID
-    //     if (userRepository.existsById(id)) {
-    //         user.setId(id); // ✅ Passe directement l'UUID
-    //         return userRepository.save(user);
-    //     }
-    //     return null;
-    // }
-
-
-
     @Override
     public void deleteUser(UUID id) { // ✅ Garde UUID
         userRepository.deleteById(id.toString());
     }
-
-    // @Override
-    // public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-    //     User user = userRepository.findByEmail(email)
-    //             .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
-
-    //     return org.springframework.security.core.userdetails.User.builder()
-    //             .username(user.getEmail())
-    //             .password(user.getPassword())
-    //             .roles(user.isAdmin() ? "ADMIN" : "USER")
-    //             .build();
-    // }
-
-    // @Override
-    // public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-    //     User user = userRepository.findByEmail(email)
-    //             .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
-
-    //     // ✅ Utilisation du getter pour obtenir le rôle
-    //     String role = user.getRole();
-
-    //     return org.springframework.security.core.userdetails.User.builder()
-    //             .username(user.getEmail())
-    //             .password(user.getPassword())
-    //             .roles(role) // ✅ Utilisation du rôle mappé
-    //             .build();
-    // }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -136,39 +89,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 .roles(role.replace("ROLE_", "")) // ⚠️ Supprime le préfixe ROLE_ pour Spring Security
                 .build();
     }
-
-
-
-
-    // @Override
-    // public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-    //     User user = userRepository.findByEmail(email)
-    //             .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
-
-    //     // 🔐 Mappe le rôle correctement en utilisant ROLE_ADMIN
-    //     String role = user.isAdmin() ? "ROLE_ADMIN" : "ROLE_USER";
-
-    //     return org.springframework.security.core.userdetails.User.builder()
-    //             .username(user.getEmail())
-    //             .password(user.getPassword())
-    //             .roles(role) // ✅ Utilise le rôle correctement mappé
-    //             .build();
-    // }
-
-
-    // @Override
-    // public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-    //     User user = userRepository.findByEmail(email)
-    //             .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
-
-    //     String role = user.isAdmin() ? "ROLE_ADMIN" : "ROLE_USER";
-
-    //     return org.springframework.security.core.userdetails.User.builder()
-    //             .username(user.getEmail())
-    //             .password(user.getPassword())
-    //             .roles(role)
-    //             .build();
-    // }
 
 
 }

@@ -94,11 +94,6 @@ public class GainController {
 
     private static final Logger logger = LoggerFactory.getLogger(GainController.class);
 
-    // @Autowired
-    // private GainCalculationService gainCalculationService;
-
-    // @Autowired
-    // private TicketGainRepository ticketGainRepository;
 
     private final GainCalculationService gainCalculationService;
     private final TicketGainRepository ticketGainRepository;
@@ -136,34 +131,4 @@ public class GainController {
             .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // /**
-    //  * 🔍 Récupère tous les gains enregistrés en base.
-    //  */
-    // @GetMapping
-    // public ResponseEntity<List<TicketGain>> getAllGains() {
-    //     logger.info("🔍 Récupération de tous les gains...");
-    //     List<TicketGain> gains = ticketGainRepository.findAll();
-    //     logger.info("✅ {} gains trouvés.", gains.size());
-    //     return ResponseEntity.ok(gains);
-    // }
-
-    // /**
-    //  * 🔍 Récupère les gains d'un ticket spécifique par ID.
-    //  */
-    // @GetMapping("/{ticketId}")
-    // // public ResponseEntity<TicketGain> getGainByTicketId(@PathVariable String ticketId) {
-    // //     logger.info("🔍 Recherche du gain pour le ticket ID: {}", ticketId);
-    // //     Optional<TicketGain> gain = ticketGainRepository.findByTicketId(ticketId);
-
-    // //     if (gain.isPresent()) {
-    // //         logger.info("✅ Gain trouvé pour le ticket ID {}", ticketId);
-    // //         return ResponseEntity.ok(gain.get());
-    // //     } else {
-    // //         logger.warn("❌ Aucun gain trouvé pour le ticket ID {}", ticketId);
-    // //         return ResponseEntity.notFound().build();
-    // //     }
-    // // }
-    // public Optional<TicketGain> getGainByTicketId(@PathVariable String ticketId) {
-    //     return ticketGainRepository.findByTicketId(ticketId);
-    // }
 }

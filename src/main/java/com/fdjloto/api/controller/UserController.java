@@ -135,16 +135,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    // @Operation(summary = "Retrieve all users (Admin only)")
-    // @ApiResponses(value = {
-    //     @ApiResponse(responseCode = "200", description = "List of users retrieved successfully"),
-    //     @ApiResponse(responseCode = "403", description = "Forbidden - Admin access required")
-    // })
-    // @GetMapping
-    // @PreAuthorize("hasRole('ROLE_ADMIN')")
-    // public ResponseEntity<List<User>> getAllUsers() {
-    //     return ResponseEntity.ok(userService.getAllUsers());
-    // }
     @Operation(summary = "Retrieve all users (Admin only)")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "List of users retrieved successfully"),
@@ -170,18 +160,6 @@ public class UserController {
         return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // @Operation(summary = "Register a new user (Accessible to all)")
-    // @ApiResponses(value = {
-    //     @ApiResponse(responseCode = "201", description = "User registered successfully"),
-    //     @ApiResponse(responseCode = "400", description = "Invalid user data")
-    // })
-    // @PostMapping("/register")
-    // public ResponseEntity<User> registerUser(@RequestBody User user) {
-    //     user.setId(UUID.randomUUID().toString());
-    //     user.setPassword(passwordEncoder.encode(user.getPassword()));
-    //     user.setAdmin(false); // ✅ Définit admin par défaut à false
-    //     return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(user));
-    // }
 
     @Operation(summary = "Register a new user (Accessible to all)")
     @ApiResponses(value = {

@@ -223,16 +223,3 @@ public class User {
         return this.admin ? "ROLE_ADMIN" : "ROLE_USER";
     }
 }
-
-
-
-
-// curl -X 'GET' \
-//   'http://localhost:8082/api/users' \
-//   -H 'accept: */*' \
-//   -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0NEBoYm5iLmNvbSIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNzQwNzMyNzA4LCJleHAiOjE3NDA4MTkxMDh9.xiN-umsuN1_R7Z5Fu3IBiR2btoqPMSLsfw_NoSjaiP4'
-
-// curl -X 'GET' \
-//   'http://localhost:8082/api/tickets?userId=7413b56e-9b24-44db-a0fa-a04b9ef82a31' \
-//   -H 'accept: */*'
-//   -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0NEBoYm5iLmNvbSIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNzQwNzMyNzA4LCJleHAiOjE3NDA4MTkxMDh9.xiN-umsuN1_R7Z5Fu3IBiR2btoqPMSLsfw_NoSjaiP4'

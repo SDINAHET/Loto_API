@@ -35,7 +35,7 @@ public class JwtUtils {
         List<String> roles = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
-                
+
         return Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim("roles", roles) // ✅ Ajout du role dans JWT)
@@ -76,16 +76,7 @@ public class JwtUtils {
             return false;
         }
     }
-    // public static void main(String[] args) {
-    //     JwtUtils jwtUtils = new JwtUtils();
 
-    //     // Simulation d'un utilisateur
-    //     String token = jwtUtils.generateJwtToken(() -> "testUser");
-
-    //     System.out.println("🔹 Token généré : " + token);
-    //     System.out.println("🔹 Utilisateur extrait du token : " + jwtUtils.getUserFromJwtToken(token));
-    //     System.out.println("🔹 Token valide ? " + jwtUtils.validateJwtToken(token));
-    // }
 
     // ✅ Ajout de la méthode getUserNameFromJwtToken
     public String getUserNameFromJwtToken(String token) {
@@ -96,147 +87,3 @@ public class JwtUtils {
         return claims.getSubject(); // 🔥 Retourne l'email ou l'username
     }
 }
-
-// package com.fdjloto.api.security;
-
-// import io.jsonwebtoken.*;
-// import io.jsonwebtoken.security.Keys;
-// import org.springframework.security.core.Authentication;
-// import org.springframework.stereotype.Component;
-// import org.springframework.beans.factory.annotation.Value;
-
-// import java.nio.charset.StandardCharsets;
-// import java.util.Date;
-// import javax.crypto.SecretKey;
-
-// @Component
-// public class JwtUtils {
-
-//     @Value("${app.jwtSecret}") // 🔥 Récupère la clé JWT depuis application.properties
-//     private String jwtSecret;
-
-//     @Value("${app.jwtExpirationMs}") // 🔥 Récupère l'expiration depuis application.properties
-//     private int jwtExpirationMs;
-
-//     // ⚠️ Utilisation CONSISTANTE de jwtSecret pour la clé
-//     private SecretKey secretKey;
-
-//     // 📌 Initialisation du secret dans le constructeur
-//     public JwtUtils(@Value("${app.jwtSecret}") String jwtSecret) {
-//         this.secretKey = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
-//     }
-
-//     // ✅ Génération du Token JWT avec HS256
-//     public String generateJwtToken(Authentication authentication) {
-//         return Jwts.builder()
-//                 .setSubject(authentication.getName())
-//                 .setIssuedAt(new Date())
-//                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
-//                 .signWith(secretKey, SignatureAlgorithm.HS256)
-//                 .compact();
-//     }
-
-//     // ✅ Extraction du nom d'utilisateur (email) depuis le token JWT
-//     public String getUserFromJwtToken(String token) {
-//         return Jwts.parserBuilder()
-//                 .setSigningKey(secretKey)
-//                 .build()
-//                 .parseClaimsJws(token)
-//                 .getBody()
-//                 .getSubject();
-//     }
-
-//     // ✅ Validation du Token JWT
-//     public boolean validateJwtToken(String token) {
-//         try {
-//             Jwts.parserBuilder()
-//                 .setSigningKey(secretKey)
-//                 .build()
-//                 .parseClaimsJws(token);
-//             return true;
-//         } catch (ExpiredJwtException e) {
-//             System.out.println("🔴 Token expiré : " + e.getMessage());
-//         } catch (UnsupportedJwtException e) {
-//             System.out.println("🔴 Token non supporté : " + e.getMessage());
-//         } catch (MalformedJwtException e) {
-//             System.out.println("🔴 Token mal formé : " + e.getMessage());
-//         } catch (SignatureException e) {
-//             System.out.println("🔴 Signature invalide : " + e.getMessage());
-//         } catch (IllegalArgumentException e) {
-//             System.out.println("🔴 Token vide ou null : " + e.getMessage());
-//         }
-//         return false;
-//     }
-// }
-
-// package com.fdjloto.api.security;
-
-// import io.jsonwebtoken.*;
-// import io.jsonwebtoken.security.Keys;
-// import org.springframework.security.core.Authentication;
-// import org.springframework.stereotype.Component;
-// import org.springframework.beans.factory.annotation.Value;
-
-// import java.nio.charset.StandardCharsets;
-// import java.util.Date;
-// import javax.crypto.SecretKey;
-
-// @Component
-// public class JwtUtils {
-
-//     @Value("${app.jwtSecret}")
-//     private String jwtSecret;
-
-//     @Value("${app.jwtExpirationMs}")
-//     private int jwtExpirationMs;
-
-//     // ⚠️ Utilisation CONSISTANTE de jwtSecret pour la clé
-//     private SecretKey secretKey;
-
-//     public JwtUtils(@Value("${app.jwtSecret}") String jwtSecret) {
-//         this.secretKey = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
-//     }
-
-//     // ✅ Génération du Token JWT avec HS256
-//     public String generateJwtToken(Authentication authentication) {
-//         return Jwts.builder()
-//                 .setSubject(authentication.getName())
-//                 .setIssuedAt(new Date())
-//                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
-//                 .signWith(secretKey, SignatureAlgorithm.HS256)
-//                 .compact();
-//     }
-
-//     // ✅ Extraction du nom d'utilisateur (email) depuis le token JWT
-//     public String getUserFromJwtToken(String token) {
-//         return Jwts.parserBuilder()
-//                 .setSigningKey(secretKey)
-//                 .build()
-//                 .parseClaimsJws(token)
-//                 .getBody()
-//                 .getSubject();
-//     }
-
-//     // ✅ Validation du Token JWT
-//     public boolean validateJwtToken(String token) {
-//         try {
-//             Jwts.parserBuilder()
-//                 .setSigningKey(secretKey)
-//                 .build()
-//                 .parseClaimsJws(token);
-//             return true;
-//         } catch (ExpiredJwtException e) {
-//             System.out.println("🔴 Token expiré : " + e.getMessage());
-//         } catch (UnsupportedJwtException e) {
-//             System.out.println("🔴 Token non supporté : " + e.getMessage());
-//         } catch (MalformedJwtException e) {
-//             System.out.println("🔴 Token mal formé : " + e.getMessage());
-//         } catch (SignatureException e) {
-//             System.out.println("🔴 Signature invalide : " + e.getMessage());
-//         } catch (IllegalArgumentException e) {
-//             System.out.println("🔴 Token vide ou null : " + e.getMessage());
-//         }
-//         return false;
-//     }
-// }
-

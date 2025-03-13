@@ -61,56 +61,6 @@ public class AuthController {
         return ResponseEntity.ok(jwt);
     }
 
-    // @PostMapping("/login3")
-    // public ResponseEntity<Map<String, String>> authenticateUserWithCookie(
-    //         @RequestBody LoginRequest loginRequest,
-    //         HttpServletResponse response
-    // ) {
-    //     try {
-    //         // 🔐 Authentification
-    //         Authentication authentication = authenticationManager.authenticate(
-    //                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
-    //         );
-    //         SecurityContextHolder.getContext().setAuthentication(authentication);
-
-    //         // 🔑 Génération du Token JWT
-    //         String jwt = jwtUtils.generateJwtToken(authentication);
-
-    //         // 🍪 Configuration du Cookie Sécurisé
-    //         Cookie jwtCookie = new Cookie(JWT_COOKIE_NAME, jwt);
-    //         jwtCookie.setHttpOnly(false);
-    //         jwtCookie.setSecure(false); // 🔒 À mettre à true en production
-    //         jwtCookie.setPath("/");
-    //         jwtCookie.setMaxAge(10 * 60); // 10min
-    //         // jwtCookie.setDomain("localhost");
-    //         // jwtCookie.setSameSite("Lax"); // Pour la gestion de CORS
-
-    //         // 🔥 Configuration SameSite pour le CORS
-    //         // 🚨 Utilisez "None" en production (HTTPS requis)
-    //         jwtCookie.setDomain("localhost"); // Correspond au domaine du frontend
-    //         response.addHeader("Set-Cookie", String.format("%s=%s; HttpOnly; Path=/; Max-Age=3600; SameSite=None; Secure=%b",
-    //             JWT_COOKIE_NAME, jwt, false)); // ⚠️ false pour HTTP en local, true en HTTPS
-
-    //         response.addCookie(jwtCookie);
-
-    //         // ✅ Réponse avec Token et Message
-    //         Map<String, String> responseBody = new HashMap<>();
-    //         responseBody.put("token", jwt);
-    //         responseBody.put("message", "Connexion réussie");
-    //         System.out.println("🔑 JWT généré : " + jwt);
-
-
-    //         return ResponseEntity.ok(responseBody);
-
-    //     } catch (Exception e) {
-    //         // ❌ En cas d'erreur d'authentification
-    //         Map<String, String> errorResponse = new HashMap<>();
-    //         errorResponse.put("message", "Échec de la connexion");
-
-    //         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
-    //     }
-    // }
-
     @PostMapping("/login3")
     public ResponseEntity<Map<String, String>> authenticateUserWithCookieAndLocalStorage(
             @RequestBody LoginRequest loginRequest,
@@ -167,53 +117,6 @@ public class AuthController {
         }
     }
 
-    // @PostMapping("/login4")
-    // public ResponseEntity<Map<String, String>> authenticateUser(@RequestParam String email, @RequestParam String password, HttpServletResponse response) {
-    //     Authentication authentication = authenticationManager.authenticate(
-    //             new UsernamePasswordAuthenticationToken(email, password)
-    //     );
-    //     SecurityContextHolder.getContext().setAuthentication(authentication);
-
-    //     // 🔑 Génération du Token JWT
-    //     String jwt = jwtUtils.generateJwtToken(authentication);
-
-    //     // 🔥 Stockage dans un Cookie sécurisé
-    //     Cookie jwtCookie = new Cookie(JWT_COOKIE_NAME, jwt);
-    //     jwtCookie.setHttpOnly(true);  // HttpOnly pour empêcher l'accès en JavaScript
-    //     jwtCookie.setSecure(false);   // ⚠️ Utilisez 'true' en production (HTTPS requis)
-    //     jwtCookie.setPath("/");
-    //     jwtCookie.setMaxAge(10 * 60); // Expire dans 10 minutes
-    //     response.addCookie(jwtCookie);
-
-    //     // ✅ Retour du Token dans le Body JSON pour Local Storage
-    //     Map<String, String> responseBody = new HashMap<>();
-    //     responseBody.put("token", jwt);
-    //     responseBody.put("message", "Connexion réussie");
-
-    //     return ResponseEntity.ok(responseBody);
-    // }
-
-
-
-
-
-
-
-    // @PostMapping("/login2")
-    // public ResponseEntity<Map<String, String>> authenticateUser(@RequestBody Map<String, String> request) {
-    //     String email = request.get("email");
-    //     String password = request.get("password");
-
-    //     Authentication authentication = authenticationManager.authenticate(
-    //             new UsernamePasswordAuthenticationToken(email, password)
-    //     );
-
-    //     SecurityContextHolder.getContext().setAuthentication(authentication);
-    //     String jwt = jwtUtils.generateJwtToken(authentication);
-
-    //     return ResponseEntity.ok(Map.of("token", jwt, "message", "Connexion réussie !"));
-    // }
-
     @PostMapping("/register")
     public ResponseEntity<User> registerUser(@RequestBody User user) {
         user.setId(UUID.randomUUID().toString());
@@ -226,49 +129,6 @@ public class AuthController {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return ResponseEntity.ok(userService.updateUser(id, user));
     }
-
-    // @GetMapping("/me")
-    // public ResponseEntity<Map<String, String>> getUserInfo(@CookieValue(name = "jwtToken", required = false) String token) {
-    //     if (token == null || !jwtUtils.validateJwtToken(token)) {
-    //         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Utilisateur non authentifié"));
-    //     }
-
-    //     String email = jwtUtils.getUserFromJwtToken(token);
-
-    //     // ✅ Création d'une réponse sous forme de Map
-    //     Map<String, String> response = new HashMap<>();
-    //     response.put("email", email);
-    //     response.put("message", "Utilisateur authentifié");
-
-    //     return ResponseEntity.ok(response);
-    // }
-
-    // @GetMapping("/me")
-    // public ResponseEntity<Map<String, String>> getUserInfo(
-    //         @CookieValue(name = "jwtToken", required = false) String token) {
-
-    //     if (token == null || !jwtUtils.validateJwtToken(token)) {
-    //         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-    //                             .body(Map.of("error", "Utilisateur non authentifié"));
-    //     }
-
-    //     String email = jwtUtils.getUserFromJwtToken(token);
-
-    //     // ✅ Récupérer l'utilisateur à partir de l'email
-    //     Optional<User> user = userRepository.findByEmail(email);
-    //     if (user.isEmpty()) {
-    //         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-    //                             .body(Map.of("error", "Utilisateur introuvable"));
-    //     }
-
-    //     Map<String, String> response = new HashMap<>();
-    //     response.put("email", email);
-    //     response.put("first_name", user.get().getFirstName()); // Ajout du prénom
-    //     response.put("last_name", user.get().getLastName()); // Ajout du prénom
-    //     response.put("message", "Utilisateur authentifié");
-
-    //     return ResponseEntity.ok(response);
-    // }
 
     @GetMapping("/me")
     public ResponseEntity<Map<String, String>> getUserInfo(
@@ -300,33 +160,6 @@ public class AuthController {
     }
 
 
-    // @GetMapping("/me")
-    // public ResponseEntity<Map<String, String>> getUserInfo(
-    //         @CookieValue(name = "jwtToken", required = false) String token) {
-
-    //     if (token == null || !jwtUtils.validateJwtToken(token)) {
-    //         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-    //                             .body(Map.of("error", "Utilisateur non authentifié"));
-    //     }
-
-    //     String email = jwtUtils.getUserFromJwtToken(token);
-    //     Optional<User> user = userRepository.findByEmail(email);
-
-    //     if (user.isEmpty()) {
-    //         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-    //                             .body(Map.of("error", "Utilisateur introuvable"));
-    //     }
-
-    //     Map<String, String> response = new HashMap<>();
-    //     response.put("email", email);
-    //     response.put("first_name", user.get().getFirstName()); // Ajout du prénom
-    //     response.put("message", "Utilisateur authentifié");
-
-    //     return ResponseEntity.ok(response);
-    // }
-
-
-
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> authenticateUser(
             @RequestBody Map<String, String> request,
@@ -353,18 +186,6 @@ public class AuthController {
 
         return ResponseEntity.ok(Map.of("message", "Connexion réussie !"));
     }
-
-    // @PostMapping("/logout")
-    // public ResponseEntity<String> logout(HttpServletResponse response) {
-    //     Cookie jwtCookie = new Cookie("jwtToken", null);
-    //     jwtCookie.setHttpOnly(true);
-    //     jwtCookie.setSecure(false);
-    //     jwtCookie.setPath("/");
-    //     jwtCookie.setMaxAge(0); // ❌ Expire immédiatement
-
-    //     response.addCookie(jwtCookie);
-    //     return ResponseEntity.ok("Déconnexion réussie !");
-    // }
 
     @GetMapping("/me/firstname")
     public ResponseEntity<?> getFirstName(@CookieValue(name = "jwtToken", required = false) String token) {
@@ -416,84 +237,6 @@ public class AuthController {
         return ResponseEntity.ok(responseBody);
     }
 
-
-    // @PostMapping("/login-swagger")
-    // public ResponseEntity<Map<String, String>> authenticateUserForSwagger(
-    //         @RequestBody LoginRequest loginRequest
-    // ) {
-    //     try {
-    //         // 🔐 Authentification
-    //         Authentication authentication = authenticationManager.authenticate(
-    //                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
-    //         );
-    //         SecurityContextHolder.getContext().setAuthentication(authentication);
-
-    //         // 🔑 Génération du Token JWT
-    //         String jwt = jwtUtils.generateJwtToken(authentication);
-
-    //         // 📝 Retour du Token dans la Réponse JSON pour Local Storage
-    //         Map<String, String> responseBody = new HashMap<>();
-    //         responseBody.put("token", jwt);
-    //         responseBody.put("message", "Connexion réussie");
-
-    //         // 📜 Log pour vérifier le JWT généré
-    //         System.out.println("🔑 JWT généré pour Swagger : " + jwt);
-
-    //         // ✅ Réponse avec le Token pour Local Storage
-    //         return ResponseEntity.ok(responseBody);
-
-    //     } catch (Exception e) {
-    //         // ❌ En cas d'erreur d'authentification
-    //         Map<String, String> errorResponse = new HashMap<>();
-    //         errorResponse.put("message", "Échec de la connexion");
-    //         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
-    //     }
-    // }
-
-    // @PostMapping("/login-swagger")
-    // public ResponseEntity<Map<String, String>> authenticateUserForSwagger(
-    //         @RequestBody LoginRequest loginRequest,
-    //         HttpServletResponse response
-    // ) {
-    //     try {
-    //         // 🔐 Authentification
-    //         Authentication authentication = authenticationManager.authenticate(
-    //                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
-    //         );
-    //         SecurityContextHolder.getContext().setAuthentication(authentication);
-
-    //         // 🔑 Génération du Token JWT
-    //         String jwt = jwtUtils.generateJwtToken(authentication);
-
-    //         // 🍪 Stockage du JWT dans un Cookie sécurisé
-    //         Cookie jwtCookie = new Cookie("auth_token", jwt);
-    //         jwtCookie.setHttpOnly(false);  // HttpOnly pour empêcher l'accès en JavaScript
-    //         jwtCookie.setSecure(false);   // ⚠️ Utilisez 'true' en production (HTTPS requis)
-    //         jwtCookie.setPath("/");
-    //         jwtCookie.setMaxAge(10 * 60); // Expiration : 10 minutes
-    //         jwtCookie.setDomain("localhost"); // Correspond au domaine du frontend
-    //         jwtCookie.setAttribute("SameSite", "None"); // SameSite=None pour Swagger
-    //         response.addCookie(jwtCookie);
-
-    //         // 📝 Retour du Token dans la Réponse JSON pour Local Storage
-    //         Map<String, String> responseBody = new HashMap<>();
-    //         responseBody.put("token", jwt);
-    //         responseBody.put("message", "Connexion réussie");
-
-    //         // 📜 Log pour vérifier le JWT généré
-    //         System.out.println("🔑 JWT généré pour Swagger : " + jwt);
-
-    //         // ✅ Réponse avec le Token pour Local Storage
-    //         return ResponseEntity.ok(responseBody);
-
-    //     } catch (Exception e) {
-    //         // ❌ En cas d'erreur d'authentification
-    //         Map<String, String> errorResponse = new HashMap<>();
-    //         errorResponse.put("message", "Échec de la connexion");
-    //         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
-    //     }
-    // }
-
     @PostMapping("/login-swagger")
     public ResponseEntity<Map<String, String>> authenticateUserForSwagger(
             @RequestBody LoginRequest loginRequest,
@@ -537,11 +280,4 @@ public class AuthController {
         }
         return ResponseEntity.ok(Map.of("jwtToken", jwtToken));
     }
-
-
-
-
-
-
-
 }
