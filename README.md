@@ -237,10 +237,10 @@ docker-compose down --rmi all --volumes
 ---
 
 ## 🚀 Roadmap & Future Improvements
-✔️ **Addition of advanced analysis on results**
-✔️ **Support for new games (Euromillions, Keno, etc.)**
-✔️ **Notifications for winning results**
-✔️ **Addition of a premium mode with advanced features**
+- ✔️ **Addition of advanced analysis on results**
+- ✔️ **Support for new games (Euromillions, Keno, etc.)**
+- ✔️ **Notifications for winning results**
+- ✔️ **Addition of a premium mode with advanced features**
 
 ---
 
@@ -504,9 +504,9 @@ docker-compose down --rmi all --volumes
 ---
 
 ## 🚀 Roadmap & Améliorations Futures
-✔️ **Ajout d’analyses avancées sur les résultats**
-✔️ **Support de nouveaux jeux (Euromillions, Keno, etc.)**
-✔️ **Notifications push ou email pour les résultats officiel**
+- ✔️ **Ajout d’analyses avancées sur les résultats**
+- ✔️ **Support de nouveaux jeux (Euromillions, Keno, etc.)**
+- ✔️ **Notifications push ou email pour les résultats officiel**
 
 ---
 
