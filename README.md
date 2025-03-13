@@ -66,7 +66,7 @@ spring.data.mongodb.uri=mongodb://localhost:27017/loto_results
 mvn install
 mvn spring-boot:run
 ```
-The API is available at `http://localhost:8082/api`
+The API is available at `http://localhost:8082/swagger-ui/index.html`
 
 ### 5️⃣ Start the Frontend
 The web interface can be served using **Live Server** on VSCode. Open `index.html` and start Live Server to access `http://127.0.0.1:5500/src/main/resources/static/index.html`.
@@ -329,7 +329,7 @@ python3 run.py
 ```bash
 mvn install spring-boot:run
 ```
-L'API est disponible sur `http://localhost:8082/api`
+L'API est disponible sur `http://localhost:8082/swagger-ui/index.html`
 
 ### 5️⃣ Lancer le Frontend
 L'interface web peut être servie via **Live Server** sur VSCode. Ouvrir `index.html` et démarrer Live Server pour accéder à `http://127.0.0.1:5500/src/main/resources/static/index.html`.
