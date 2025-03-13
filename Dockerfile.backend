@@ -1,0 +1,17 @@
+# Utiliser une image Java 21 légère
+FROM openjdk:21-jdk-slim
+
+# Définir le répertoire de travail
+WORKDIR /app
+
+# Copier les fichiers du backend
+COPY . /app
+
+# Construire l'application
+RUN ./mvnw install
+
+# Exécuter l'application
+CMD ["./mvnw", "spring-boot:run"]
+
+# Exposer le port de l'API
+EXPOSE 8082

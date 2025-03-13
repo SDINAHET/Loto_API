@@ -1,0 +1,18 @@
+# Utiliser une image Node.js légère
+FROM node:18-alpine
+
+# Installer http-server globalement
+RUN npm install -g http-server
+
+# Définir le répertoire de travail
+WORKDIR /app
+
+# Copier les fichiers du frontend
+COPY src/main/resources/static /app
+
+# Exposer le port 5500
+EXPOSE 5500
+
+# Lancer le serveur HTTP
+CMD ["http-server", "-p", "5500"]
+
