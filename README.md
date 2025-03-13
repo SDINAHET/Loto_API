@@ -63,14 +63,23 @@ spring.data.mongodb.uri=mongodb://localhost:27017/loto_results
 
 ### 4️⃣ Lancer le Backend (Spring Boot)
 ```bash
-mvn install
-mvn spring-boot:run
+mvn install spring-boot:run
 ```
 L'API est disponible sur `http://localhost:8082/api`
 
 ### 5️⃣ Lancer le Frontend
 L'interface web peut être servie via **Live Server** sur VSCode. Ouvrir `index.html` et démarrer Live Server pour accéder à `http://127.0.0.1:5500/src/main/resources/static/index.html`.
 
+```bash
+npm install -g http-server
+http-server src/main/resources/static -p 5500
+```
+Available front on:
+  http://127.0.0.1:5500
+
+http-server → Lance un serveur HTTP statique.
+src/main/resources/static → Définit le dossier contenant les fichiers à servir.
+-p 5500 → Spécifie que le serveur doit écouter sur le port 5500 comme live server
 ---
 
 ## 🔗 Endpoints de l'API
@@ -250,6 +259,12 @@ The API is available at `http://localhost:8082/api`
 ### 5️⃣ Start the Frontend
 The web interface can be served using **Live Server** on VSCode. Open `index.html` and start Live Server to access `http://127.0.0.1:5500/src/main/resources/static/index.html`.
 
+```bash
+npm install -g http-server
+http-server src/main/resources/static -p 5500
+```
+Available front on:
+  http://127.0.0.1:5500
 ---
 
 ## 🔗 API Endpoints
