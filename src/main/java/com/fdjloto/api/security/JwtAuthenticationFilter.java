@@ -9,7 +9,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -20,57 +19,88 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * **JWT Authentication Filter** - This filter is executed once per request (`OncePerRequestFilter`)
+ * and is responsible for validating and setting the authentication context based on the JWT token.
+ */
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtils jwtUtils;
     private final UserDetailsService userDetailsService;
 
+    /**
+     * Constructor for `JwtAuthenticationFilter`
+     *
+     * @param jwtUtils Utility class for handling JWT operations (validation, extraction).
+     * @param userDetailsService Service to retrieve user details.
+     */
     public JwtAuthenticationFilter(JwtUtils jwtUtils, UserDetailsService userDetailsService) {
         this.jwtUtils = jwtUtils;
         this.userDetailsService = userDetailsService;
     }
 
+    /**
+     * **Main filter method** - Intercepts requests, extracts the JWT, validates it,
+     * and sets the authentication in the Spring Security context.
+     *
+     * @param request Incoming HTTP request.
+     * @param response HTTP response.
+     * @param filterChain Chain of filters to execute next.
+     * @throws ServletException If a servlet error occurs.
+     * @throws IOException If an input/output error occurs.
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        // 🔥 Recherche du JWT dans l'en-tête Authorization ou le cookie jwtToken
+        // 🔍 Look for the JWT in the Authorization header or the "jwtToken" cookie
         String token = getTokenFromHeader(request).orElseGet(() -> getTokenFromCookie(request).orElse(null));
 
-        // 🔥 Si un token est trouvé, on le valide
+        // 🔐 If a valid token is found, extract user details and set authentication
         if (token != null && jwtUtils.validateJwtToken(token)) {
             String username = jwtUtils.getUserFromJwtToken(token);
 
-            // 🔥 Extraction des rôles depuis le token JWT
+            // 🔥 Extract roles from the JWT token
             List<String> roles = jwtUtils.getRolesFromJwtToken(token);
 
-            // 🔥 Conversion des rôles en `GrantedAuthority`
+            // 🔥 Convert roles to `GrantedAuthority`
             List<GrantedAuthority> authorities = roles.stream()
                     .map(SimpleGrantedAuthority::new)
                     .collect(Collectors.toList());
 
-            // 🔥 Création de l'objet `Authentication` avec les rôles
+            // 🔥 Create an authentication object with user details and roles
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(username, null, authorities);
 
-            // 🔥 Définition du contexte de sécurité Spring
+            // 🔥 Set the authentication in the Spring Security context
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
+        // 🔄 Continue processing the request
         filterChain.doFilter(request, response);
     }
 
-    // 🔑 Recherche du token dans l'en-tête Authorization
+    /**
+     * Extracts the JWT token from the **Authorization header** if present.
+     *
+     * @param request The incoming HTTP request.
+     * @return An `Optional<String>` containing the JWT if found, otherwise empty.
+     */
     private Optional<String> getTokenFromHeader(HttpServletRequest request) {
         String headerAuth = request.getHeader("Authorization");
         if (headerAuth != null && headerAuth.startsWith("Bearer ")) {
-            return Optional.of(headerAuth.substring(7));
+            return Optional.of(headerAuth.substring(7)); // Remove "Bearer " prefix
         }
         return Optional.empty();
     }
 
-    // 🔑 Recherche du token dans le cookie jwtToken
+    /**
+     * Extracts the JWT token from the **cookies** if present.
+     *
+     * @param request The incoming HTTP request.
+     * @return An `Optional<String>` containing the JWT if found, otherwise empty.
+     */
     private Optional<String> getTokenFromCookie(HttpServletRequest request) {
         if (request.getCookies() != null) {
             return Arrays.stream(request.getCookies())

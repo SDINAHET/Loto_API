@@ -1,259 +1,3 @@
-// // package com.fdjloto.api.model;
-
-// // import jakarta.persistence.*;
-// // import java.time.LocalDate;
-// // import java.util.UUID;
-// // import java.util.regex.Pattern;
-
-// // @Entity
-// // public class Ticket {
-
-// //     @Id
-// //     @GeneratedValue
-// //     private UUID id;
-
-// //     // @Column(nullable = false)
-// //     // private UUID userId;
-
-// //     @Column(nullable = false)
-// //     private String email;  // 🔥 Ajout de l'email pour lier les tickets à l'utilisateur
-
-// //     @Column(nullable = false)
-// //     private String numbers; // Format: "1-2-3-4-5"
-
-// //     @Column(nullable = false)
-// //     private int chanceNumber = 1; // Par défaut 1, entre 1 et 10
-
-// //     @Column(nullable = false)
-// //     private LocalDate drawDate;
-
-// //     // public UUID getId() {
-// //     //     return id;
-// //     // }
-
-// //     // public void setId(UUID id) {
-// //     //     this.id = id;
-// //     // }
-
-// //     // public UUID getUserId() {
-// //     //     return userId;
-// //     // }
-
-// //     // public void setUserId(UUID userId) {
-// //     //     this.userId = userId;
-// //     // }
-
-// //      // Getters et Setters
-
-// //     public String getEmail() {
-// //         return email;
-// //     }
-
-// //     public void setEmail(String email) {
-// //         this.email = email;
-// //     }
-
-// //     public String getNumbers() {
-// //         return numbers;
-// //     }
-
-// //     public void setNumbers(String numbers) {
-// //         if (!isValidNumbers(numbers)) {
-// //             throw new IllegalArgumentException("Les numéros doivent être au format '1-2-3-4-5' avec des valeurs entre 1 et 49.");
-// //         }
-// //         this.numbers = numbers;
-// //     }
-
-// //     public int getChanceNumber() {
-// //         return chanceNumber;
-// //     }
-
-// //     public void setChanceNumber(int chanceNumber) {
-// //         if (chanceNumber <= 1 || chanceNumber > 10) {
-// //             throw new IllegalArgumentException("Le numéro chance doit être entre 1 et 10.");
-// //         }
-// //         this.chanceNumber = chanceNumber;
-// //     }
-
-// //     public LocalDate getDrawDate() {
-// //         return drawDate;
-// //     }
-
-// //     public void setDrawDate(LocalDate drawDate) {
-// //         this.drawDate = drawDate;
-// //     }
-
-// //     private boolean isValidNumbers(String numbers) {
-// //         String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
-// //         return Pattern.matches(regex, numbers);
-// //     }
-// // }
-
-
-// package com.fdjloto.api.model;
-
-// import jakarta.persistence.*;
-// import java.time.LocalDate;
-// import java.util.UUID;
-// import com.fdjloto.api.converter.*;
-// import com.fasterxml.jackson.annotation.JsonFormat;
-
-// @Entity
-// @Table(name = "tickets")  // Assurez-vous que le nom de la table est bien "ticket"
-// public class Ticket {
-
-//     @Id
-//     @GeneratedValue
-//     private UUID id;
-
-//     @Column(nullable = false)
-//     private String numbers;
-
-//     @Column(nullable = false, name = "lucky_number")
-//     private int chanceNumber;
-
-//     // @Column(nullable = false, name = "draw_date")
-//     // private LocalDate drawDate;
-
-//     @Column(nullable = false, name = "draw_date")
-//     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-//     @Convert(converter = DateConverter.class)
-//     private LocalDate drawDate;
-
-//     // @Column(nullable = false, name = "draw_date")
-//     // private String drawDate;
-
-
-//     @Column(nullable = false, name = "draw_day")
-//     private String drawDay;
-
-//     @ManyToOne
-//     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
-//     private User user;
-
-//     // Getters et Setters
-
-//     public UUID getId() {
-//         return id;
-//     }
-
-//     public void setId(UUID id) {
-//         this.id = id;
-//     }
-
-//     public String getNumbers() {
-//         return numbers;
-//     }
-
-//     public void setNumbers(String numbers) {
-//         this.numbers = numbers;
-//     }
-
-//     public int getChanceNumber() {
-//         return chanceNumber;
-//     }
-
-//     public void setChanceNumber(int chanceNumber) {
-//         this.chanceNumber = chanceNumber;
-//     }
-
-//     public LocalDate getDrawDate() {
-//         return drawDate;
-//     }
-
-//     public void setDrawDate(LocalDate drawDate) {
-//         this.drawDate = drawDate;
-//     }
-
-//     public String getDrawDay() {
-//         return drawDay;
-//     }
-
-//     public void setDrawDay(String drawDay) {
-//         this.drawDay = drawDay;
-//     }
-
-//     public User getUser() {
-//         return user;
-//     }
-
-//     public void setUser(User user) {
-//         this.user = user;
-//     }
-
-//     public String getUserEmail() {
-//         return user.getEmail();
-//     }
-
-// }
-
-
-// package com.fdjloto.api.model;
-
-// import jakarta.persistence.*;
-// import java.time.LocalDate;
-// import java.time.LocalDateTime;
-// import java.util.UUID;
-// import com.fasterxml.jackson.annotation.JsonFormat;
-// import com.fasterxml.jackson.annotation.JsonIgnore;
-
-// @Entity
-// @Table(name = "tickets")
-// public class Ticket {
-
-//     @Id
-//     @Column(name = "id", columnDefinition = "TEXT") // SQLite ne supporte pas UUID directement
-//     private String id;
-
-//     @Column(nullable = false)
-//     private String numbers;
-
-//     @Column(nullable = false, name = "lucky_number")
-//     private int chanceNumber;
-
-//     @Column(nullable = false, name = "draw_date")
-//     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-//     private LocalDate drawDate;
-
-//     @Column(nullable = false, name = "draw_day")
-//     private String drawDay;
-
-//     @Column(nullable = false, updatable = false)
-//     private LocalDateTime createdAt;
-
-//     @ManyToOne(fetch = FetchType.LAZY)
-//     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
-//     @JsonIgnore
-//     private User user;
-
-//     public Ticket() {
-//         this.id = UUID.randomUUID().toString();
-//     }
-
-//     // Getters et Setters
-//     public String getId() { return id; }
-//     public void setId(UUID id) { this.id = id.toString(); }
-//     public String getNumbers() { return numbers; }
-//     public void setNumbers(String numbers) { this.numbers = numbers; }
-//     public int getChanceNumber() { return chanceNumber; }
-//     public void setChanceNumber(int chanceNumber) { this.chanceNumber = chanceNumber; }
-//     public LocalDate getDrawDate() { return drawDate; }
-//     public void setDrawDate(LocalDate drawDate) { this.drawDate = drawDate; }
-//     public String getDrawDay() { return drawDay; }
-//     public void setDrawDay(String drawDay) { this.drawDay = drawDay; }
-//     public User getUser() { return user; }
-//     public void setUser(User user) { this.user = user; }
-//     public String getUserEmail() { return user.getEmail(); }
-//     public LocalDateTime getCreatedAt() { return createdAt; }
-
-//     @PrePersist
-//     public void prePersist() {
-//         this.createdAt = LocalDateTime.now();
-//     } // 🔥✅ Ajout de l'accolade de fermeture manquante
-
-// }
-
-
 package com.fdjloto.api.model;
 
 import jakarta.persistence.*;
@@ -265,115 +9,151 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fdjloto.api.converter.LocalDateTimeAttributeConverter;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+/**
+ * Represents a lottery ticket entity stored in the database.
+ * This model maps to the "tickets" table.
+ */
+@Schema(description = "Represents a lottery ticket entity stored in the database.")
 @Entity
 @Table(name = "tickets")
 public class Ticket {
 
     @Id
-    @Column(name = "id", columnDefinition = "TEXT") // SQLite ne supporte pas UUID directement
+    @Column(name = "id", columnDefinition = "TEXT") // SQLite does not support UUID directly
+    @Schema(description = "Unique identifier of the ticket", example = "123e4567-e89b-12d3-a456-426614174000")
     private String id;
 
     @Column(nullable = false)
-    private String numbers;
+    @Schema(description = "Numbers selected on the ticket (comma-separated)", example = "5,12,23,34,45")
+    private String numbers; // Lottery numbers chosen by the user
 
     @Column(nullable = false, name = "lucky_number")
-    private int chanceNumber;
+    @Schema(description = "The lucky number (Numéro Chance)", example = "7")
+    private int chanceNumber; // The "lucky number" or "bonus ball"
 
     @Column(nullable = false, name = "draw_date")
+    @Schema(description = "The draw date of the ticket", example = "2025-03-15")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate drawDate;
+    private LocalDate drawDate; // Date of the lottery draw
 
     @Column(nullable = true, name = "draw_day")
-    private String drawDay;
+    @Schema(description = "The day of the week when the draw takes place", example = "Wednesday")
+    private String drawDay; // Name of the draw day (e.g., "Wednesday", "Saturday")
 
-    // // ✅ Nouvelle colonne : statut du ticket (GAGNANT, PERDU, EN ATTENTE)
-    // private String statut = "EN ATTENTE";
-
-    // // ✅ Nouvelle colonne : montant du gain
-    // private double gain = 0.0;
-
-    // @Column(nullable = false, updatable = false)
-    // private LocalDateTime createdAt;
-
-    // @Column(nullable = true) // ✅ `updatedAt` peut être `null` avant la première mise à jour
-    // private LocalDateTime updatedAt;
-
-    // @Column(name = "created_at", nullable = false, updatable = false, columnDefinition = "TEXT")
-    // private LocalDateTime createdAt;
-
-    // @Column(name = "updated_at", nullable = true, columnDefinition = "TEXT")
-    // private LocalDateTime updatedAt;
-
-    // @Column(name = "created_at", nullable = false, updatable = false, columnDefinition = "TEXT")
-    // @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    // private LocalDateTime createdAt;
-
-    // @Column(name = "updated_at", nullable = true, columnDefinition = "TEXT")
-    // @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    // private LocalDateTime updatedAt;
-
+    // Timestamp when the ticket was created
     @Column(name = "created_at")
+    @Schema(description = "Timestamp when the ticket was created", example = "2025-03-15 12:30:45")
     @Convert(converter = LocalDateTimeAttributeConverter.class)
     private LocalDateTime createdAt;
 
+    // Timestamp when the ticket was last updated
     @Column(name = "updated_at")
+    @Schema(description = "Timestamp when the ticket was last updated", example = "2025-03-16 15:45:30")
     @Convert(converter = LocalDateTimeAttributeConverter.class)
     private LocalDateTime updatedAt;
 
-
-
-
+    /**
+     * Many-to-One relationship with the User entity.
+     * Each ticket is associated with a single user.
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
-    @JsonIgnore
+    @JsonIgnore // Prevents exposing the user object in JSON responses
+    @Schema(description = "The user who owns the ticket (hidden in JSON responses)")
     private User user;
 
-    // ✅ Constructeur : Génère un UUID et initialise `createdAt`
+    /**
+     * Default constructor:
+     * - Generates a unique UUID as the ticket ID.
+     * - Initializes the createdAt timestamp to the current date and time.
+     */
     public Ticket() {
         this.id = UUID.randomUUID().toString();
         this.createdAt = LocalDateTime.now();
     }
 
-    // @PrePersist
-    // public void prePersist() {
-    //     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    //     this.createdAt = LocalDateTime.now().format(formatter);
-    //     this.updatedAt = LocalDateTime.now().format(formatter); // ✅ Initialisation
-    // }
-
-    // @PreUpdate
-    // public void preUpdate() {
-    //     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    //     this.updatedAt = LocalDateTime.now().format(formatter); // ✅ Met à jour `updatedAt`
-    // }
-
+    /**
+     * PrePersist hook:
+     * - Automatically sets createdAt and updatedAt timestamps before saving a new entity.
+     */
     @PrePersist
     public void prePersist() {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
 
+    /**
+     * PreUpdate hook:
+     * - Automatically updates the updatedAt timestamp before modifying an entity.
+     */
     @PreUpdate
     public void preUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
 
-    // ✅ Getters et Setters
-    public String getId() { return id; }
-    public void setId(UUID id) { this.id = id.toString(); }
-    public String getNumbers() { return numbers; }
-    public void setNumbers(String numbers) { this.numbers = numbers; }
-    public int getChanceNumber() { return chanceNumber; }
-    public void setChanceNumber(int chanceNumber) { this.chanceNumber = chanceNumber; }
-    public LocalDate getDrawDate() { return drawDate; }
-    public void setDrawDate(LocalDate drawDate) { this.drawDate = drawDate; }
-    public String getDrawDay() { return drawDay; }
-    public void setDrawDay(String drawDay) { this.drawDay = drawDay; }
-    public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
-    public String getUserEmail() { return user.getEmail(); }
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public LocalDateTime getUpdatedAt() { return updatedAt; } // ✅ Ajout du getter
+    // ✅ Getters and Setters
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id.toString();
+    }
+
+    public String getNumbers() {
+        return numbers;
+    }
+
+    public void setNumbers(String numbers) {
+        this.numbers = numbers;
+    }
+
+    public int getChanceNumber() {
+        return chanceNumber;
+    }
+
+    public void setChanceNumber(int chanceNumber) {
+        this.chanceNumber = chanceNumber;
+    }
+
+    public LocalDate getDrawDate() {
+        return drawDate;
+    }
+
+    public void setDrawDate(LocalDate drawDate) {
+        this.drawDate = drawDate;
+    }
+
+    public String getDrawDay() {
+        return drawDay;
+    }
+
+    public void setDrawDay(String drawDay) {
+        this.drawDay = drawDay;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getUserEmail() {
+        return user.getEmail(); // Returns the email of the associated user
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
 
     public void setCreatedAt(String createdAt) {
         this.createdAt = LocalDateTime.parse(createdAt, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
@@ -390,5 +170,14 @@ public class Ticket {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
-
 }
+
+/**
+ * 💡 Explanation:
+ * - **Ticket** is an entity mapped to the `tickets` table in the database.
+ * - Uses **UUID** as the primary key since SQLite does not support UUID natively.
+ * - Includes **lottery numbers, lucky number, draw date, timestamps**.
+ * - Uses **@PrePersist and @PreUpdate** to automatically manage timestamps.
+ * - Establishes a **Many-to-One** relationship with the **User** entity.
+ * - Uses **@JsonIgnore** to prevent serialization of the **User** object.
+ */

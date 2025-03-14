@@ -3,63 +3,161 @@ package com.fdjloto.api.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.Date;
 
 @Document(collection = "historique")
+@Schema(description = "Represents detailed lottery results for historical draws.")
 public class Historique20Detail {
-@Id
+
+	@Id
+	@Schema(description = "Unique identifier of the draw", example = "605c72df98eb2f001f7a6c91")
     private String id;
+
+	@Schema(description = "Year and draw number", example = "2025")
     private int anneeNumeroDeTirage;
+
+	@Schema(description = "Day of the draw", example = "Lundi")
     private String jourDeTirage;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", timezone = "Europe/Paris")
-    private Date dateDeTirage; // ✅ Maintenant stocké en Date
+    @Schema(description = "The draw date formatted as 'dd/MM/yyyy'", example = "15/03/2025")
+	private Date dateDeTirage; // ✅ Maintenant stocké en Date
 
+	@Schema(description = "The deadline date for claiming winnings", example = "15/03/2026")
     private String dateDeForclusion;
+
+	@Schema(description = "The first drawn number", example = "12")
     private int boule1;
+
+	@Schema(description = "The second drawn number", example = "25")
     private int boule2;
+
+	@Schema(description = "The third drawn number", example = "37")
     private int boule3;
-    private int boule4;
+
+	@Schema(description = "The fourth drawn number", example = "42")
+	private int boule4;
+
+	@Schema(description = "The fifth drawn number", example = "49")
     private int boule5;
+
+	@Schema(description = "The lucky number (Numéro Chance)", example = "7")
     private int numeroChance;
+
+	@Schema(description = "The winning combination", example = "12-25-37-42-49")
     private String combinaisonGagnante;
+
+	@Schema(description = "The total number of tickets sold rang1", example = "100")
     private int nombreDeGagnantAuRang1;
+
+	@Schema(description = "The total amount of winnings rang1", example = "100.50")
     private double rapportDuRang1;
+
+	@Schema(description = "The total number of tickets sold rang2", example = "100")
     private int nombreDeGagnantAuRang2;
-    private double rapportDuRang2;
+
+	@Schema(description = "The total amount of winnings rang2", example = "100.50")
+	private double rapportDuRang2;
+
+	@Schema(description = "The total number of tickets sold rang3", example = "100")
     private int nombreDeGagnantAuRang3;
+
+	@Schema(description = "The total amount of winnings rang3", example = "100.50")
     private double rapportDuRang3;
+
+	@Schema(description = "The total number of tickets sold rang4", example = "100")
     private int nombreDeGagnantAuRang4;
+
+	@Schema(description = "The total amount of winnings rang4", example = "100.50")
     private double rapportDuRang4;
+
+	@Schema(description = "The total number of tickets sold rang5", example = "100")
     private int nombreDeGagnantAuRang5;
+
+	@Schema(description = "The total amount of winnings rang5", example = "100.50")
     private double rapportDuRang5;
+
+	@Schema(description = "The total number of tickets sold rang6", example = "100")
     private int nombreDeGagnantAuRang6;
+
+	@Schema(description = "The total amount of winnings rang6", example = "100.50")
     private double rapportDuRang6;
+
+	@Schema(description = "The total number of tickets sold rang7", example = "100")
     private int nombreDeGagnantAuRang7;
+
+	@Schema(description = "The total amount of winnings rang7", example = "100.50")
     private double rapportDuRang7;
+
+	@Schema(description = "The total number of tickets sold rang8", example = "100")
     private int nombreDeGagnantAuRang8;
+
+	@Schema(description = "The total amount of winnings rang8", example = "100.50")
     private double rapportDuRang8;
+
+	@Schema(description = "The total number of tickets sold rang9", example = "100")
     private int nombreDeGagnantAuRang9;
+
+	@Schema(description = "The total amount of winnings rang9", example = "100.50")
     private double rapportDuRang9;
+
+	@Schema(description = "The total number of winning codes", example = "100")
     private int nombreDeCodesGagnants;
+
+	@Schema(description = "The total amount of winnings for codes", example = "100.50")
     private int rapportCodesGagnants;
+
+	@Schema(description = "The winning codes", example = "AB1234567")
     private String codesGagnants;
+
+	@Schema(description = "The first drawn number of the second draw", example = "12")
     private int boule1SecondTirage;
+
+	@Schema(description = "The second drawn number of the second draw", example = "25")
     private int boule2SecondTirage;
+
+	@Schema(description = "The third drawn number of the second draw", example = "37")
     private int boule3SecondTirage;
+
+	@Schema(description = "The fourth drawn number of the second draw", example = "42")
     private int boule4SecondTirage;
+
+	@Schema(description = "The fifth drawn number of the second draw", example = "49")
     private int boule5SecondTirage;
+
+	@Schema(description = "The winning combination of the second draw", example = "12-25-37-42-49")
     private String combinaisonGagnanteSecondTirage;
+
+	@Schema(description = "The total number of tickets sold rang1 for the second draw", example = "100")
     private int nombreDeGagnantAuRang1SecondTirage;
+
+	@Schema(description = "The total amount of winnings rang1 for the second draw", example = "100.50")
     private double rapportDuRang1SecondTirage;
+
+	@Schema(description = "The total number of tickets sold rang2 for the second draw", example = "100")
     private int nombreDeGagnantAuRang2SecondTirage;
+
+	@Schema(description = "The total amount of winnings rang2 for the second draw", example = "100.50")
     private double rapportDuRang2SecondTirage;
+
+	@Schema(description = "The total number of tickets sold rang3 for the second draw", example = "100")
     private int nombreDeGagnantAuRang3SecondTirage;
+
+	@Schema(description = "The total amount of winnings rang3 for the second draw", example = "100.50")
     private double rapportDuRang3SecondTirage;
+
+	@Schema(description = "The total number of tickets sold rang4 for the second draw", example = "100")
     private int nombreDeGagnantAuRang4SecondTirage;
+
+	@Schema(description = "The total amount of winnings rang4 for the second draw", example = "100.50")
     private double rapportDuRang4SecondTirage;
+
+	@Schema(description = "The lucky number for the Joker+ game", example = "7")
     private int numeroJokerplus;
+
+	@Schema(description = "The currency used for the winnings", example = "EUR")
     private String devise;
 
 	// ✅ Constructeur vide (nécessaire pour Spring Boot)

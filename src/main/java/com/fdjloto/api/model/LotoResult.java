@@ -2,65 +2,166 @@ package com.fdjloto.api.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 
 
+/**
+ * Represents a Loto result stored in MongoDB.
+ */
+@Schema(description = "Represents a lottery draw result stored in the database.")
 @Document(collection = "historique")
 public class LotoResult {
-    @Id
+
+	@Id
+	@Schema(description = "LotoResult id")
     private String id;
+
+	@Schema(description = "LotoResult anneeNumeroDeTirage")
     private int anneeNumeroDeTirage;
+
+	@Schema(description = "LotoResult jourDeTirage")
     private String jourDeTirage;
 
+	@Schema(description = "LotoResult dateDeTirage")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", timezone = "Europe/Paris")
     private Date dateDeTirage; // ✅ Maintenant stocké en Date
 
+	@Schema(description = "LotoResult dateDeForclusion")
     private String dateDeForclusion;
+
+	@Schema(description = "LotoResult boule1")
     private int boule1;
+
+	@Schema(description = "LotoResult boule2")
     private int boule2;
+
+	@Schema(description = "LotoResult boule3")
     private int boule3;
+
+	@Schema(description = "LotoResult boule4")
     private int boule4;
+
+	@Schema(description = "LotoResult boule5")
     private int boule5;
+
+	@Schema(description = "LotoResult numeroChance")
     private int numeroChance;
+
+	@Schema(description = "LotoResult combinaisonGagnante")
     private String combinaisonGagnante;
+
+	@Schema(description = "LotoResult nombreDeGagnantAuRang1")
     private int nombreDeGagnantAuRang1;
+
+	@Schema(description = "LotoResult rapportDuRang1")
     private double rapportDuRang1;
+
+	@Schema(description = "LotoResult nombreDeGagnantAuRang2")
     private int nombreDeGagnantAuRang2;
+
+	@Schema(description = "LotoResult rapportDuRang2")
     private double rapportDuRang2;
+
+	@Schema(description = "LotoResult nombreDeGagnantAuRang3")
     private int nombreDeGagnantAuRang3;
+
+	@Schema(description = "LotoResult rapportDuRang3")
     private double rapportDuRang3;
+
+	@Schema(description = "LotoResult nombreDeGagnantAuRang4")
     private int nombreDeGagnantAuRang4;
+
+	@Schema(description = "LotoResult rapportDuRang4")
     private double rapportDuRang4;
+
+	@Schema(description = "LotoResult nombreDeGagnantAuRang5")
     private int nombreDeGagnantAuRang5;
+
+	@Schema(description = "LotoResult rapportDuRang5")
     private double rapportDuRang5;
+
+	@Schema(description = "LotoResult nombreDeGagnantAuRang6")
     private int nombreDeGagnantAuRang6;
+
+	@Schema(description = "LotoResult rapportDuRang6")
     private double rapportDuRang6;
+
+	@Schema(description = "LotoResult nombreDeGagnantAuRang7")
     private int nombreDeGagnantAuRang7;
+
+	@Schema(description = "LotoResult rapportDuRang7")
     private double rapportDuRang7;
-    private int nombreDeGagnantAuRang8;
+
+	@Schema(description = "LotoResult nombreDeGagnantAuRang8")
+	private int nombreDeGagnantAuRang8;
+
+	@Schema(description = "LotoResult rapportDuRang8")
     private double rapportDuRang8;
+
+	@Schema(description = "LotoResult nombreDeGagnantAuRang9")
     private int nombreDeGagnantAuRang9;
+
+	@Schema(description = "LotoResult rapportDuRang9")
     private double rapportDuRang9;
+
+	@Schema(description = "LotoResult nombreDeCodesGagnants")
     private int nombreDeCodesGagnants;
+
+	@Schema(description = "LotoResult rapportCodesGagnants")
     private int rapportCodesGagnants;
+
+	@Schema(description = "LotoResult codesGagnants")
     private String codesGagnants;
+
+	@Schema(description = "LotoResult boule1SecondTirage")
     private int boule1SecondTirage;
+
+	@Schema(description = "LotoResult boule2SecondTirage")
     private int boule2SecondTirage;
+
+	@Schema(description = "LotoResult boule3SecondTirage")
     private int boule3SecondTirage;
+
+	@Schema(description = "LotoResult boule4SecondTirage")
     private int boule4SecondTirage;
+
+	@Schema(description = "LotoResult boule5SecondTirage")
     private int boule5SecondTirage;
+
+	@Schema(description = "LotoResult combinaisonGagnanteSecondTirage")
     private String combinaisonGagnanteSecondTirage;
+
+	@Schema(description = "LotoResult nombreDeGagnantAuRang1SecondTirage")
     private int nombreDeGagnantAuRang1SecondTirage;
+
+	@Schema(description = "LotoResult rapportDuRang1SecondTirage")
     private double rapportDuRang1SecondTirage;
+
+	@Schema(description = "LotoResult nombreDeGagnantAuRang2SecondTirage")
     private int nombreDeGagnantAuRang2SecondTirage;
+
+	@Schema(description = "LotoResult rapportDuRang2SecondTirage")
     private double rapportDuRang2SecondTirage;
+
+	@Schema(description = "LotoResult nombreDeGagnantAuRang3SecondTirage")
     private int nombreDeGagnantAuRang3SecondTirage;
+
+	@Schema(description = "LotoResult rapportDuRang3SecondTirage")
     private double rapportDuRang3SecondTirage;
+
+	@Schema(description = "LotoResult nombreDeGagnantAuRang4SecondTirage")
     private int nombreDeGagnantAuRang4SecondTirage;
+
+	@Schema(description = "LotoResult rapportDuRang4SecondTirage")
     private double rapportDuRang4SecondTirage;
+
+	@Schema(description = "LotoResult numeroJokerplus")
     private int numeroJokerplus;
+
+	@Schema(description = "LotoResult devise")
     private String devise;
 
 	// ✅ Constructeur vide (nécessaire pour Spring Boot)

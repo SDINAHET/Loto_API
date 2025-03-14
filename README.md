@@ -216,6 +216,7 @@ volumes:
 Start the containers:
 ```bash
 docker-compose up -d --build
+http-server src/main/resources/static -p 5500
 ```
 Then open your browser at http://127.0.0.1:5500/ to access the frontend
 and for the backend (Swagger): http://localhost:8082/swagger-ui/index.html.
@@ -483,6 +484,7 @@ volumes:
 Lancer les conteneurs :
 ```bash
 docker-compose up -d --build
+http-server src/main/resources/static -p 5500
 ```
 puis ouvrir votre navigateur à l'adresse `http://127.0.0.1:5500/` pour accéder au frontend
 et pour le backend (swagger):`http://localhost:8082/swagger-ui/index.html`.
