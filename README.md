@@ -245,6 +245,15 @@ docker-compose down --rmi all --volumes
 
 ---
 
+## Export Project Dependencies - Spring Boot
+
+### 🚀 Export Dependencies using Maven
+To export all dependencies from a **Maven** project to a text file, use the following command:
+
+```sh
+mvn dependency:list > dependencies.txt
+```
+
 ## 👨‍💻 Author & Contributions
 Developed by [@SDINAHET](https://github.com/SDINAHET)
 Contributions are welcome! Open an issue or submit a PR 🚀
@@ -511,6 +520,15 @@ docker-compose down --rmi all --volumes
 - ✔️ **Notifications push ou email pour les résultats officiel**
 
 ---
+
+## Export Project Dependencies - Spring Boot
+
+### 🚀 Export Dependencies using Maven
+To export all dependencies from a **Maven** project to a text file, use the following command:
+
+```sh
+mvn dependency:list > dependencies.txt
+```
 
 ## 👨‍💻 Auteur & Contributions
 Développé par [@SDINAHET](https://github.com/SDINAHET)
