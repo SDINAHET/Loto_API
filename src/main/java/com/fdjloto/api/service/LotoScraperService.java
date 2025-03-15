@@ -1535,6 +1535,9 @@ import java.util.List;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.io.*;
 import java.nio.file.*;
 
@@ -1555,6 +1558,8 @@ import com.opencsv.exceptions.CsvException;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @Service
@@ -1567,6 +1572,14 @@ public class LotoScraperService {
 
     @Autowired
     private LotoRepository lotoRepository;
+
+	@EventListener(ApplicationReadyEvent.class)
+    public void scheduleInitialScrape() {
+        System.out.println("🕒 Scraping planifié pour démarrer dans 1 minute...");
+
+        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+        scheduler.schedule(this::scrapeData, 10, TimeUnit.SECONDS);
+    }
 
     // @Scheduled(fixedRate = 3600000)  // Exécution toutes les heures
 	// @Scheduled(fixedDelay = 300000)  // Attendre 5 minutes après la fin de l'exécution précédente

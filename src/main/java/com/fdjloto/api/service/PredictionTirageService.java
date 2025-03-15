@@ -11,9 +11,16 @@ import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.context.event.EventListener;
+
 
 
 @SpringBootApplication
@@ -31,6 +38,14 @@ public class PredictionTirageService {
     public PredictionTirageService(TirageRepository tirageRepository, PredictionRepository predictionRepository) {
         this.tirageRepository = tirageRepository;
         this.predictionRepository = predictionRepository;
+    }
+
+    @EventListener(ApplicationReadyEvent.class)
+    public void scheduleInitialPrediction() {
+        logger.info("🕒 Génération de la première prédiction planifiée dans 1 minute...");
+
+        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+        scheduler.schedule(this::generatePredictionScheduled, 40, TimeUnit.SECONDS);
     }
 
     // ✅ Planification automatique à 00h00 chaque jour
