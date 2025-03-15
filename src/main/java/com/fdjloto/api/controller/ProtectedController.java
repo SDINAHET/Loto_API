@@ -26,7 +26,8 @@ import java.util.Map;
 @RequestMapping("/api/protected")
 @Tag(name = "Protected Resources", description = "Endpoints that require authentication via JWT.")
 @SecurityRequirement(name = "bearerAuth")  // 🔥 Swagger recognizes this controller as secured
-@CrossOrigin(origins = "http://127.0.0.1:5500") // 🔥 Enables CORS for Live Server
+//@CrossOrigin(origins = "http://127.0.0.1:5500") // 🔥 Enables CORS for Live Server
+@CrossOrigin(origins = {"http://127.0.0.1:5500", "http://192.168.1.83:5500"}, allowCredentials = "true")
 // @CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST})
 
 public class ProtectedController {

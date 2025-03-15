@@ -35,7 +35,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 @SecurityRequirement(name = "bearerAuth")
 @SecurityRequirement(name = "jwtCookieAuth")
 @CrossOrigin(
-    origins = "http://127.0.0.1:5500",
+    //origins = "http://127.0.0.1:5500",
+    origins = {"http://127.0.0.1:5500", "http://192.168.1.83:5500"},
     allowCredentials = "true",
     allowedHeaders = "*",
     methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE}

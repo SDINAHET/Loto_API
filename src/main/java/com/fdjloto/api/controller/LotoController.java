@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/loto")
 @Tag(name = "Lottery Scraper", description = "Endpoints for triggering the lottery web scraping process.")
 // @CrossOrigin(origins = "*") // Allows requests from any frontend
-@CrossOrigin(origins = "http://127.0.0.1:5500") // 🔥 Enables CORS for Live Server
+//@CrossOrigin(origins = "http://127.0.0.1:5500") // 🔥 Enables CORS for Live Server
+@CrossOrigin(origins = {"http://127.0.0.1:5500", "http://192.168.1.83:5500"}, allowCredentials = "true")
+
 public class LotoController {
 
     @Autowired

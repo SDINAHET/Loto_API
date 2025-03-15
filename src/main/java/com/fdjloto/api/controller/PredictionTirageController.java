@@ -18,7 +18,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/predictions")
 @Tag(name = "Lottery Predictions", description = "Endpoints for generating and retrieving lottery predictions.")
-@CrossOrigin(origins = "http://127.0.0.1:5500") // 🔥 Enables CORS for Live Server
+//@CrossOrigin(origins = "http://127.0.0.1:5500") // 🔥 Enables CORS for Live Server
+@CrossOrigin(origins = {"http://127.0.0.1:5500", "http://192.168.1.83:5500"}, allowCredentials = "true")
 public class PredictionTirageController {
 
     private final PredictionService predictionService;

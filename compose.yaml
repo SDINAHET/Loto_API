@@ -80,7 +80,7 @@ services:
       MONGO_INITDB_DATABASE: loto_database  # Définit la base de données par défaut
     volumes:
       - mongodb_data:/data/db
-      # - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro  # Vérifie que ce fichier existe bien
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro  # Vérifie que ce fichier existe bien
 
 volumes:
   mongodb_data:
