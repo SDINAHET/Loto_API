@@ -49,7 +49,7 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-    
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
@@ -68,7 +68,7 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/v1/api-docs/**", "/swagger-ui.html", "/login-swagger").permitAll() // ✅ Swagger accessible sans JWT
                         // .requestMatchers("/api/health").permitAll()
                         // Auth API accessible sans authentification
-                        .requestMatchers("/api/auth/**", "/api/hello", "/localhost:5500/**", "api/loto/scrape").permitAll()
+                        .requestMatchers("/api/auth/**", "/api/hello", "/localhost:5500/**", "/api/loto/scrape").permitAll()
                         // Endpoints protégés par JWT
                         // .requestMatchers("/api/protected/**").permitAll()
                         // .requestMatchers("/api/tickets/**").authenticated()
@@ -85,10 +85,10 @@ public class SecurityConfig {
                         // .requestMatchers(HttpMethod.DELETE, "/api/tickets/**").hasRole("ADMIN") // 🔥 DELETE réservé aux admins
                         // .requestMatchers("/api/tickets/**", "/api/tickets", "/api/tickets/{ticketId}").hasAnyRole("USER", "ADMIN") // 🔐 Accès USER et ADMIN
                         .requestMatchers("/api/historique/last20").permitAll()
-                        .requestMatchers("/api/predictions/generate", "/api/generate", "api/predictions/latest").permitAll()
+                        .requestMatchers("/api/predictions/generate", "/api/generate", "/api/predictions/latest").permitAll()
                         .requestMatchers("/api/historique/last20/Detail/**").permitAll()
                         .requestMatchers("/api/tirages", "/api/tirages/**").permitAll()
-                        .requestMatchers("/api/gains/calculate", "api/gains","api/gains/**").hasAnyRole("ADMIN", "USER") // 🔥 PUT accessible aux admins et utilisateurs
+                        .requestMatchers("/api/gains/calculate", "/api/gains","/api/gains/**").hasAnyRole("ADMIN", "USER") // 🔥 PUT accessible aux admins et utilisateurs
                         // .requestMatchers("/api/users/**", "/api/users").authenticated()  // Protégé par JWT
                         // .requestMatchers("/api/users/**").hasRole("ADMIN")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")  // 🔐 Accès ADMIN
