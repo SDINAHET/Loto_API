@@ -3609,23 +3609,32 @@ jobs:
       #       exit 1
       #     fi
 
-      # 🎫 Tester la soumission d’un ticket SANS JWT
-      - name: 🎫 Create Ticket (Without JWT)
+      # # 🎫 Tester la soumission d’un ticket SANS JWT
+      # - name: 🎫 Create Ticket (Without JWT)
+      #   run: |
+      #     response=$(curl -s -o response_no_jwt.json -w "%{http_code}" -X POST "http://localhost:8082/api/tickets" \
+      #       -H "Content-Type: application/json" \
+      #       -H "Accept: application/json" \
+      #       -d '{"numbers":[1,2,3,4,5],"luckyNumber":6, "drawDate":"2025-03-12"}')
+
+      #     echo "🔍 Ticket Creation Response JSON (Without JWT):"
+      #     cat response_no_jwt.json | jq .
+
+      #     if [ "$response" -eq 201 ]; then
+      #       echo "✅ Ticket successfully created without JWT!"
+      #     else
+      #       echo "❌ Failed to create ticket without JWT. HTTP Code: $response"
+      #       exit 1
+      #     fi
+
+      # 🎫 Tester la soumission d’un ticket avec JWT
+      - name: 🎫 Create Ticket
         run: |
-          response=$(curl -s -o response_no_jwt.json -w "%{http_code}" -X POST "http://localhost:8082/api/tickets" \
+          curl -X POST "http://localhost:8082/api/tickets" \
             -H "Content-Type: application/json" \
-            -H "Accept: application/json" \
-            -d '{"numbers":[1,2,3,4,5],"luckyNumber":6, "drawDate":"2025-03-12"}')
-
-          echo "🔍 Ticket Creation Response JSON (Without JWT):"
-          cat response_no_jwt.json | jq .
-
-          if [ "$response" -eq 201 ]; then
-            echo "✅ Ticket successfully created without JWT!"
-          else
-            echo "❌ Failed to create ticket without JWT. HTTP Code: $response"
-            exit 1
-          fi
+            -H "Authorization: Bearer ${{ steps.login.outputs.jwt_token }}" \
+            -d '{"numbers":[1,2,3,4,5],"luckyNumber":6, "drawDate":"2025-03-12"}' \
+            -b cookies.txt
 
       # 🔄 Scraping des résultats FDJ
       - name: 🔄 Run Loto Scraper
