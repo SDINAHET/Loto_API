@@ -316,7 +316,7 @@ jobs:
           cache: 'maven'
 
       - name: 🐳 Start Docker Containers (MySQL & MongoDB)
-        run: dockercompose up -d --build # ⚠️ Note : "docker compose" sans tiret depuis v2 et non plus docker-compose
+        run: docker compose up -d --build # ⚠️ Note : "docker compose" sans tiret depuis v2 et non plus docker-compose
 
       - name: ⏳ Wait for services to be ready
         run: |
@@ -330,7 +330,7 @@ jobs:
         run: mvn test
 
       - name: 🛑 Stop & Clean Docker Containers
-        run: docker-compose down -v
+        run: docker compose down -v
 
   start-app:
     name: 🚀 Start Spring Boot App
