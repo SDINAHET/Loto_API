@@ -1660,7 +1660,7 @@ jobs:
       - name: 🐳 Start Docker Containers (MySQL, SQLite & MongoDB)
         run: docker compose up -d --build
 
-        Attendre que l’API soit prête (Swagger UI & Health Check)
+      # ⏳ Wait for API & Swagger UI to be ready
       - name: ⏳ Wait for API & Swagger UI to be ready
         run: |
           echo "Waiting for API..."
