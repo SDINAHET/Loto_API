@@ -12,11 +12,18 @@
 ![GitHub last commit](https://img.shields.io/github/last-commit/SDINAHET/Loto-Tracker-API) -->
 
 
+
+
+### 📦 **Build et Couverture des Tests**
 [![Version](https://img.shields.io/badge/version-2.0.0-brightgreen?style=for-the-badge&logo=git)](https://github.com/SDINAHET/Loto_API/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](https://github.com/SDINAHET/Loto_API/blob/main/LICENSE)
 
-### 📦 **Build et Couverture des Tests**
-[![CI Build](https://github.com/SDINAHET/Loto_API/actions/workflows/ci.yml/badge.svg)](https://github.com/SDINAHET/Loto_API/actions)
+<!-- [![Build & Tests](https://github.com/SDINAHET/Loto_API/actions/workflows/ci.yml/badge.svg)](https://github.com/SDINAHET/Loto_API/actions) -->
+<!-- [![Tests Passed](https://img.shields.io/badge/tests-10%2F10-success)](https://github.com/SDINAHET/Loto_API/actions) -->
+![Test Results](https://github.com/SDINAHET/Loto_API/actions/workflows/ci.yml/badge.svg?event=push)
+
+![Tests](https://github.com/SDINAHET/Loto-Tracker-API/actions/workflows/ci.yml/badge.svg)
+<!-- [![CI Build](https://github.com/SDINAHET/Loto_API/actions/workflows/ci.yml/badge.svg)](https://github.com/SDINAHET/Loto_API/actions) -->
 [![Coverage](https://img.shields.io/codecov/c/github/SDINAHET/Loto_API)](https://codecov.io/gh/SDINAHET/Loto_API)
 [![Deploy to Vercel](https://img.shields.io/badge/Deploy-Vercel-black)](https://loto-api-black.vercel.app)
 
