@@ -314,7 +314,7 @@ docker-compose down --rmi all --volumes
 - ✔️ **Addition of advanced analysis on results**
 - ✔️ **Support for new games (Euromillions, Keno, etc.)**
 - ✔️ **Notifications for winning results**
-- ✔️ **Addition of a premium mode with advanced features**
+<!-- - ✔️ **Addition of a premium mode with advanced features** -->
 
 ---
 
