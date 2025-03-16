@@ -1660,6 +1660,7 @@ jobs:
       - name: 🐳 Start Docker Containers (MySQL, SQLite & MongoDB)
         run: docker compose up -d --build
 
+        Attendre que l’API soit prête (Swagger UI & Health Check)
       - name: ⏳ Wait for API & Swagger UI to be ready
         run: |
           echo "Waiting for API..."
@@ -1669,19 +1670,16 @@ jobs:
           done
           echo "✅ API is ready!"
 
-      - name: 🔑 Login User & Retrieve JWT Token
+      # 🔑 Authentification - Tester le login et récupérer le token JWT
+      - name: 🔑 Login User & Retrieve JWT Token (login3)
         id: login
         run: |
-          response=$(curl -s -X POST "http://localhost:8082/api/auth/login3" \
+          JWT_TOKEN=$(curl -X POST "http://localhost:8082/api/auth/login3" \
             -H "Content-Type: application/json" \
             -d '{"email":"test4@hbnb.com","password":"user1234"}' \
-            -c cookies.txt)
+            -c cookies.txt | jq -r '.token')
 
-          echo "🔍 Login response: $response"  # Debug
-
-          JWT_TOKEN=$(echo "$response" | jq -r '.token')
-
-          if [ -z "$JWT_TOKEN" ] || [ "$JWT_TOKEN" == "null" ]; then
+          if [ -z "$JWT_TOKEN" ]; then
             echo "❌ Login failed!"
             exit 1
           fi
@@ -1689,24 +1687,94 @@ jobs:
           echo "✅ JWT Token retrieved!"
           echo "::set-output name=jwt_token::$JWT_TOKEN"
 
+      # 🎫 Tester la soumission d’un ticket avec JWT
       - name: 🎫 Create Ticket
         run: |
-          echo "🔍 Using JWT Token: ${{ steps.login.outputs.jwt_token }}"  # Debug
-
-          response=$(curl -s -o response.json -w "%{http_code}" -X POST "http://localhost:8082/api/tickets" \
+          curl -X POST "http://localhost:8082/api/tickets" \
             -H "Content-Type: application/json" \
             -H "Authorization: Bearer ${{ steps.login.outputs.jwt_token }}" \
             -d '{"numbers":[1,2,3,4,5],"luckyNumber":6, "drawDate":"2025-03-12"}' \
-            -b cookies.txt)
+            -b cookies.txt
 
-          cat response.json  # Debug
+#       # 🔄 Scraping des résultats FDJ via le service Spring Boot
+#       - name: 🔄 Run Loto Scraper
+#         run: |
+#           curl -X GET "http://localhost:8082/api/loto/scrape"
 
-          if [ "$response" -eq 201 ]; then
-            echo "✅ Ticket successfully created!"
-          else
-            echo "❌ Failed to create ticket. HTTP Code: $response"
-            exit 1
-          fi
+#       # 🏆 Calcul automatique des gains via l’API
+#       - name: 🏆 Calculate Ticket Winnings
+#         run: |
+#           curl -X GET "http://localhost:8082/api/gains/calculate"
+
+#       # 📅 Vérifier les tirages disponibles
+#       - name: 🔍 Get Available Draw Dates
+#         run: |
+#           curl -X GET "http://localhost:8082/api/tirages/dates"
+
+#       # 📜 Vérifier l'historique des résultats
+#       - name: 📜 Get Last 20 Lottery Results
+#         run: |
+#           curl -X GET "http://localhost:8082/api/historique/last20"
+
+#       # 🔒 Tester un endpoint protégé avec JWT
+#       - name: 🔒 Get Authenticated User Info
+#         run: |
+#           curl -X GET "http://localhost:8082/api/auth/me" \
+#             -H "Authorization: Bearer ${{ steps.login.outputs.jwt_token }}" \
+#             -b cookies.txt
+
+#       # 🏷 Vérifier le ticket soumis
+#       - name: 📑 Get Ticket Info
+#         run: |
+#           curl -X GET "http://localhost:8082/api/tickets"
+
+      # - name: ⏳ Wait for API & Swagger UI to be ready
+      #   run: |
+      #     echo "Waiting for API..."
+      #     until curl --output /dev/null --silent --head --fail http://localhost:8082/api/hello; do
+      #       printf '.'
+      #       sleep 5
+      #     done
+      #     echo "✅ API is ready!"
+
+      # - name: 🔑 Login User & Retrieve JWT Token
+      #   id: login
+      #   run: |
+      #     response=$(curl -s -X POST "http://localhost:8082/api/auth/login3" \
+      #       -H "Content-Type: application/json" \
+      #       -d '{"email":"test4@hbnb.com","password":"user1234"}' \
+      #       -c cookies.txt)
+
+      #     echo "🔍 Login response: $response"  # Debug
+
+      #     JWT_TOKEN=$(echo "$response" | jq -r '.token')
+
+      #     if [ -z "$JWT_TOKEN" ] || [ "$JWT_TOKEN" == "null" ]; then
+      #       echo "❌ Login failed!"
+      #       exit 1
+      #     fi
+
+      #     echo "✅ JWT Token retrieved!"
+      #     echo "::set-output name=jwt_token::$JWT_TOKEN"
+
+      # - name: 🎫 Create Ticket
+      #   run: |
+      #     echo "🔍 Using JWT Token: ${{ steps.login.outputs.jwt_token }}"  # Debug
+
+      #     response=$(curl -s -o response.json -w "%{http_code}" -X POST "http://localhost:8082/api/tickets" \
+      #       -H "Content-Type: application/json" \
+      #       -H "Authorization: Bearer ${{ steps.login.outputs.jwt_token }}" \
+      #       -d '{"numbers":[1,2,3,4,5],"luckyNumber":6, "drawDate":"2025-03-12"}' \
+      #       -b cookies.txt)
+
+      #     cat response.json  # Debug
+
+      #     if [ "$response" -eq 201 ]; then
+      #       echo "✅ Ticket successfully created!"
+      #     else
+      #       echo "❌ Failed to create ticket. HTTP Code: $response"
+      #       exit 1
+      #     fi
 
       - name: 🔄 Run Loto Scraper
         run: |
