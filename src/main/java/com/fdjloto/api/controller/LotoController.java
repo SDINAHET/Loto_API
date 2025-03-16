@@ -23,7 +23,7 @@ public class LotoController {
     @Autowired
     private LotoScraperService lotoScraperService; // ✅ Injecting the scraping service
 
-/**
+    /**
      * **🔄 Endpoint to trigger the web scraping process for lottery results.**
      *
      * @return **200 OK** - A success message indicating that the scraping has started.

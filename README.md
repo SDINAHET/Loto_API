@@ -39,6 +39,33 @@
 [![Project Board](https://img.shields.io/badge/Project-Board-orange?style=for-the-badge&logo=trello)](https://github.com/SDINAHET/Loto_API/projects)
 [![Discussions](https://img.shields.io/badge/GitHub-Discussions-blueviolet?style=for-the-badge&logo=github)](https://github.com/SDINAHET/Loto_API/discussions)
 
+# English version:
+## 📌 Table of Contents
+1. [📌 Project Description](#-project-description)
+2. [🏗️ Project Architecture](#-project-architecture)
+3. [🚀 Key Features](#-key-features)
+4. [🏗️ Installation & Configuration](#-installation--configuration)
+   - [1️⃣ Prerequisites](#1️⃣-prerequisites)
+   - [2️⃣ Clone the Project](#2️⃣-clone-the-project)
+   - [3️⃣ Database Configuration](#3️⃣-database-configuration)
+   - [4️⃣ Start the Backend (Spring Boot)](#4️⃣-start-the-backend-spring-boot)
+   - [5️⃣ Start the Frontend](#5️⃣-start-the-frontend)
+5. [🔗 API Endpoints](#-api-endpoints)
+   - [📖 API Documentation](#-api-documentation)
+   - [📌 Users](#-users)
+   - [🎟️ Ticket Management](#-ticket-management)
+   - [🎰 Draw Results](#-draw-results)
+   - [🏆 Winnings Management](#-winnings-management)
+   - [📊 Results History](#-results-history)
+6. [📡 Deployment](#-deployment)
+   - [📌 Deployment with Docker](#-deployment-with-docker)
+7. [🚀 Roadmap & Future Improvements](#-roadmap--future-improvements)
+8. [📜 Export Project Dependencies](#-export-project-dependencies)
+9. [👨‍💻 Author & Contributions](#-author--contributions)
+10. [📜 License](#-license)
+11. [👥 Authors](#-authors)
+
+
 
 ## 📌 Project Description
 
@@ -303,17 +330,65 @@ Contributions are welcome! Open an issue or submit a PR 🚀
 
 ---
 
-## 📜 License
+## 📜 [Licence](LICENSE)
 Project under **MIT License** - Free to use and modify.
 
 ---
 
 🎉 **Thank you for using Loto API!** Good luck 🍀
 
+---
+
+## 👥 [Authors](AUTHORS)
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/SDINAHET">
+        <img src="https://github.com/SDINAHET.png" width="100px;" alt=""/><br />
+        <sub><b>Stéphane Dinahet</b></sub>
+      </a>
+      <br />
+      🚀 Creator & Lead Developer
+    </td>
+  </tr>
+</table>
+
+
+
+
+
+
 
 
 
 # 🎰 Loto API - Gestion et Calcul des Gains
+
+# Version française:
+## 📌 Table des Matières
+1. [📌 Description du Projet](#-description-du-projet)
+2. [🏗️ Architecture du Projet](#-architecture-du-projet)
+3. [🚀 Fonctionnalités Principales](#-fonctionnalités-principales)
+4. [🏗️ Installation & Configuration](#-installation--configuration)
+   - [1️⃣ Prérequis](#1️⃣-prérequis)
+   - [2️⃣ Cloner le Projet](#2️⃣-cloner-le-projet)
+   - [3️⃣ Configuration de la Base de Données](#3️⃣-configuration-de-la-base-de-données)
+   - [4️⃣ Lancer le Backend (Spring Boot)](#4️⃣-lancer-le-backend-spring-boot)
+   - [5️⃣ Lancer le Frontend](#5️⃣-lancer-le-frontend)
+5. [🔗 Endpoints de l'API](#-endpoints-de-lapi)
+   - [📖 Documentation API](#-documentation-api)
+   - [📌 Gestion des Utilisateurs](#-gestion-des-utilisateurs)
+   - [🎟️ Gestion des Tickets](#-gestion-des-tickets)
+   - [🎰 Résultats des Tirages](#-résultats-des-tirages)
+   - [🏆 Gestion des Gains](#-gestion-des-gains)
+   - [📊 Historique des Résultats](#-historique-des-résultats)
+6. [📡 Déploiement](#-déploiement)
+   - [📌 Déploiement avec Docker](#-déploiement-avec-docker)
+7. [🚀 Roadmap & Améliorations Futures](#-roadmap--améliorations-futures)
+8. [📜 Export des Dépendances du Projet](#-export-des-dépendances-du-projet)
+9. [👨‍💻 Auteur & Contributions](#-auteur--contributions)
+10. [📜 Licence](#-licence)
+11. [👥 Auteurs](#-auteurs)
 
 ## 📌 Description du Projet
 
@@ -582,12 +657,34 @@ Contributions bienvenues ! Ouvrez une issue ou proposez une PR 🚀
 
 ---
 
-## 📜 Licence
+## 📜 [Licence](LICENSE)
 Projet sous licence **MIT** - Libre d'utilisation et de modification.
 
 ---
 
 🎉 **Merci d'utiliser Loto API !** Bonne chance 🍀
+
+---
+
+## 👥 [Auteurs](AUTHORS)
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/SDINAHET">
+        <img src="https://github.com/SDINAHET.png" width="100px;" alt=""/><br />
+        <sub><b>Stéphane Dinahet</b></sub>
+      </a>
+      <br />
+      🚀 Creator & Lead Developer
+    </td>
+  </tr>
+</table>
+
+
+
+
+
 
 
 

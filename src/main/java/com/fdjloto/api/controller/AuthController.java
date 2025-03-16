@@ -83,7 +83,7 @@ public class AuthController {
         return ResponseEntity.ok(jwt);
     }
 
-        /**
+    /**
      * **Login with JWT stored in HTTP-only cookie**
      *
      * @param loginRequest User login details.
@@ -145,7 +145,7 @@ public class AuthController {
     }
 
 
-        /**
+    /**
      * **User Registration**
      *
      * @param user User object containing registration details.
@@ -165,6 +165,26 @@ public class AuthController {
         return ResponseEntity.ok(userService.createUser(user));
     }
 
+
+    /**
+     * 🔄 Update user details
+     *
+     * @param id   User ID (UUID) to update
+     * @param user User object containing new details
+     * @return Updated user
+     */
+    @Operation(
+        summary = "Update a user",
+        description = "Updates the details of an existing user by providing their ID.",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "User successfully updated",
+                content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = User.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid request"),
+            @ApiResponse(responseCode = "404", description = "User not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+        }
+    )
     // 🔄 Update user details
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable UUID id, @RequestBody User user) {
@@ -172,7 +192,7 @@ public class AuthController {
         return ResponseEntity.ok(userService.updateUser(id, user));
     }
 
-        /**
+    /**
      * **Retrieve User Info**
      *
      * @param token JWT token from cookie.
@@ -253,7 +273,7 @@ public class AuthController {
         }
     }
 
-        /**
+    /**
      * **User Logout**
      *
      * @param response HTTP response to clear JWT cookie.
