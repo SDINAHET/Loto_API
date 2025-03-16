@@ -20,10 +20,10 @@
 
 <!-- [![Build & Tests](https://github.com/SDINAHET/Loto_API/actions/workflows/ci.yml/badge.svg)](https://github.com/SDINAHET/Loto_API/actions) -->
 <!-- [![Tests Passed](https://img.shields.io/badge/tests-10%2F10-success)](https://github.com/SDINAHET/Loto_API/actions) -->
-![Test Results](https://github.com/SDINAHET/Loto_API/actions/workflows/ci.yml/badge.svg?event=push)
+<!-- ![Test Results](https://github.com/SDINAHET/Loto_API/actions/workflows/ci.yml/badge.svg?event=push) -->
 
-![Tests](https://github.com/SDINAHET/Loto-Tracker-API/actions/workflows/ci.yml/badge.svg)
-<!-- [![CI Build](https://github.com/SDINAHET/Loto_API/actions/workflows/ci.yml/badge.svg)](https://github.com/SDINAHET/Loto_API/actions) -->
+![Tests](https://github.com/SDINAHET/Loto_API/actions/workflows/ci.yml/badge.svg)
+[![CI Build](https://github.com/SDINAHET/Loto_API/actions/workflows/ci.yml/badge.svg)](https://github.com/SDINAHET/Loto_API/actions)
 [![Coverage](https://img.shields.io/codecov/c/github/SDINAHET/Loto_API)](https://codecov.io/gh/SDINAHET/Loto_API)
 [![Deploy to Vercel](https://img.shields.io/badge/Deploy-Vercel-black)](https://loto-api-black.vercel.app)
 
