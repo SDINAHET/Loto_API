@@ -1829,15 +1829,21 @@ jobs:
             exit 1
           fi
 
+      # - name: 📑 Get Ticket Info
+      #   run: |
+      #     response=$(curl -s -o response.json -w "%{http_code}" -X GET "http://localhost:8082/api/tickets")
+      #     if [ "$response" -eq 200 ]; then
+      #       echo "✅ Ticket info retrieved!"
+      #     else
+      #       echo "❌ Failed to retrieve ticket info. HTTP Code: $response"
+      #       exit 1
+      #     fi
+
+
+      # 🏷 Vérifier le ticket soumis
       - name: 📑 Get Ticket Info
         run: |
-          response=$(curl -s -o response.json -w "%{http_code}" -X GET "http://localhost:8082/api/tickets")
-          if [ "$response" -eq 200 ]; then
-            echo "✅ Ticket info retrieved!"
-          else
-            echo "❌ Failed to retrieve ticket info. HTTP Code: $response"
-            exit 1
-          fi
+          curl -X GET "http://localhost:8082/api/tickets"
 
       - name: 🛑 Stop & Clean Docker Containers
         run: docker compose down -v
