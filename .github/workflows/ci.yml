@@ -65,7 +65,7 @@ jobs:
         run: sleep 30
 
       - name: 🛠 Test if app is running
-        run: curl --fail http://localhost:8080/api/hello || exit 1
+        run: curl --fail http://localhost:8082/api/hello || exit 1
 
   deploy:
     name: 🚀 Deploy to Vercel
