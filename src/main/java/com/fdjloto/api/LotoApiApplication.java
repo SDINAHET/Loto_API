@@ -136,7 +136,7 @@ import io.swagger.v3.oas.models.servers.Server;
         title = "Loto Tracker API - Portfolio 2025   Holberton School RENNES  🚀 ",
         version = "v2.0.0",
         description = """
-        <h2>API permettant de suivre les résultats du Loto, de gérer les comptes utilisateurs, et de calculer automatiquement les gains en comparant les tickets soumis avec les résultats officiels de la FDJ.</h2>
+        <h2>API permettant de suivre les résultats du Loto, de gérer les comptes utilisateurs, et de calculer automatiquement les gains en comparant les tickets soumis avec les résultats officiels du loto français.</h2>
         <h3>Fonctionnalités principales :</h3>
         <table style="border-collapse: collapse; width: 100%;">
             <thead>
