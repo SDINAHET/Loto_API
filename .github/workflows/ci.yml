@@ -32,13 +32,13 @@ jobs:
       - name: 🧪 Run Tests
         run: mvn test
 
-      - name: 📊 Upload Test Coverage to Codecov
-        uses: codecov/codecov-action@v4
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: target/site/jacoco/jacoco.xml
-          fail_ci_if_error: true
-          verbose: true
+    #   - name: 📊 Upload Test Coverage to Codecov
+    #     uses: codecov/codecov-action@v4
+    #     with:
+    #       token: ${{ secrets.CODECOV_TOKEN }}
+    #       files: target/site/jacoco/jacoco.xml
+    #       fail_ci_if_error: true
+    #       verbose: true
 
   start-app:
     name: 🚀 Start Spring Boot App
