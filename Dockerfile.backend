@@ -7,6 +7,8 @@ WORKDIR /app
 # Copier les fichiers du backend
 COPY . /app
 
+RUN chmod +x mvnw
+
 # Construire l'application
 RUN ./mvnw install
 

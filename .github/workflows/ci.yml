@@ -258,6 +258,121 @@
 #     #     run: vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
 
 
+# name: 🚀 CI/CD - Loto Tracker API (Docker)
+
+# on:
+#   push:
+#     branches:
+#       - main
+#       - develop
+#   pull_request:
+#     branches:
+#       - main
+#       - develop
+
+# jobs:
+#   build:
+#     name: 🏗 Build & Test API (Docker)
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: 🛠 Checkout code
+#         uses: actions/checkout@v4
+
+#       # - name: 🔧 Install Docker and Docker Compose
+#       #   run: |
+#       #     sudo apt update
+#       #     sudo apt install -y docker.io docker-compose
+#       #     sudo systemctl start docker
+#       #     docker --version
+#       #     docker-compose --version
+
+#       - name: 🔧 Install Docker and Docker Compose
+#         run: |
+#           sudo apt update
+#           sudo apt install -y ca-certificates curl gnupg
+
+#           # Ajouter la clé GPG officielle de Docker
+#           sudo install -m 0755 -d /etc/apt/keyrings
+#           curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo tee /etc/apt/keyrings/docker.asc > /dev/null
+#           sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+#           # Ajouter le dépôt Docker officiel
+#           echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+#           sudo apt update
+#           sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+#           # Vérifier les installations
+#           docker --version
+#           docker compose version
+
+
+#       - name: 🔧 Setup JDK 21
+#         uses: actions/setup-java@v3
+#         with:
+#           distribution: 'temurin'
+#           java-version: '21'
+#           cache: 'maven'
+
+#       - name: 🐳 Start Docker Containers (MySQL & MongoDB)
+#         run: docker compose up -d --build # ⚠️ Note : "docker compose" sans tiret depuis v2 et non plus docker-compose
+
+#       - name: ⏳ Wait for services to be ready
+#         run: |
+#           echo "Waiting for services to start..."
+#           sleep 30  # Ajuste en fonction du temps de démarrage
+
+#       - name: 📦 Build with Maven (install dependencies)
+#         run: mvn clean install -DskipTests
+
+#       - name: 🧪 Run Tests
+#         run: mvn test
+
+#       - name: 🛑 Stop & Clean Docker Containers
+#         run: docker compose down -v
+
+#   start-app:
+#     name: 🚀 Start Spring Boot App
+#     runs-on: ubuntu-latest
+#     needs: build
+#     if: github.ref == 'refs/heads/main'
+
+#     steps:
+#       - name: 🛠 Checkout code
+#         uses: actions/checkout@v4
+
+#       - name: 🔧 Setup JDK 21
+#         uses: actions/setup-java@v3
+#         with:
+#           distribution: 'temurin'
+#           java-version: '21'
+
+#       - name: 🚀 Run Spring Boot Application
+#         run: mvn spring-boot:run &
+#         env:
+#           SPRING_PROFILES_ACTIVE: developpement
+
+#       - name: 🛑 Wait for app to start (timeout 30s)
+#         run: sleep 30
+
+#       - name: 🛠 Test if app is running
+#         run: curl --fail http://localhost:8082/api/hello || exit 1
+
+#   deploy:
+#     name: 🚀 Deploy to Vercel
+#     runs-on: ubuntu-latest
+#     needs: start-app
+#     if: github.ref == 'refs/heads/main'
+
+#     steps:
+#       - name: 🛠 Checkout code
+#         uses: actions/checkout@v4
+
+#       - name: ⚡ Install Vercel CLI
+#         run: npm install -g vercel
+
+
 name: 🚀 CI/CD - Loto Tracker API (Docker)
 
 on:
@@ -279,14 +394,7 @@ jobs:
       - name: 🛠 Checkout code
         uses: actions/checkout@v4
 
-      # - name: 🔧 Install Docker and Docker Compose
-      #   run: |
-      #     sudo apt update
-      #     sudo apt install -y docker.io docker-compose
-      #     sudo systemctl start docker
-      #     docker --version
-      #     docker-compose --version
-
+      # Installer Docker et Docker Compose
       - name: 🔧 Install Docker and Docker Compose
         run: |
           sudo apt update
@@ -307,7 +415,7 @@ jobs:
           docker --version
           docker compose version
 
-
+      # Configurer JDK 21 pour Maven
       - name: 🔧 Setup JDK 21
         uses: actions/setup-java@v3
         with:
@@ -315,20 +423,25 @@ jobs:
           java-version: '21'
           cache: 'maven'
 
+      # Démarrer les conteneurs Docker pour MySQL et MongoDB
       - name: 🐳 Start Docker Containers (MySQL & MongoDB)
-        run: docker compose up -d --build # ⚠️ Note : "docker compose" sans tiret depuis v2 et non plus docker-compose
+        run: docker compose up -d --build  # Note: "docker compose" sans tiret
 
+      # Attendre que les services soient prêts
       - name: ⏳ Wait for services to be ready
         run: |
           echo "Waiting for services to start..."
           sleep 30  # Ajuste en fonction du temps de démarrage
 
+      # Construire le projet avec Maven sans exécuter les tests
       - name: 📦 Build with Maven (install dependencies)
         run: mvn clean install -DskipTests
 
+      # Exécuter les tests
       - name: 🧪 Run Tests
         run: mvn test
 
+      # Arrêter et nettoyer les conteneurs Docker
       - name: 🛑 Stop & Clean Docker Containers
         run: docker compose down -v
 
@@ -342,20 +455,24 @@ jobs:
       - name: 🛠 Checkout code
         uses: actions/checkout@v4
 
+      # Configurer JDK 21 pour Maven
       - name: 🔧 Setup JDK 21
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '21'
 
+      # Lancer l'application Spring Boot
       - name: 🚀 Run Spring Boot Application
         run: mvn spring-boot:run &
         env:
           SPRING_PROFILES_ACTIVE: developpement
 
+      # Attendre que l'application démarre
       - name: 🛑 Wait for app to start (timeout 30s)
         run: sleep 30
 
+      # Tester si l'API fonctionne
       - name: 🛠 Test if app is running
         run: curl --fail http://localhost:8082/api/hello || exit 1
 
@@ -369,5 +486,6 @@ jobs:
       - name: 🛠 Checkout code
         uses: actions/checkout@v4
 
+      # Installer le CLI Vercel
       - name: ⚡ Install Vercel CLI
         run: npm install -g vercel
