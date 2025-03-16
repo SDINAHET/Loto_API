@@ -1267,7 +1267,7 @@ jobs:
 
       - name: 📦 Run Maven (run)
         # run: mvn clean install -DskipTests
-        run: mvn sprin-boot:run
+        run: mvn spring-boot:run
 
   test-integration:
     name: 🐳 Docker & Integration Tests
