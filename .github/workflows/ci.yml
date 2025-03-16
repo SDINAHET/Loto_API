@@ -1265,9 +1265,9 @@ jobs:
       - name: 🧪 Run Unit Tests with Maven
         run: mvn test
 
-      - name: 📦 Run Maven (run)
-        # run: mvn clean install -DskipTests
-        run: mvn spring-boot:run
+      # - name: 📦 Run Maven (run)
+      #   # run: mvn clean install -DskipTests
+      #   run: mvn spring-boot:run
 
   test-integration:
     name: 🐳 Docker & Integration Tests
