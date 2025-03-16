@@ -211,6 +211,9 @@ WORKDIR /app
 # Copy backend files
 COPY . /app
 
+# Execution permissions
+RUN chmod +x mvnw
+
 # Build the application
 RUN ./mvnw install
 
@@ -538,6 +541,9 @@ WORKDIR /app
 
 # Copier les fichiers du backend
 COPY . /app
+
+# Permission d'execution
+RUN chmod +x mvnw
 
 # Construire l'application
 RUN ./mvnw install

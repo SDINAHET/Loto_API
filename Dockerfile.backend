@@ -7,6 +7,7 @@ WORKDIR /app
 # Copier les fichiers du backend
 COPY . /app
 
+# Execution permissions
 RUN chmod +x mvnw
 
 # Construire l'application
