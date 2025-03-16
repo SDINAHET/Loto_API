@@ -704,7 +704,167 @@
 #         run: npm install -g vercel
 
 
-name: 🚀 CI/CD - Loto Tracker API (Integration Tests with Docker, MongoDB, and SQLite)
+# name: 🚀 CI/CD - Loto Tracker API (Install and run springboot / Integration Tests with Docker, MongoDB, and SQLite)
+
+# on:
+#   push:
+#     branches:
+#       - main
+#       - develop
+#   pull_request:
+#     branches:
+#       - main
+#       - develop
+
+# jobs:
+#   build:
+#     name: 🏗 Build API with Maven (before Docker)
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: 🛠 Checkout code
+#         uses: actions/checkout@v4
+
+#       # Installer JDK 21 pour Maven
+#       - name: 🔧 Setup JDK 21
+#         uses: actions/setup-java@v3
+#         with:
+#           distribution: 'temurin'
+#           java-version: '21'
+#           cache: 'maven'
+
+#       # Construire le projet avec Maven avant Docker
+#       - name: 📦 Build with Maven (install dependencies)
+#         run: mvn clean install -DskipTests
+
+#       # Exécuter les tests unitaires Maven avant Docker
+#       - name: 🧪 Run Unit Tests with Maven
+#         run: mvn test
+
+#   test-integration:
+#     name: 🐳 Docker & Integration Tests
+#     runs-on: ubuntu-latest
+#     needs: build
+
+#     steps:
+#       - name: 🛠 Checkout code
+#         uses: actions/checkout@v4
+
+#       # Installer Docker et Docker Compose
+#       - name: 🔧 Install Docker and Docker Compose
+#         run: |
+#           sudo apt update
+#           sudo apt install -y ca-certificates curl gnupg
+
+#           # Ajouter la clé GPG officielle de Docker
+#           sudo install -m 0755 -d /etc/apt/keyrings
+#           curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo tee /etc/apt/keyrings/docker.asc > /dev/null
+#           sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+#           # Ajouter le dépôt Docker officiel
+#           echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+#           sudo apt update
+#           sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+#           # Vérifier les installations
+#           docker --version
+#           docker compose version
+
+#       # Démarrer les conteneurs Docker (MySQL, MongoDB, API)
+#       - name: 🐳 Start Docker Containers (MySQL, SQLite & MongoDB)
+#         run: docker compose up -d --build
+
+#       # Attendre le démarrage de l’API
+#       - name: ⏳ Wait for API & Swagger UI to be ready
+#         run: |
+#           echo "Waiting for API..."
+#           until curl --output /dev/null --silent --head --fail http://localhost:8082/swagger-ui.html; do
+#             printf '.'
+#             sleep 5
+#           done
+#           echo "✅ API is ready!"
+
+#       # 🔑 Authentification - Tester le login et récupérer le token JWT
+#       - name: 🔑 Login User & Retrieve JWT Token (login3)
+#         id: login
+#         run: |
+#           JWT_TOKEN=$(curl -X POST "http://localhost:8082/api/auth/login3" \
+#             -H "Content-Type: application/json" \
+#             -d '{"email":"test4@hbnb.com","password":"user1234"}' \
+#             -c cookies.txt | jq -r '.token')
+
+#           if [ -z "$JWT_TOKEN" ]; then
+#             echo "❌ Login failed!"
+#             exit 1
+#           fi
+
+#           echo "✅ JWT Token retrieved!"
+#           echo "::set-output name=jwt_token::$JWT_TOKEN"
+
+#       # 🎫 Tester la soumission d’un ticket avec JWT
+#       - name: 🎫 Create Ticket
+#         run: |
+#           curl -X POST "http://localhost:8082/api/tickets" \
+#             -H "Content-Type: application/json" \
+#             -H "Authorization: Bearer ${{ steps.login.outputs.jwt_token }}" \
+#             -d '{"numbers":[1,2,3,4,5],"luckyNumber":6}', "drawDate":"2025-03-12" \
+#             -b cookies.txt
+
+#       # 🔄 Scraping des résultats FDJ via le service Spring Boot
+#       - name: 🔄 Run Loto Scraper
+#         run: |
+#           curl -X GET "http://localhost:8082/api/loto/scrape"
+
+#       # 🏆 Calcul automatique des gains via l’API
+#       - name: 🏆 Calculate Ticket Winnings
+#         run: |
+#           curl -X GET "http://localhost:8082/api/gains/calculate"
+
+#       # 📅 Vérifier les tirages disponibles
+#       - name: 🔍 Get Available Draw Dates
+#         run: |
+#           curl -X GET "http://localhost:8082/api/tirages/dates"
+
+#       # 📜 Vérifier l'historique des résultats
+#       - name: 📜 Get Last 20 Lottery Results
+#         run: |
+#           curl -X GET "http://localhost:8082/api/historique/last20"
+
+#       # 🔒 Tester un endpoint protégé avec JWT
+#       - name: 🔒 Get Authenticated User Info
+#         run: |
+#           curl -X GET "http://localhost:8082/api/auth/me" \
+#             -H "Authorization: Bearer ${{ steps.login.outputs.jwt_token }}" \
+#             -b cookies.txt
+
+#       # 🏷 Vérifier le ticket soumis
+#       - name: 📑 Get Ticket Info
+#         run: |
+#           curl -X GET "http://localhost:8082/api/tickets"
+
+#       # Arrêter et nettoyer les conteneurs Docker
+#       - name: 🛑 Stop & Clean Docker Containers
+#         run: docker compose down -v
+
+#   deploy:
+#     name: 🚀 Deploy to Vercel
+#     runs-on: ubuntu-latest
+#     needs: test-integration
+
+#     steps:
+#       - name: 🛠 Checkout code
+#         uses: actions/checkout@v4
+
+#       # Installer le CLI Vercel
+#       - name: ⚡ Install Vercel CLI
+#         run: npm install -g vercel
+
+#       # Déployer l'API et Swagger UI sur Vercel
+#       - name: 🚀 Deploy Swagger UI on Vercel
+#         # run: vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+name: 🚀 CI/CD - Loto Tracker API (Install and run Spring Boot / Integration Tests with Docker, MongoDB, and SQLite)
 
 on:
   push:
@@ -755,31 +915,24 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y ca-certificates curl gnupg
-
-          # Ajouter la clé GPG officielle de Docker
           sudo install -m 0755 -d /etc/apt/keyrings
           curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo tee /etc/apt/keyrings/docker.asc > /dev/null
           sudo chmod a+r /etc/apt/keyrings/docker.asc
-
-          # Ajouter le dépôt Docker officiel
           echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-
           sudo apt update
           sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-
-          # Vérifier les installations
           docker --version
           docker compose version
 
-      # Démarrer les conteneurs Docker (MySQL, MongoDB, API)
+      # Démarrer les conteneurs Docker (MySQL, SQLite & MongoDB)
       - name: 🐳 Start Docker Containers (MySQL, SQLite & MongoDB)
         run: docker compose up -d --build
 
-      # Attendre le démarrage de l’API
+      # Attendre que l’API soit prête (Swagger UI & Health Check)
       - name: ⏳ Wait for API & Swagger UI to be ready
         run: |
           echo "Waiting for API..."
-          until curl --output /dev/null --silent --head --fail http://localhost:8082/swagger-ui.html; do
+          until curl --output /dev/null --silent --head --fail http://localhost:8082/api/hello; do
             printf '.'
             sleep 5
           done
@@ -808,7 +961,7 @@ jobs:
           curl -X POST "http://localhost:8082/api/tickets" \
             -H "Content-Type: application/json" \
             -H "Authorization: Bearer ${{ steps.login.outputs.jwt_token }}" \
-            -d '{"numbers":[1,2,3,4,5],"luckyNumber":6}', "drawDate":"2025-03-12" \
+            -d '{"numbers":[1,2,3,4,5],"luckyNumber":6, "drawDate":"2025-03-12"}' \
             -b cookies.txt
 
       # 🔄 Scraping des résultats FDJ via le service Spring Boot
@@ -861,5 +1014,5 @@ jobs:
         run: npm install -g vercel
 
       # Déployer l'API et Swagger UI sur Vercel
-      - name: 🚀 Deploy Swagger UI on Vercel
-        run: vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
+      # - name: 🚀 Deploy Swagger UI on Vercel
+        # run: vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
