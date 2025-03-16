@@ -373,7 +373,7 @@
 #         run: npm install -g vercel
 
 
-name: 🚀 CI/CD - Loto Tracker API (Docker)
+name: 🚀 CI/CD - Loto Tracker API (Test run Docker / Test install and run Spring-boot)
 
 on:
   push:
