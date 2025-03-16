@@ -3636,12 +3636,17 @@ jobs:
             -d '{"numbers":[1,2,3,4,5],"luckyNumber":6, "drawDate":"2025-03-12"}' \
             -b cookies.txt
 
-      # 🔄 Scraping des résultats FDJ
+      # # 🔄 Scraping des résultats FDJ
+      # - name: 🔄 Run Loto Scraper
+      #   run: |
+      #     response=$(curl -s -o response.json -w "%{http_code}" -X GET "http://localhost:8082/api/loto/scrape")
+      #     echo "🔍 Scraper Response JSON:"
+      #     cat response.json | jq .
+
+      # 🔄 Scraping des résultats FDJ via le service Spring Boot
       - name: 🔄 Run Loto Scraper
         run: |
-          response=$(curl -s -o response.json -w "%{http_code}" -X GET "http://localhost:8082/api/loto/scrape")
-          echo "🔍 Scraper Response JSON:"
-          cat response.json | jq .
+          curl -X GET "http://localhost:8082/api/loto/scrape"
 
       # 🏆 Calcul automatique des gains
       - name: 🏆 Calculate Ticket Winnings
