@@ -2601,6 +2601,25 @@ jobs:
           echo "🔍 JWT Token: ${{ env.JWT_TOKEN }}"
           echo $JWT_TOKEN | cut -d "." -f2 | base64 -d | jq .
 
+      # 🔒 Check API Access for User
+      - name: 🔒 Check API Access for User
+        run: |
+          response=$(curl -s -o response.json -w "%{http_code}" -X GET "http://localhost:8082/api/auth/me" \
+            -H "Authorization: Bearer ${{ env.JWT_TOKEN }}" \
+            -H "Accept: application/json" \
+            -b cookies.txt)
+
+          echo "🔍 User Info Response:"
+          cat response.json
+
+          if [ "$response" -eq 200 ]; then
+            echo "✅ Authenticated user info retrieved!"
+          else
+            echo "❌ Failed to retrieve user info. HTTP Code: $response"
+            exit 1
+          fi
+
+
 
 
       # 🎫 Tester la soumission d’un ticket
