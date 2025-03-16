@@ -12,24 +12,25 @@
 ![GitHub last commit](https://img.shields.io/github/last-commit/SDINAHET/Loto-Tracker-API) -->
 
 
-[![Version](https://img.shields.io/badge/version-2.0.0-brightgreen?style=for-the-badge&logo=git)](https://github.com/SDINAHET/Loto-Tracker-API/releases)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](https://github.com/SDINAHET/Loto-Tracker-API/blob/main/LICENSE)
+[![Version](https://img.shields.io/badge/version-2.0.0-brightgreen?style=for-the-badge&logo=git)](https://github.com/SDINAHET/Loto_API/releases)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](https://github.com/SDINAHET/Loto_API/blob/main/LICENSE)
 
 ### 📦 **Build et Couverture des Tests**
-[![CI Build](https://github.com/SDINAHET/Loto-Tracker-API/actions/workflows/ci.yml/badge.svg)](https://github.com/SDINAHET/Loto-Tracker-API/actions)
-[![Coverage](https://img.shields.io/codecov/c/github/SDINAHET/Loto-Tracker-API)](https://codecov.io/gh/SDINAHET/Loto-Tracker-API)
+[![CI Build](https://github.com/SDINAHET/Loto_API/actions/workflows/ci.yml/badge.svg)](https://github.com/SDINAHET/Loto_API/actions)
+[![Coverage](https://img.shields.io/codecov/c/github/SDINAHET/Loto_API)](https://codecov.io/gh/SDINAHET/Loto_API)
 [![Deploy to Vercel](https://img.shields.io/badge/Deploy-Vercel-black)](https://loto-api-black.vercel.app)
 
 ### 📊 **Statistiques du Projet**
-![GitHub Repo stars](https://img.shields.io/github/stars/SDINAHET/Loto-Tracker-API?style=social)
-![GitHub forks](https://img.shields.io/github/forks/SDINAHET/Loto-Tracker-API?style=social)
-![GitHub issues](https://img.shields.io/github/issues/SDINAHET/Loto-Tracker-API?style=for-the-badge&color=red)
-![GitHub last commit](https://img.shields.io/github/last-commit/SDINAHET/Loto-Tracker-API?style=for-the-badge&color=blue)
+![GitHub Repo stars](https://img.shields.io/github/stars/SDINAHET/Loto_API?style=social)
+![GitHub forks](https://img.shields.io/github/forks/SDINAHET/Loto_API?style=social)
+![GitHub issues](https://img.shields.io/github/issues/SDINAHET/Loto_API?style=for-the-badge&color=red)
+![GitHub last commit](https://img.shields.io/github/last-commit/SDINAHET/Loto_API?style=for-the-badge&color=blue)
 
 ### 🔗 **Liens Importants**
 [![Swagger Docs](https://img.shields.io/badge/Swagger-Docs-3cb371?style=for-the-badge&logo=swagger)](http://localhost:8082/swagger-ui/index.html)
-[![Project Board](https://img.shields.io/badge/Project-Board-orange?style=for-the-badge&logo=trello)](https://github.com/SDINAHET/Loto-Tracker-API/projects)
-[![Discussions](https://img.shields.io/badge/GitHub-Discussions-blueviolet?style=for-the-badge&logo=github)](https://github.com/SDINAHET/Loto-Tracker-API/discussions)
+[![Frontend](https://img.shields.io/badge/Frontend-127.0.0.1:5500-blue?style=for-the-badge&logo=googlechrome)](http://127.0.0.1:5500/)
+[![Project Board](https://img.shields.io/badge/Project-Board-orange?style=for-the-badge&logo=trello)](https://github.com/SDINAHET/Loto_API/projects)
+[![Discussions](https://img.shields.io/badge/GitHub-Discussions-blueviolet?style=for-the-badge&logo=github)](https://github.com/SDINAHET/Loto_API/discussions)
 
 
 ## 📌 Project Description

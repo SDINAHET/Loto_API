@@ -59,7 +59,7 @@ jobs:
       - name: 🚀 Run Spring Boot Application
         run: mvn spring-boot:run &
         env:
-          SPRING_PROFILES_ACTIVE: production
+          SPRING_PROFILES_ACTIVE: developpement
 
       - name: 🛑 Wait for app to start (timeout 30s)
         run: sleep 30
@@ -81,4 +81,4 @@ jobs:
         run: npm install -g vercel
 
     #   - name: 🚀 Deploy to Vercel
-    #     run: vercel --prod --token=${{ secrets.VERCEL_TOKEN }} 
+    #     run: vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
