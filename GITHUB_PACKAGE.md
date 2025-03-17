@@ -42,6 +42,11 @@ If you have a `docker-compose.yml` file configured for both services, run:
 docker-compose up -d
 ```
 
+or if you want:
+```bash
+docker pull ghcr.io/sdinahet/loto_api:latest && docker pull ghcr.io/sdinahet/loto_front:latest && docker-compose up -d
+```
+
 🔗 **Docker Compose File:** [compose.yaml](https://github.com/SDINAHET/Loto_API/blob/main/compose.yaml)
 
 ---
