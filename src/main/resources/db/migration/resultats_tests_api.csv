@@ -1,0 +1,6 @@
+Critère,Valeur Observée,Objectif
+Temps moyen de réponse de l'API (ms),199.81,~200ms
+Taux de succès des requêtes API (%),98.2,98%
+Nombre d'utilisateurs testeurs,15.0,15
+Nombre de tickets analysés,266.0,250+
+Nombre de bugs critiques résolus,10.0,10

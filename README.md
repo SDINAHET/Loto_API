@@ -39,6 +39,12 @@
 [![Project Board](https://img.shields.io/badge/Project-Board-orange?style=for-the-badge&logo=trello)](https://github.com/SDINAHET/Loto_API/projects)
 [![Discussions](https://img.shields.io/badge/GitHub-Discussions-blueviolet?style=for-the-badge&logo=github)](https://github.com/SDINAHET/Loto_API/discussions)
 
+<!-- [![🇬🇧 English Version](https://img.shields.io/badge/Docs-English-blue?style=for-the-badge&logo=readthedocs)](README.md) -->
+<!-- [![🇫🇷 Version Française](https://img.shields.io/badge/Docs-Français-red?style=for-the-badge&logo=readthedocs)](README-FR.md) -->
+[![🇬🇧 English Version](https://img.shields.io/badge/Docs-English-blue?style=for-the-badge&logo=readthedocs)](README.md#english-version)
+[![🇫🇷 Version Française](https://img.shields.io/badge/Docs-Français-red?style=for-the-badge&logo=readthedocs)](README.md#version-française)
+
+
 # English version:
 ## 📌 Table of Contents
 1. [📌 Project Description](#-project-description)
@@ -155,7 +161,7 @@ Available front on:
 | Method | Endpoint | Description |
 |--------|---------|-------------|
 | POST | `/api/users/register` | User registration |
-| POST | `/api/auth/login` | Login and JWT generation |
+| POST | `/api/auth/login3` | Login and JWT generation |
 | GET  | `/api/auth/me` | Retrieve user info |
 | GET  | `/api/auth/me/firstname` | Retrieve user's first name |
 | POST | `/api/auth/logout` | Logout (JWT deletion) |
@@ -342,7 +348,7 @@ Project under **MIT License** - Free to use and modify.
 
 ---
 
-## 👥 [Authors](AUTHORS)
+## 👥 [Authors](AUTHORS.md)
 
 <table>
   <tr>
@@ -486,7 +492,7 @@ src/main/resources/static → Définit le dossier contenant les fichiers à serv
 | Méthode | Endpoint | Description |
 |---------|---------|-------------|
 | POST | `/api/users/register` | Inscription utilisateur |
-| POST | `/api/auth/login` | Connexion et génération du JWT |
+| POST | `/api/auth/login3` | Connexion et génération du JWT |
 | GET  | `/api/auth/me` | Récupération des infos utilisateur |
 | GET  | `/api/auth/me/firstname` | Récupérer le prénom de l'utilisateur |
 | POST | `/api/auth/logout` | Déconnexion (suppression du JWT) |
@@ -672,7 +678,7 @@ Projet sous licence **MIT** - Libre d'utilisation et de modification.
 
 ---
 
-## 👥 [Auteurs](AUTHORS)
+## 👥 [Auteurs](AUTHORS.md)
 
 <table>
   <tr>
