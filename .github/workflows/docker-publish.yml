@@ -62,15 +62,15 @@
 #         #   docker push $IMAGE_NAME:latest
 #         #   docker push $IMAGE_NAME:${{ github.sha }}
 
-		# run: |
-		# 	IMAGE_NAME=ghcr.io/$(echo "${{ github.repository_owner }}/loto_api" | tr '[:upper:]' '[:lower:]')
+#          run: |
+#          IMAGE_NAME=ghcr.io/$(echo "${{ github.repository_owner }}/loto_api" | tr '[:upper:]' '[:lower:]')
 
-		# 	# Construire l'image avec un tag latest + SHA du commit
-		# 	docker build --platform linux/amd64 -t $IMAGE_NAME:latest -t $IMAGE_NAME:${{ github.sha }} .
+#          # Construire l'image avec un tag latest + SHA du commit
+#          docker build --platform linux/amd64 -t $IMAGE_NAME:latest -t $IMAGE_NAME:${{ github.sha }} .
 
-		# 	# Pousser les deux tags
-		# 	docker push $IMAGE_NAME:latest
-		# 	docker push $IMAGE_NAME:${{ github.sha }}
+#          # Pousser les deux tags
+#          docker push $IMAGE_NAME:latest
+#          docker push $IMAGE_NAME:${{ github.sha }}
 
 
 #       - name: Logout from GitHub Container Registry
