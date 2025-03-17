@@ -30,7 +30,8 @@
 ### 📊 **Statistiques du Projet**
 ![GitHub Repo stars](https://img.shields.io/github/stars/SDINAHET/Loto_API?style=social)
 ![GitHub forks](https://img.shields.io/github/forks/SDINAHET/Loto_API?style=social)
-![GitHub issues](https://img.shields.io/github/issues/SDINAHET/Loto_API?style=for-the-badge&color=red)
+<!-- ![GitHub issues](https://img.shields.io/github/issues/SDINAHET/Loto_API?style=for-the-badge&color=red) -->
+[![GitHub Issues](https://img.shields.io/badge/Support-Issues-red?style=for-the-badge&logo=github)](https://github.com/SDINAHET/Loto_API/issues)
 ![GitHub last commit](https://img.shields.io/github/last-commit/SDINAHET/Loto_API?style=for-the-badge&color=blue)
 
 ### 🔗 **Liens Importants**
@@ -42,6 +43,9 @@
 [![🛠 Contributing](https://img.shields.io/badge/Contributing-Guide-orange?style=for-the-badge)](CONTRIBUTING.md)
 [![📑 Security](https://img.shields.io/badge/Security-Policy-red?style=for-the-badge)](SECURITY.md)
 [![🤝 Code of Conduct](https://img.shields.io/badge/Code%20of%20Conduct-Active-blueviolet?style=for-the-badge)](CODE_OF_CONDUCT.md)
+[![📌 Support Guide](https://img.shields.io/badge/Support-Guide-orange?style=for-the-badge&logo=readthedocs)](SUPPORT.md)
+<!-- [![📌 Support Guide](https://img.shields.io/badge/Support-Guide-orange?style=for-the-badge&logo=readthedocs)](https://github.com/SDINAHET/Loto_API/blob/main/SUPPORT.md) -->
+
 
 
 <!-- [![🇬🇧 English Version](https://img.shields.io/badge/Docs-English-blue?style=for-the-badge&logo=readthedocs)](README.md) -->
