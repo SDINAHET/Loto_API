@@ -1,0 +1,49 @@
+# Configuration du projet GitHub
+repository:
+  name: "Loto_API"  # ✅ Nom du dépôt corrigé
+  description: "API for tracking loto results / API pour la gestion et le suivi des gains Loto."
+  homepage: "https://github.com/SDINAHET/Loto_API"  # ✅ Lien mis à jour
+  topics: [loto, api, spring-boot, java, jwt, security]
+  default_branch: main
+  visibility: public  # public ou private selon ton besoin
+
+# Activation des fonctionnalités
+features:
+  issues: true  # ✅ Activation des issues pour gérer les bugs/propositions
+  discussions: true  # ✅ Activation des discussions pour la communauté
+  wiki: false  # ❌ Désactivation du wiki si non utilisé
+
+# Protection des branches
+branches:
+  - name: "main"  # ✅ Protection de la branche principale
+    protection:
+      required_status_checks:
+        strict: true
+        contexts: ["CI Build", "Linting"]
+      enforce_admins: true  # ✅ Appliquer les règles même aux admins
+      required_pull_request_reviews:
+        required_approving_review_count: 1  # ✅ Au moins 1 review avant merge
+      restrictions:
+        users: ["SDINAHET"]  # ✅ Seul toi peux merger directement
+        teams: ["maintainers"]  # ✅ Ajout d'une équipe si besoin
+
+# Sécurité et automatisation
+security:
+  dependabot_updates: true  # ✅ Mises à jour automatiques des dépendances
+  secret_scanning: true  # ✅ Vérification des secrets dans le code
+  vulnerability_alerts: true  # ✅ Alertes pour les failles de sécurité
+
+# Gestion des collaborateurs
+collaborators:
+  - username: "SDINAHET"
+    permission: "admin"  # ✅ Toi en admin
+  - username: "contributor1"
+    # permission: "write"  # ✅ Un contributeur avec accès écriture
+    permission: "read"  # ✅ Un contributeur avec accès read
+
+# Autorisations GitHub Actions
+actions:
+  enabled: true  # ✅ Activation de GitHub Actions pour CI/CD
+  permissions:
+    contents: "read"  # ✅ Lecture du code
+    issues: "write"  # ✅ Permettre la création d'issues via les actions

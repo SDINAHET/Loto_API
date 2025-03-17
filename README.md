@@ -38,6 +38,11 @@
 [![Frontend](https://img.shields.io/badge/Frontend-127.0.0.1:5500-blue?style=for-the-badge&logo=googlechrome)](http://127.0.0.1:5500/)
 [![Project Board](https://img.shields.io/badge/Project-Board-orange?style=for-the-badge&logo=trello)](https://github.com/SDINAHET/Loto_API/projects)
 [![Discussions](https://img.shields.io/badge/GitHub-Discussions-blueviolet?style=for-the-badge&logo=github)](https://github.com/SDINAHET/Loto_API/discussions)
+[![📜 Changelog](https://img.shields.io/badge/Changelog-View-blue?style=for-the-badge)](CHANGELOG.md)
+[![🛠 Contributing](https://img.shields.io/badge/Contributing-Guide-orange?style=for-the-badge)](CONTRIBUTING.md)
+[![📑 Security](https://img.shields.io/badge/Security-Policy-red?style=for-the-badge)](SECURITY.md)
+[![🤝 Code of Conduct](https://img.shields.io/badge/Code%20of%20Conduct-Active-blueviolet?style=for-the-badge)](CODE_OF_CONDUCT.md)
+
 
 <!-- [![🇬🇧 English Version](https://img.shields.io/badge/Docs-English-blue?style=for-the-badge&logo=readthedocs)](README.md) -->
 <!-- [![🇫🇷 Version Française](https://img.shields.io/badge/Docs-Français-red?style=for-the-badge&logo=readthedocs)](README-FR.md) -->
