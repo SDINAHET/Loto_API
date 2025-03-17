@@ -35,6 +35,7 @@
 ![GitHub last commit](https://img.shields.io/github/last-commit/SDINAHET/Loto_API?style=for-the-badge&color=blue)
 
 ### 🔗 **Liens Importants**
+[![Landing Page](https://img.shields.io/badge/Landing_Page-Loto_Tracker_API-blue?style=for-the-badge&logo=githubpages)](https://sdinahet.github.io/SDINAHET/Landing_page_loto_API.html)
 [![Swagger Docs](https://img.shields.io/badge/Swagger-Docs-3cb371?style=for-the-badge&logo=swagger)](http://localhost:8082/swagger-ui/index.html)
 [![Frontend](https://img.shields.io/badge/Frontend-127.0.0.1:5500-blue?style=for-the-badge&logo=googlechrome)](http://127.0.0.1:5500/)
 [![Project Board](https://img.shields.io/badge/Project-Board-orange?style=for-the-badge&logo=trello)](https://github.com/SDINAHET/Loto_API/projects)
@@ -59,7 +60,7 @@
 [![🇫🇷 Version Française](https://img.shields.io/badge/Docs-Français-red?style=for-the-badge&logo=readthedocs)](README.md#version-française)
 <!-- [![🇫🇷 Version Française](https://img.shields.io/badge/Docs-Français-red?style=for-the-badge&logo=readthedocs)](README.md#loto-api---gestion-et-calcul-des-gains) -->
 <!-- # 🎰 Loto API - Gestion et Calcul des Gains -->
-
+<!-- https://sdinahet.github.io/SDINAHET/Landing_page_loto_API.html  -->
 
 # English version:
 
