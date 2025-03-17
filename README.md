@@ -52,9 +52,14 @@
 <!-- [![🇫🇷 Version Française](https://img.shields.io/badge/Docs-Français-red?style=for-the-badge&logo=readthedocs)](README-FR.md) -->
 [![🇬🇧 English Version](https://img.shields.io/badge/Docs-English-blue?style=for-the-badge&logo=readthedocs)](README.md#english-version)
 [![🇫🇷 Version Française](https://img.shields.io/badge/Docs-Français-red?style=for-the-badge&logo=readthedocs)](README.md#version-française)
+<!-- [![🇫🇷 Version Française](https://img.shields.io/badge/Docs-Français-red?style=for-the-badge&logo=readthedocs)](README.md#loto-api---gestion-et-calcul-des-gains) -->
+<!-- # 🎰 Loto API - Gestion et Calcul des Gains -->
 
 
 # English version:
+
+# 🎰 Loto Tracker API
+
 ## 📌 Table of Contents
 1. [📌 Project Description](#-project-description)
 2. [🏗️ Project Architecture](#-project-architecture)
@@ -380,9 +385,12 @@ Project under **MIT License** - Free to use and modify.
 
 
 
-# 🎰 Loto API - Gestion et Calcul des Gains
+
 
 # Version française:
+
+# 🎰 Loto API - Gestion et Calcul des Gains
+
 ## 📌 Table des Matières
 1. [📌 Description du Projet](#-description-du-projet)
 2. [🏗️ Architecture du Projet](#-architecture-du-projet)
