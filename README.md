@@ -45,7 +45,7 @@
 [![🤝 Code of Conduct](https://img.shields.io/badge/Code%20of%20Conduct-Active-blueviolet?style=for-the-badge)](CODE_OF_CONDUCT.md)
 [![📌 Support Guide](https://img.shields.io/badge/Support-Guide-orange?style=for-the-badge&logo=readthedocs)](SUPPORT.md)
 [![Docker Packages](https://img.shields.io/badge/GitHub-Package-24292e?style=for-the-badge&logo=github)](https://github.com/SDINAHET?tab=packages)
-[![GitHub Packages](https://img.shields.io/badge/Loto_API-Package-24292e?style=for-the-badge&logo=github)](https://github.com/SDINAHET/Loto_API/packages)
+[![Docker Packages](https://img.shields.io/badge/Loto_API-Package-24292e?style=for-the-badge&logo=github)](https://github.com/SDINAHET/Loto_API/packages)
 
 
 <!-- [![📌 Support Guide](https://img.shields.io/badge/Support-Guide-orange?style=for-the-badge&logo=readthedocs)](https://github.com/SDINAHET/Loto_API/blob/main/SUPPORT.md) -->
