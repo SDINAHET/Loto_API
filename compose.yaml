@@ -21,10 +21,10 @@ services:
     depends_on:
       - backend
 
-  # mongodb:
-  #   image: mongo:latest
   mongodb:
-    image: ghcr.io/sdinahlet/loto_mongodb:latest
+    image: mongo:latest
+  # mongodb:
+  #   image: ghcr.io/sdinahlet/loto_mongodb:latest
 
     container_name: mongodb
     restart: always
