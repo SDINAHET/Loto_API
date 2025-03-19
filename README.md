@@ -334,6 +334,9 @@ If you want to remove all images and associated volumes:
 docker-compose down --rmi all --volumes
 ```
 
+
+Guide for the instalation of Docker package on Github for the project Loto_API: [GITHUB_PACKAGE.md](GITHUB_PACKAGE.md)
+
 ---
 
 ## 🚀 Roadmap & Future Improvements
@@ -352,13 +355,6 @@ To export all dependencies from a **Maven** project to a text file, use the foll
 ```sh
 mvn dependency:list > dependencies.txt
 ```
-
-## 👨‍💻 Author & Contributions
-Developed by [@SDINAHET](https://github.com/SDINAHET)
-Contributions are welcome! Open an issue or submit a PR 🚀
-
----
-
 ## 📜 [Licence](LICENSE)
 Project under **MIT License** - Free to use and modify.
 
@@ -368,7 +364,11 @@ Project under **MIT License** - Free to use and modify.
 
 ---
 
-## 👥 [Authors](AUTHORS.md)
+## 👨‍💻 Author & Contributions
+Developed by [@SDINAHET](https://github.com/SDINAHET)
+Contributions are welcome! Open an issue or submit a PR 🚀
+
+👥 [Authors](AUTHORS.md)
 
 <table>
   <tr>
@@ -668,6 +668,8 @@ Si tu veux supprimer toutes les images et volumes associés :
 docker-compose down --rmi all --volumes
 ```
 
+Guide pour l'installation des package Docker sur Github pour le projet Loto_API: [GITHUB_PACKAGE.md](GITHUB_PACKAGE.md)
+
 ---
 
 ## 🚀 Roadmap & Améliorations Futures
@@ -686,10 +688,6 @@ To export all dependencies from a **Maven** project to a text file, use the foll
 mvn dependency:list > dependencies.txt
 ```
 
-## 👨‍💻 Auteur & Contributions
-Développé par [@SDINAHET](https://github.com/SDINAHET)
-Contributions bienvenues ! Ouvrez une issue ou proposez une PR 🚀
-
 ---
 
 ## 📜 [Licence](LICENSE)
@@ -701,7 +699,11 @@ Projet sous licence **MIT** - Libre d'utilisation et de modification.
 
 ---
 
-## 👥 [Auteurs](AUTHORS.md)
+## 👨‍💻 Auteur & Contributions
+Développé par [@SDINAHET](https://github.com/SDINAHET)
+Contributions bienvenues ! Ouvrez une issue ou proposez une PR 🚀
+
+👥 [Auteurs](AUTHORS.md)
 
 <table>
   <tr>
@@ -715,12 +717,4 @@ Projet sous licence **MIT** - Libre d'utilisation et de modification.
     </td>
   </tr>
 </table>
-
-
-
-
-
-
-
-
 
