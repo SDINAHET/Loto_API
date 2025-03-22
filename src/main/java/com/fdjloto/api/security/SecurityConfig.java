@@ -60,7 +60,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // 🔴 Désactive CSRF pour les APIs REST stateless
                 // .csrf(AbstractHttpConfigurer::disable) // ✅ Version optimisée
                 // .anonymous(anonymous -> anonymous.disable()) // Supprime l'authentification anonyme
-                .cors(cors -> cors.disable()) // 🔴 Désactive CORS (ajoute une config si nécessaire)
+                // .cors(cors -> cors.disable()) // 🔴 Désactive CORS (ajoute une config si nécessaire)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 // .httpBasic(httpBasic -> httpBasic.disable()) // 🔴 Désactive l'authentification basique
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 🔴 JWT = stateless
                 .authorizeHttpRequests(auth -> auth
@@ -68,7 +69,7 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/v1/api-docs/**", "/swagger-ui.html", "/login-swagger").permitAll() // ✅ Swagger accessible sans JWT
                         // .requestMatchers("/api/health").permitAll()
                         // Auth API accessible sans authentification
-                        .requestMatchers("/api/auth/**", "/api/hello", "/localhost:5500/**", "api/loto/scrape").permitAll()
+                        .requestMatchers("/api/auth/**", "/api/health", "/api/hello", "/localhost:5500/**", "api/loto/scrape").permitAll()
                         // Endpoints protégés par JWT
                         // .requestMatchers("/api/protected/**").permitAll()
                         // .requestMatchers("/api/tickets/**").authenticated()
@@ -108,5 +109,27 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)  // 🔐 Ajoute le filtre JWT
                 .build();
     }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of(
+            "http://192.168.1.83:5500",
+            "http://localhost:5500",
+            "http://192.168.1.83:8082",
+            "http://localhost:8082",
+            "http://192.168.1.83:27017",
+            "http://localhost:27017"
+        ));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
+
 
 }

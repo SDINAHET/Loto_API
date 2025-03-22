@@ -217,6 +217,7 @@ Start the containers:
 ```bash
 docker-compose up -d --build
 http-server src/main/resources/static -p 5500
+ttp-server src/main/resources/static -p 5500 -a 0.0.0.0
 ```
 Then open your browser at http://127.0.0.1:5500/ to access the frontend
 and for the backend (Swagger): http://localhost:8082/swagger-ui/index.html.
@@ -338,6 +339,7 @@ L'interface web peut être servie via **Live Server** sur VSCode. Ouvrir `index.
 ```bash
 npm install -g http-server
 http-server src/main/resources/static -p 5500
+http-server src/main/resources/static -p 5500 -a 0.0.0.0
 ```
 Available front on:
   http://127.0.0.1:5500

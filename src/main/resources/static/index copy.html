@@ -243,7 +243,8 @@
     <!-- <div id="loading-screen">
         <div class="loader"></div>
         <p>Chargement du site Loto Tracker... Veuillez patienter.</p>
-        <p>http://localhost:8082/api/health</p>
+        // <p>http://localhost:8082/api/health</p>
+        <p id="api-health-url"></p>
     </div> -->
 
     <!-- 📌 Contenu principal caché au départ -->
@@ -416,6 +417,21 @@
     </div>
 
     <script>
+        <!-- Configuration dynamique du backend -->
+        document.addEventListener("DOMContentLoaded", function () {
+            const protocol = window.location.protocol;
+            const hostname = window.location.hostname;
+            const port = "8082";
+            const baseUrl = `${protocol}//${hostname}:${port}`;
+            const healthUrl = `${baseUrl}/api/health`;
+
+            document.getElementById("health-link").innerHTML = `
+                🔗 <a href="${healthUrl}" target="_blank">${healthUrl}</a>
+            `;
+        });
+
+
+
         document.addEventListener("DOMContentLoaded", function () {
             let triggerTabList = [].slice.call(document.querySelectorAll('#tirageTabs button'));
             triggerTabList.forEach(function (triggerEl) {
@@ -499,6 +515,8 @@
             try {
                 let formattedDate = formatDateForAPI(date);
                 let apiUrl = `http://192.168.1.83:8082/api/historique/last20/Detail/tirage/${formattedDate}`;
+                // let apiUrl = `${baseUrl}/api/historique/last20/Detail/tirage/${formattedDate}`;
+
                 console.log("Requête API vers :", apiUrl);
 
                 let response = await axios.get(apiUrl);
@@ -882,8 +900,10 @@
             let apiUrl;
             if (!endDate) {
                 apiUrl = `http://192.168.1.83:8082/api/historique/last20/Detail/tirages?startDate=${startDate}`;
+                //apiUrl = `${baseUrl}/api/historique/last20/Detail/tirages?startDate=${startDate}`;
             } else {
                 apiUrl = `http://192.168.1.83:8082/api/historique/last20/Detail/tirages?startDate=${startDate}&endDate=${endDate}`;
+                //apipiUrl = `${baseUrl}/api/historique/last20/Detail/tirages?startDate=${startDate}&endDate=${endDate}`;
             }
 
             console.log("Requête API vers :", apiUrl);
@@ -966,7 +986,8 @@
         async function showPrediction() {
             try {
                 console.log("📡 Récupération des prédictions...");
-                let response = await axios.get("http://192.168.1.83:8082/api/predictions/latest");
+                const baseUrl = "http://192.168.1.83:8082";
+                let response = await axios.get("${baseUrl}/api/predictions/latest");
                 let data = response.data;
 
                 if (!data || !Array.isArray(data.probableNumbers) || typeof data.sortieRates !== "object") {
@@ -1068,7 +1089,8 @@
         // ✅ Vérifie si l'utilisateur est connecté via le cookie
         async function checkUserAuth() {
             try {
-                const response = await fetch("http://192.168.1.83:8082/api/protected/userinfo", {
+                const baseUrl = "http://192.168.1.83:8082";
+                const response = await fetch("${baseUrl}/api/protected/userinfo", {
                     method: "GET",
                     credentials: "include" // Envoie le cookie JWT automatiquement
                 });
@@ -1093,7 +1115,8 @@
         // ✅ Déconnexion
         async function logout() {
             try {
-                const response = await fetch("http://192.168.1.83:8082/api/auth/logout", {
+                const baseUrl = "http://192.168.1.83:8082";
+                const response = await fetch("${baseUrl}/api/auth/logout", {
                     method: "POST",
                     credentials: "include"
                 });
@@ -1110,7 +1133,8 @@
         // ✅ Ouvrir la modale de paramètres
         async function openSettings() {
             try {
-                const response = await fetch("http://192.168.1.83:8082/api/protected/userinfo", {
+                const baseUrl = "http://192.168.1.83:8082";
+                const response = await fetch("${baseUrl}/api/protected/userinfo", {
                     method: "GET",
                     credentials: "include"
                 });
@@ -1147,7 +1171,8 @@
             };
 
             try {
-                const response = await fetch("http://192.168.1.83:8082/api/users/me", {
+                const baseUrl = "http://192.168.1.83:8082";
+                const response = await fetch("${baseUrl}/api/users/me", {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
                     credentials: "include",
@@ -1332,6 +1357,7 @@
 
 </body>
 </html>
+
 
 
 

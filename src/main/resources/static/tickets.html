@@ -107,9 +107,9 @@
 
 
 <script>
-const API_URL = "http://localhost:8082/api/tickets";
-const API_GAINS = "http://localhost:8082/api/gains";
-const API_TIRAGE = "http://localhost:8082/api/historique/last20/Detail/tirage/";
+const API_URL = "http://192.168.1.83:8082/api/tickets";
+const API_GAINS = "http://192.168.1.83:8082/api/gains";
+const API_TIRAGE = "http://192.168.1.83:8082/api/historique/last20/Detail/tirage/";
 
 async function showTirageDetails(date) {
     try {
@@ -393,7 +393,7 @@ async function deleteTicket(ticketId) {
 
 async function checkUserAuth() {
     try {
-        const response = await axios.get("http://localhost:8082/api/auth/me", { withCredentials: true });
+        const response = await axios.get("http://192.168.1.83:8082/api/auth/me", { withCredentials: true });
 
         if (response.status === 200 && response.data.email) {
             // Vérifie si `first_name` existe, sinon affiche l'email
@@ -414,7 +414,7 @@ document.addEventListener("DOMContentLoaded", checkUserAuth);
 
 // ✅ Déconnexion
 async function logout() {
-    await axios.post("http://localhost:8082/api/auth/logout", {}, { withCredentials: true });
+    await axios.post("http://192.168.1.83:8082/api/auth/logout", {}, { withCredentials: true });
     window.location.href = "index.html";
 }
 

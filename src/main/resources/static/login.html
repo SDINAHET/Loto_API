@@ -128,7 +128,7 @@
             const password = document.getElementById("password").value;
 
             try {
-                const response = await fetch("http://localhost:8082/api/auth/login3", {
+                const response = await fetch("http://192.168.1.83:8082/api/auth/login3", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -182,7 +182,7 @@
         // ✅ Déconnexion
         async function logout() {
         try {
-            const response = await fetch("http://localhost:8082/api/auth/logout", {
+            const response = await fetch("http://192.168.1.83:8082/api/auth/logout", {
                 method: "POST",
                 credentials: "include"
             });
@@ -198,7 +198,7 @@
 
         // Fonction pour gérer le login et stocker le token
         function handleLogin(username, password) {
-            axios.post('http://localhost:8082/api/auth/login4', {
+            axios.post('http://192.168.1.83:8082/api/auth/login4', {
                 username: username,
                 password: password
             })

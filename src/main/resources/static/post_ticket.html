@@ -65,7 +65,7 @@
 </div>
 
 <script>
-const API_URL = "http://localhost:8082/api/tickets";
+const API_URL = "http://192.168.1.83:8082/api/tickets";
 let userId = null; // Stockage de l'ID utilisateur
 
 document.addEventListener("DOMContentLoaded", async function () {
@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 async function checkUserAuth() {
     try {
         console.log("🔹 Vérification de l'utilisateur...");
-        const response = await axios.get("http://localhost:8082/api/auth/me", { withCredentials: true });
+        const response = await axios.get("http://192.168.1.83:8082/api/auth/me", { withCredentials: true });
 
         if (response.status !== 200 || !response.data.id) {
             alert("Vous devez être connecté pour ajouter un ticket.");

@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 // ✅ Charger les détails du ticket existant
 async function loadTicketDetails(ticketId) {
     try {
-        const response = await axios.get(`http://localhost:8082/api/tickets/${ticketId}`, { withCredentials: true });
+        const response = await axios.get(`http://192.168.1.83:8082/api/tickets/${ticketId}`, { withCredentials: true });
         const ticket = response.data;
 
         document.getElementById("ticketDate").value = ticket.drawDate || "";
@@ -165,7 +165,7 @@ document.getElementById("ticketForm").addEventListener("submit", async function 
     };
 
     try {
-        await axios.put(`http://localhost:8082/api/tickets/${ticketId}`, ticketData, {
+        await axios.put(`http://192.168.1.83:8082/api/tickets/${ticketId}`, ticketData, {
             withCredentials: true,  // 🔥 Assure que la session est bien envoyée
             headers: {
                 "Content-Type": "application/json",

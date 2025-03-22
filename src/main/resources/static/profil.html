@@ -74,7 +74,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 // ✅ Charger le profil utilisateur
 async function loadUserProfile() {
     try {
-        const response = await axios.get("http://localhost:8082/api/auth/me", { withCredentials: true });
+        const response = await axios.get("http://192.168.1.83:8082/api/auth/me", { withCredentials: true });
 
         if (!response.data || !response.data.id) {
             alert("Problème : L'ID utilisateur est invalide !");
@@ -101,7 +101,7 @@ async function loadUserProfile() {
 // ✅ Récupérer le JWT via API (si HttpOnly) ou Cookie direct
 async function getJwtToken() {
     try {
-        let response = await axios.get("http://localhost:8082/api/auth/token", { withCredentials: true });
+        let response = await axios.get("http://192.168.1.83:8082/api/auth/token", { withCredentials: true });
         return response.data.jwtToken || null;
     } catch (error) {
         console.error("❌ Impossible de récupérer le JWT :", error);
@@ -139,7 +139,7 @@ document.getElementById("profileForm").addEventListener("submit", async function
     }
 
     try {
-        let response = await axios.put(`http://localhost:8082/api/users/${userId}`, updatedData, {
+        let response = await axios.put(`http://192.168.1.83:8082/api/users/${userId}`, updatedData, {
             withCredentials: true,
             headers: {
                 "Content-Type": "application/json",
@@ -172,7 +172,7 @@ document.getElementById("profileForm").addEventListener("submit", async function
 
 async function checkUserAuth() {
     try {
-        const response = await axios.get("http://localhost:8082/api/auth/me", { withCredentials: true });
+        const response = await axios.get("http://192.168.1.83:8082/api/auth/me", { withCredentials: true });
 
         if (response.status === 200 && response.data.email) {
             // Vérifie si `first_name` existe, sinon affiche l'email
