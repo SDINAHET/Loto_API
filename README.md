@@ -497,6 +497,7 @@ L'interface web peut être servie via **Live Server** sur VSCode. Ouvrir `index.
 ```bash
 npm install -g http-server
 http-server src/main/resources/static -p 5500
+http-server src/main/resources/static -p 5500 -a 0.0.0.0
 ```
 Available front on:
   http://127.0.0.1:5500
@@ -737,3 +738,8 @@ flowchart TD
     B -->|Displays Results| A
 
 ```
+
+https://status.stephanedinahet.fr/status/loto
+
+http://stephanedinahet.fr
+https://stephanedinahet.fr

@@ -6,6 +6,8 @@
     <title>Résultats Loto</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" /> -->
+
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="loto_tracker.png">
@@ -232,6 +234,53 @@
             100% { left: 100%; bottom: -50px; }
         }
 
+        .next-draws-container {
+            display: flex;
+            flex-wrap: wrap;               /* ⬅️ Permet le retour à la ligne si besoin */
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            padding: 10px 0;
+            overflow-x: hidden;           /* ✅ Supprime la barre de scroll */
+        }
+        
+        
+
+        .next-date-box {
+            background: #f8f9fa;
+            border: 2px solid #0d6efd;
+            border-radius: 30px;
+            padding: 10px 20px;
+            font-weight: 600;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease-in-out;
+        }
+        
+        .next-date-box:hover {
+            transform: scale(1.05); /* petit zoom au survol */
+        }
+        
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .next-date-box {
+            /* ... styles actuels ... */
+            animation: fadeInUp 0.6s ease-in-out;
+        }
+        
+        
 
 
 
@@ -271,8 +320,14 @@
         <h1 class="text-center">Résultats du Loto</h1>
         <p class="text-center" id="current-time"></p>
         <div class="text-center my-3">
-            <h2>Prochain tirage dans :
-                <span id="countdown" class="countdown-container"></span></h2>
+            <!-- <h2>Prochain tirage dans : -->
+            <h3>
+                <p id="next-draw-info" class="text-center fw-bold text-primary mb-2"></p>
+                <div id="countdown" class="countdown-container"></div>
+                <!-- <div id="next-5-draws" class="text-center mt-3 fw-bold d-flex justify-content-center gap-4 flex-wrap text-dark"></div> -->
+                <div id="next-5-draws" class="next-draws-container"></div>
+                <audio id="alertSound" src="https://www.soundjay.com/buttons/sounds/beep-07.mp3" preload="auto"></audio>
+                <!-- <span id="countdown" class="countdown-container"></span></h2> -->
 
 
         </div>
@@ -433,19 +488,105 @@
         setInterval(updateTime, 1000);
         updateTime();
 
+        // function startCountdown() {
+            // setInterval(() => {
+                // let now = moment().tz("Europe/Paris");
+                // let nextDraw = moment().tz("Europe/Paris").add(2, 'days').set({ hour: 20, minute: 0, second: 0 });
+                // let diff = moment.duration(nextDraw.diff(now));
+
+                //// Mise à jour du texte avec un effet dynamique
+                // document.getElementById("countdown").innerText =
+                //    `${diff.days()}j ${diff.hours()}h ${diff.minutes()}m ${diff.seconds()}s`;
+
+            // }, 1000);
+        // }
+        // startCountdown();
+
         function startCountdown() {
+            const tirageDays = [1, 3, 6]; // Lundi, Mercredi, Samedi
+            const joursFr = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
+            let alerted = false; // Pour éviter de jouer le son plusieurs fois
+            const alertSound = document.getElementById("alertSound");
+        
+            function getNextDrawDate(baseDate = moment().tz("Europe/Paris")) {
+                let next = baseDate.clone().set({ hour: 20, minute: 0, second: 0, millisecond: 0 });
+                while (!tirageDays.includes(next.day()) || next.isBefore(baseDate)) {
+                    next.add(1, 'day');
+                }
+                return next;
+            }
+        
+            // 📅 Génère le calendrier des 5 prochains tirages
+            function updateCalendar() {
+                let calendar = document.getElementById("next-5-draws");
+                calendar.innerHTML = "";
+                let date = moment().tz("Europe/Paris");
+                for (let i = 0; i < 3; i++) {
+                    date = getNextDrawDate(date);
+                    let div = document.createElement("div");
+                    div.innerHTML = `📅 ${joursFr[date.day()]} ${date.format("DD/MM/YYYY")} à 20h`;
+                    div.className = "next-date-box";
+                    div.innerHTML = `<i class="fa-solid fa-calendar-days"></i> ${joursFr[date.day()]} ${date.format("DD/MM/YYYY")} à 20h`;
+                    calendar.appendChild(div);
+                    date.add(1, 'minute'); // éviter les doublons
+                }
+            }
+            
+        
+            updateCalendar(); // Affiche les 5 dates une fois au démarrage
+        
+            // 🔁 Met à jour le compte à rebours chaque seconde
             setInterval(() => {
                 let now = moment().tz("Europe/Paris");
-                let nextDraw = moment().tz("Europe/Paris").add(2, 'days').set({ hour: 20, minute: 0, second: 0 });
+                let nextDraw = getNextDrawDate(now);
                 let diff = moment.duration(nextDraw.diff(now));
-
-                // Mise à jour du texte avec un effet dynamique
-                document.getElementById("countdown").innerText =
-                    `${diff.days()}j ${diff.hours()}h ${diff.minutes()}m ${diff.seconds()}s`;
-
+        
+                // 🕔 Phrase "Prochain tirage : Lundi à 20h"
+                document.getElementById("next-draw-info").innerText =
+                    `🕔 Prochain tirage : ${joursFr[nextDraw.day()]} à 20h`;
+        
+                // ⏳ Affiche du compte à rebours
+                let countdownText = `${diff.days()}j ${diff.hours()}h ${diff.minutes()}m ${diff.seconds()}s`;
+                let countdownEl = document.getElementById("countdown");
+                countdownEl.innerText = countdownText;
+        
+                // 🎨 Couleurs dynamiques
+                let hoursLeft = diff.asHours();
+                if (hoursLeft <= 3) {
+                    countdownEl.style.background = "#dc3545"; // rouge
+                    countdownEl.style.color = "white";
+                } else if (hoursLeft <= 5) {
+                    countdownEl.style.background = "#ff5722"; // orange foncé
+                    countdownEl.style.color = "white";
+                } else if (hoursLeft <= 7) {
+                    countdownEl.style.background = "#ffc107"; // orange clair
+                    countdownEl.style.color = "#000";
+                } else {
+                    // countdownEl.style.background = "#ff5722"; // rouge
+                    countdownEl.style.background = "linear-gradient(135deg, rgba(255, 87, 34, 0.95), rgba(255, 193, 7, 0.95))";
+                    countdownEl.style.color = "#fff";
+                }
+        
+                // 🔔 Alerte sonore et visuelle quand il reste moins d'1h
+                if (diff.asMinutes() <= 60 && !alerted) {
+                    alertSound.play(); // 🔊 joue le son
+                    document.title = "🚨 Tirage bientôt !";
+                    countdownEl.style.boxShadow = "0 0 30px red";
+                    countdownEl.classList.add("animate__animated", "animate__flash");
+                    alerted = true;
+                }
+        
+                // ✅ Reset pour le prochain tirage (quand tirage passé)
+                if (diff.asMilliseconds() <= 0) {
+                    alerted = false;
+                    updateCalendar();
+                }
             }, 1000);
         }
+        
+        
         startCountdown();
+        
 
 
         function getDayName(dateString) {
