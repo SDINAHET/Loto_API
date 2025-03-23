@@ -167,6 +167,7 @@ The web interface can be served using **Live Server** on VSCode. Open `index.htm
 ```bash
 npm install -g http-server
 http-server src/main/resources/static -p 5500
+http-server src/main/resources/static -p 5500 -a 0.0.0.0
 ```
 Available front on:
   http://127.0.0.1:5500
